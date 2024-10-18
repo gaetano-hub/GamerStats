@@ -2,8 +2,8 @@
 /* 
 STATUS:WIP
 TODO:
-    -test statphp with statcalculatorL.js
-
+    -test statphp with statcalculatorL.js DONE
+    
 */
 
 
@@ -17,15 +17,15 @@ function getTableData($pdo)
 {
     try {
         // Query
-        $stmt = $pdo->query("SELECT * FROM your_table");
+        $stmt = $pdo->query("SELECT * FROM paolocannone"); // Replace with your table name
         $results = [];
-
+        
         // Fetch rows one at a time and append them to the results array
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $results[] = $row;
         }
-
         return $results;
+
     } catch (PDOException $e) {
         // it returns 'error' and the error message associated with the exception.
         return ['error' => $e->getMessage()];
@@ -37,28 +37,21 @@ main code
 */
 
 // Connection setup (TEMPORARY)
-$host = 'localhost';
-$dbname = 'your_database';
-$user = 'your_username';
-$pass = 'your_password';
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "riot_games";
 
 try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $user, $pass);
+    $pdo = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     // Call the function and save the results in a variable
     $data = json_encode(getTableData($pdo));
 
-    /* 
-
-    INSERT CODE TO HANDLE $data
-
-    */ 
-
-    /* 
-    DEBUG
+    //Send data to AJAX js request
     echo $data;
-    */ 
+    
 
 } catch (PDOException $e) {
     // it returns 'error' and the error message associated with the exception.

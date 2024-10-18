@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riot Games Match Stats Lookup</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+        }
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .match-info {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Get Riot Games Match Statistics by Game Name and Tagline</h1>
+    <label for="gameName">Enter Game Name:</label>
+    <input type="text" id="gameName" placeholder="Enter Game Name here" value="Paolocannone" required>
+
+    <label for="tagline">Enter Tagline (without #):</label>
+    <input type="text" id="tagline" placeholder="Enter Tagline here" value="EUW" required>
+
+    <button onclick="getRiotMatches()">Get Matches</button>
+
+    <div id="result"></div>
+
+    <script>
+        function getRiotMatches() {
+            const gameName = document.getElementById("gameName").value;
+            const tagline = document.getElementById("tagline").value;
+
+            if (!gameName || !tagline) {
+                alert("Please enter both Game Name and Tagline");
+                return;
+            }
+
+            // Fai la richiesta al server PHP che funge da proxy per ottenere il PUUID
+            const apiUrl = `api_riot/riot-proxy.php?gameName=${encodeURIComponent(gameName)}&tagline=${encodeURIComponent(tagline)}`;
+
+            fetch(apiUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Network response was not ok: " + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.puuid) {
+                        // Display the PUUID
+                        document.getElementById("result").innerHTML = `<p>PUUID: ${data.puuid}</p>`;
+                        getMatches(data.puuid);  // Chiama la funzione per ottenere le partite
+                    } else {
+                        throw new Error("Puuid not found");
+                    }
+                })
+                .catch(error => {
+                    console.error("There was a problem with the fetch operation:", error);
+                    document.getElementById("result").innerHTML = `<p>Error: ${error.message}</p>`;
+                });
+        }
+
+        function getMatches(puuid) {
+            const matchesUrl = `api_riot/matchlist-proxy.php?puuid=${puuid}`;
+
+            fetch(matchesUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Network response was not ok: " + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(matchIds => {
+                    if (matchIds.length > 0) {
+                        matchIds.forEach(matchId => {
+                            getMatchDetails(matchId);
+                        });
+                    } else {
+                        document.getElementById("result").innerHTML += `<p>No matches found.</p>`;
+                    }
+                })
+                .catch(error => {
+                    console.error("There was a problem with the fetch operation:", error);
+                    document.getElementById("result").innerHTML += `<p>Error: ${error.message}</p>`;
+                });
+        }
+
+        function getMatchDetails(matchId) {
+            name = document.getElementById("gameName").value;
+            const matchDetailsUrl = `api_riot/matchdetails-proxy.php?matchId=${matchId}&gameName=${name}`;
+
+            fetch(matchDetailsUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Network response was not ok: " + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(matchDetails => {
+                    displayMatchInfo(matchDetails);
+                })
+                .catch(error => {
+                    console.error("There was a problem with the fetch operation:", error);
+                    document.getElementById("result").innerHTML += `<p>Error fetching match details: ${error.message}</p>`;
+                });
+        }
+
+        function displayMatchInfo(matchDetails) {
+            const resultDiv = document.getElementById("result");
+
+            // Estrarre le informazioni principali dalla risposta
+            const { info } = matchDetails;
+            const { participants, gameDuration } = info;
+
+            const matchInfoDiv = document.createElement('div');
+            matchInfoDiv.classList.add('match-info');
+            matchInfoDiv.innerHTML = `<h3>Match ID: ${matchDetails.id}</h3>
+                                       <p>Game Duration: ${gameDuration} seconds</p>`;
+
+            participants.forEach(participant => {
+                matchInfoDiv.innerHTML += `
+                    <h4>Player: ${participant.championName}</h4>
+                    <p>Kills: ${participant.kills}, Deaths: ${participant.deaths}, Assists: ${participant.assists}</p>
+                    <p>Damage Dealt: ${participant.totalDamageDealtToChampions}</p>
+                    <p>Win: ${participant.win}</p>
+                `;
+            });
+
+            resultDiv.appendChild(matchInfoDiv);
+        }
+    </script>
+</body>
+</html>
