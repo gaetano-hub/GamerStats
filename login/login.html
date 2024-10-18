@@ -4,19 +4,19 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="styleSignUp.css">
+    <link rel="stylesheet" href="styleLogin.css">
     <!-- Bootstrap CSS -->
     <link href="../assets/css/bootstrap.min.css" rel="stylesheet" />
     <!-- Bootstrap JS -->
     <script src="../assets/js/bootstrap.bundle.min.js"></script>
-    <title>Sign Up</title>
+    <title>Login</title>
 </head>
 
 <body>
     <div class="d-flex justify-content-center align-items-center vh-100">
         <div class="card" style="width: 40rem;">
             <div class="card-body">
-                <form action="signUp.php" method="post" class="form" id="signUp">
+                <form action="login.php" method="post" class="form" id="login">
                     <!-- action, method e id da modificare a piacimento nel backend a seconda delle necessità -->
                     <div class="d-flex justify-content-center">
                         <label>
@@ -24,39 +24,31 @@
                         </label>
                     </div>
                     <div class="d-flex justify-content-center">
-                        <p style="font-size: 2rem;" class="title">Sign Up</p>
+                        <p style="font-size: 2rem;" class="title">Login</p>
                     </div>
                     <div class="d-flex justify-content-center">
-                        <p style="margin-top: -1rem;" class="message_title">Register to have full access to GamerStats!</p>
+                        <p style="margin-top: -1rem;" class="message_title">Log into your account to have full access to GamerStats!</p>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="floatingName" placeholder="Nick25">
-                        <label for="floatingInput">Nickame</label>
+                        <input type="text" class="form-control" id="floatingName" placeholder="Nick25" />
+                        <label for="floatingInput">Nickname</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="email" class="form-control" id="floatingEmail" placeholder="random@example.com">
-                        <label for="floatingInput">Email address</label>
-                    </div>
-                    <div class="form-floating mb-3">
-                        <input type="password" name="password" class="form-control" id="floatingPassword" placeholder="Password">
+                        <input type="password" name="password" class="form-control" id="floatingPassword"
+                            placeholder="Password">
                         <label for="floatingPassword">Password</label>
                     </div>
-                    <div class="form-floating mb-3">
-                        <input type="password" name="confirmPassword" class="form-control" id="floatingConfirmPassword" placeholder="Password">
-                        <label for="floatingPassword">Confirm Password</label>
-                    </div>
                     <div class="d-grid gap-1">
-                        <button class="btn btn-primary btn-lg" id="submitSignUp" type="submit" form="signUp" value="Sign Up">Confirm Registration</button>
+                        <button class="btn btn-primary btn-lg" id="submitLogin" type="submit" form="login" value="login">Confirm</button>
                     </div>
                     <div class="d-flex justify-content-center mt-1">
                         <!-- TODO: aggiungere href per arrivare a pagina Login -->
-                        <p style="font-size: -1rem;" class="title">Do you already have an account? Login <a href="../login/login.html">here</a></p> 
+                        <p style="font-size: -1rem;" class="title">You don't have an account yet? Sign up <a href="../signUp/signUp.html">here</a></p> 
                     </div>
                 </form>
                 <div class="d-flex justify-content-center mt-1">
-                    <p style="font-size: -1rem;" class="title">Or you can sign up with:</p>
+                    <p style="font-size: -1rem;" class="title">Or you can sign in with:</p>
                 </div>
-                <!-- TODO per Gaetano e Andrea: rendere funzionanti i bottoni di riot e battlenet-->
                 <div class="d-flex justify-content-between">
                     <button class="btn btn-lg flex-fill me-1" id="riotGamesBtn" style="background-color: rgb(210, 44, 44); color: white;">Riot Games</button>
                     <button class="btn btn-lg flex-fill ms-1" id="battleNetBtn" style="background-color:darkblue; color: white;">Battle.net</button>
