@@ -13,7 +13,7 @@
 </head>
 
 <body>
-    <div class="container d-flex justify-content-center">
+    <div class="d-flex justify-content-center align-items-center vh-100">
         <div class="card" style="width: 40rem;">
             <div class="card-body">
                 <form action="signUp.php" method="post" class="form" id="signUp">
@@ -30,17 +30,19 @@
                         <p style="margin-top: -1rem;" class="message_title">Register to have full access to GamerStats!</p>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" />
+                        <input type="text" class="form-control" id="floatingName" placeholder="Name">
+                        <label for="floatingInput">Name</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="email" class="form-control" id="floatingEmail" placeholder="random@example.com">
                         <label for="floatingInput">Email address</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="password" name="password" class="form-control" id="floatingPassword"
-                            placeholder="Password">
+                        <input type="password" name="password" class="form-control" id="floatingPassword" placeholder="Password">
                         <label for="floatingPassword">Password</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="password" name="confermaPassword" class="form-control" id="floatingPassword"
-                            placeholder="Password">
+                        <input type="password" name="confirmPassword" class="form-control" id="floatingConfirmPassword" placeholder="Password">
                         <label for="floatingPassword">Confirm Password</label>
                     </div>
                     <div class="d-grid gap-1">
@@ -54,6 +56,7 @@
                 <div class="d-flex justify-content-center mt-1">
                     <p style="font-size: -1rem;" class="title">Or you can sign up with:</p>
                 </div>
+                <!-- TODO per Gaetano e Andrea: rendere funzionanti i bottoni di riot e battlenet-->
                 <div class="d-flex justify-content-between">
                     <button class="btn btn-lg flex-fill me-1" id="riotGamesBtn" style="background-color: rgb(210, 44, 44); color: white;">Riot Games</button>
                     <button class="btn btn-lg flex-fill ms-1" id="battleNetBtn" style="background-color:darkblue; color: white;">Battle.net</button>
