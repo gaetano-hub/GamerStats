@@ -6,6 +6,16 @@ body {
     background-repeat: no-repeat;
 }
 
+/*pulsante search*/
+#search {
+    background-image: url('../assets/search.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    border:none;
+    background-color: #F8F9FA;
+}
+
 .separator {
     margin: auto;
     margin-left: 10px;

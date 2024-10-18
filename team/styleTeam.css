@@ -1,0 +1,25 @@
+#search {
+    background-image: url('../assets/search.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    border:none;
+    background-color: #F8F9FA;
+}
+
+#homeref{
+    background-image: url('../assets/home.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    border:none;
+    background-color: #F8F9FA;
+}
+
+.separator {
+    margin: auto;
+    margin-left: 10px;
+    font-size: 25px;
+    color: rgb(165, 165, 165);
+    font-family: 'Arial', sans-serif;
+}
