@@ -8,6 +8,76 @@ body {
     background-repeat: no-repeat;
 }
 
+:root{
+    --object_color: rgb(255, 255, 255);
+    --brand_color: rgb(0, 0, 0);
+    --navbar_textCol: rgb(83, 83, 83);
+    --switch_color: rgb(49, 49, 49);
+    --separator_color: rgb(165, 165, 165);
+    --transparent_col: rgba(255, 255, 255, 0.5);
+    --text_color: rgb(0, 0, 0);
+    --btnTxt_col: aliceblue;
+    --button_col: rgb(1, 110, 184);
+}
+
+.darkmode{
+    --object_color: rgb(52, 52, 52);
+    --brand_color: rgb(217, 217, 217);
+    --navbar_textCol: rgb(151, 151, 151);
+    --switch_color: rgb(74, 74, 74);
+    --separator_color: rgb(165, 165, 165);
+    --transparent_col: rgba(0, 0, 0, 0.5);
+    --text_color: rgb(191, 191, 191);
+    --btnTxt_col: rgb(191, 191, 191);
+    --button_col: rgb(42, 96, 133);
+}
+
+#ui-switch {
+    height: 35px;
+    width: 35px;
+    padding: 0;
+    border-radius: 50%;
+    background-color: var(--switch_color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 18px;
+}
+
+#ui-switch svg {
+    fill: var(--object_color);
+}
+
+#ui-switch svg:last-child {
+    display: none;
+}
+
+.darkmode #ui-switch svg:first-child {
+    display: none;
+}
+
+.darkmode #ui-switch svg:last-child {
+    display: block;
+}
+
+
+/* Video di sfondo
+.video-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;  /* Il video copre l'intera area 
+    z-index: -1;  /* Posiziona il video dietro il contenuto 
+}
+
+/* Contenuto sovrapposto al video 
+.content {
+    z-index: 1;
+}*/
+
 /*pulsante search*/
 #search {
     background-image: url("../assets/search.png");
@@ -22,7 +92,7 @@ body {
     margin: auto;
     margin-left: 10px;
     font-size: 25px;
-    color: rgb(165, 165, 165);
+    color: var(sepa);
     font-family: 'Arial', sans-serif;
 }
 
