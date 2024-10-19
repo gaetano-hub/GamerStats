@@ -6,6 +6,7 @@ body {
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
+    /*color: var(--text_color);*/
 }
 
 :root{
@@ -41,8 +42,8 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    position: fixed;
-    top: 18px;
+    /*position: fixed;
+    top: 18px;*/
 }
 
 #ui-switch svg {
@@ -80,12 +81,15 @@ body {
 
 /*pulsante search*/
 #search {
-    background-image: url("../assets/search.png");
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
     border:none;
-    background-color: #F8F9FA;
+}
+
+#search svg{
+    fill: var(--text_color);
+}
+
+input[type="search"]::placeholder{
+    color: var(--text_color);
 }
 
 .separator {

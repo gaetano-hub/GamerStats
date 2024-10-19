@@ -1,12 +1,12 @@
 let darkmode = localStorage.getItem('darkmode')
-const themeSwitch = document.getElementById('ui-switch')
+var themeSwitch = document.getElementById('ui-switch')
 
-const enableDarkMode = () => {
+var enableDarkMode = () => {
     document.body.classList.add('darkmode')
     localStorage.setItem('darkmode', 'active')
 }
 
-const disableDarkMode = () => {
+var disableDarkMode = () => {
     document.body.classList.remove('darkmode')
     localStorage.setItem('darkmode', null)
 }
