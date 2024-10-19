@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="it">
 
 <head>
     <meta charset="UTF-8" />
@@ -10,14 +10,36 @@
     <!-- Bootstrap JS -->
     <script src="../assets/js/bootstrap.bundle.min.js"></script>
     <title>Sign Up</title>
+
+    <script>
+        function validateForm() {
+            const username = document.forms["registrationForm"]["nickname"].value;
+            const password = document.forms["registrationForm"]["password"].value;
+            const confirmPassword = document.forms["registrationForm"]["confirmPassword"].value;
+
+            if (username.length < 3) {
+                alert("Il nome utente deve contenere almeno 3 caratteri.");
+                return false;
+            }
+            if (password.length < 6) {
+                alert("La password deve contenere almeno 6 caratteri.");
+                return false;
+            }
+            if (password !== confirmPassword) {
+                alert("Le password non corrispondono.");
+                return false;
+            }
+
+            return true; // Il modulo è valido
+        }
+    </script>
 </head>
 
 <body>
     <div class="d-flex justify-content-center align-items-center vh-100">
         <div class="card" style="width: 40rem;">
             <div class="card-body">
-                <form action="signUp.php" method="post" class="form" id="signUp">
-                    <!-- action, method e id da modificare a piacimento nel backend a seconda delle necessità -->
+                <form name="registrationForm" action="signUp.php" method="POST" class="form" id="signUp" onsubmit="return validateForm();">
                     <div class="d-flex justify-content-center">
                         <label>
                             <img class="img" src="../assets/LogoGS.png" style="width: 100px; height: 100px;" alt="logo" />
@@ -30,33 +52,33 @@
                         <p style="margin-top: -1rem;" class="message_title">Register to have full access to GamerStats!</p>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="floatingName" placeholder="Nick25">
-                        <label for="floatingInput">Nickame</label>
+                        <input type="text" name="nickname" class="form-control" id="nickname" placeholder="Nick25" value="gaetano" required>
+                        <label for="nickname">Nickname</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="email" class="form-control" id="floatingEmail" placeholder="random@example.com">
-                        <label for="floatingInput">Email address</label>
+                        <input type="email" name="email" class="form-control" id="email" placeholder="random@example.com" value="gaetano@gmail.com" required>
+                        <label for="email">Email address</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="password" name="password" class="form-control" id="floatingPassword" placeholder="Password">
-                        <label for="floatingPassword">Password</label>
+                        <input type="password" name="password" class="form-control" id="password" placeholder="Password" value="gaetano12345" required>
+                        <label for="password">Password</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="password" name="confirmPassword" class="form-control" id="floatingConfirmPassword" placeholder="Password">
-                        <label for="floatingPassword">Confirm Password</label>
+                        <input type="password" name="confirmPassword" class="form-control" id="confirmPassword" placeholder="Confirm Password" value="gaetano12345" required>
+                        <label for="confirmPassword">Confirm Password</label>
                     </div>
                     <div class="d-grid gap-1">
-                        <button class="btn btn-primary btn-lg" id="submitSignUp" type="submit" form="signUp" value="Sign Up">Confirm Registration</button>
+                        <button class="btn btn-primary btn-lg" id="submitSignUp" type="submit">Confirm Registration</button>
+                        <a href="https://id.riotgames.com/auth/authorize?response_type=code&client_id=YOUR_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI&scope=openid+email">Accedi con Riot</a>
+
                     </div>
                     <div class="d-flex justify-content-center mt-1">
-                        <!-- TODO: aggiungere href per arrivare a pagina Login -->
-                        <p style="font-size: -1rem;" class="title">Do you already have an account? Login <a href="../login/login.html">here</a></p> 
+                        <p style="font-size: -1rem;" class="title">Do you already have an account? Login <a href="../login/login.html">here</a></p>
                     </div>
                 </form>
                 <div class="d-flex justify-content-center mt-1">
                     <p style="font-size: -1rem;" class="title">Or you can sign up with:</p>
                 </div>
-                <!-- TODO per Gaetano e Andrea: rendere funzionanti i bottoni di riot e battlenet-->
                 <div class="d-flex justify-content-between">
                     <button class="btn btn-lg flex-fill me-1" id="riotGamesBtn" style="background-color: rgb(210, 44, 44); color: white;">Riot Games</button>
                     <button class="btn btn-lg flex-fill ms-1" id="battleNetBtn" style="background-color:darkblue; color: white;">Battle.net</button>
@@ -66,4 +88,4 @@
     </div>
 </body>
 
-</html> 
+</html>

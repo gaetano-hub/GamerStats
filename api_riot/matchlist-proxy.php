@@ -12,7 +12,7 @@ if (!$puuid) {
 }
 
 
-$url = "https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/$puuid/ids?start=0&count=5";
+$url = "https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/$puuid/ids?start=0&count=10";
 
 
 $ch = curl_init();

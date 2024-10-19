@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="it">
 
 <head>
     <meta charset="UTF-8" />
@@ -16,8 +16,7 @@
     <div class="d-flex justify-content-center align-items-center vh-100">
         <div class="card" style="width: 40rem;">
             <div class="card-body">
-                <form action="login.php" method="post" class="form" id="login">
-                    <!-- action, method e id da modificare a piacimento nel backend a seconda delle necessità -->
+                <form action="login.php" method="POST" class="form" id="login">
                     <div class="d-flex justify-content-center">
                         <label>
                             <img class="img" src="../assets/LogoGS.png" style="width: 100px; height: 100px;" alt="logo" />
@@ -30,20 +29,18 @@
                         <p style="margin-top: -1rem;" class="message_title">Log into your account to have full access to GamerStats!</p>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="floatingName" placeholder="Nick25" />
-                        <label for="floatingInput">Nickname</label>
+                        <input type="text" name="nickname" class="form-control" id="nickname" placeholder="Nick25" value="gaetano" required />
+                        <label for="nickname">Nickname</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="password" name="password" class="form-control" id="floatingPassword"
-                            placeholder="Password">
-                        <label for="floatingPassword">Password</label>
+                        <input type="password" name="password" class="form-control" id="password" placeholder="Password" value="gaetano12345" required />
+                        <label for="password">Password</label>
                     </div>
                     <div class="d-grid gap-1">
                         <button class="btn btn-primary btn-lg" id="submitLogin" type="submit" form="login" value="login">Confirm</button>
                     </div>
                     <div class="d-flex justify-content-center mt-1">
-                        <!-- TODO: aggiungere href per arrivare a pagina Login -->
-                        <p style="font-size: -1rem;" class="title">You don't have an account yet? Sign up <a href="../signUp/signUp.html">here</a></p> 
+                        <p style="font-size: -1rem;" class="title">You don't have an account yet? Sign up <a href="../signUp/signUp.html">here</a></p>
                     </div>
                 </form>
                 <div class="d-flex justify-content-center mt-1">
@@ -51,11 +48,11 @@
                 </div>
                 <div class="d-flex justify-content-between">
                     <button class="btn btn-lg flex-fill me-1" id="riotGamesBtn" style="background-color: rgb(210, 44, 44); color: white;">Riot Games</button>
-                    <button class="btn btn-lg flex-fill ms-1" id="battleNetBtn" style="background-color:darkblue; color: white;">Battle.net</button>
+                    <button class="btn btn-lg flex-fill ms-1" id="battleNetBtn" style="background-color: darkblue; color: white;">Battle.net</button>
                 </div>
             </div>
         </div>
     </div>
 </body>
 
-</html> 
+</html>

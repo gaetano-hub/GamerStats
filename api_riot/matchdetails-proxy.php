@@ -49,6 +49,7 @@ if ($httpCode != 200) {
 }
 
 $matchDetails = json_decode($response, true);
+
 if (json_last_error() !== JSON_ERROR_NONE) {
     echo json_encode(['error' => 'Failed to parse JSON response.']);
     exit;
@@ -58,7 +59,7 @@ if (json_last_error() !== JSON_ERROR_NONE) {
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "riot_games";
+$dbname = "GameStats";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -112,7 +113,7 @@ if ($conn->query($sql) !== TRUE) {
 }
 
 
-sleep(1);
+sleep(2);
 
 
 $sql = "CREATE TABLE IF NOT EXISTS `$name` (
@@ -160,7 +161,8 @@ foreach ($participants as $participant) {
     $gameDuration = $info['gameDuration'];
     $win = $participant['win'] ? 1 : 0;
 
-
+    echo "<li>Match ID: " . $match['gameId'] . " - Champion: " . $match['champion'] . "</li>";
+            
     if (($puuid_cercato == $puuid)) {
         $stmt->bind_param("sssiiiiiiii", $matchId, $puuid, $championName, $kills, $deaths, $assists, $damageDealt, $goldEarned, $teamId, $gameDuration, $win);
         if ($stmt->execute()) {
@@ -177,8 +179,5 @@ $stmt->close();
 $conn->close();
 
 
-echo json_encode([
-    'success' => true,
-    'message' => "$successCount participants data inserted",
-    'matchDetails' => $matchDetails
-]);
+echo json_encode($matchDetails);
+

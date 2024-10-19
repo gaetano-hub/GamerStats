@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,24 +12,21 @@
             padding: 20px;
             background-color: #f4f4f4;
         }
+
         #result {
             margin-top: 20px;
             padding: 10px;
             border: 1px solid #ccc;
             background-color: #fff;
         }
+
         pre {
             white-space: pre-wrap;
             word-wrap: break-word;
         }
-        .match-info {
-            margin-bottom: 15px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            background-color: #f9f9f9;
-        }
     </style>
 </head>
+
 <body>
     <h1>Get Riot Games Match Statistics by Game Name and Tagline</h1>
     <label for="gameName">Enter Game Name:</label>
@@ -51,8 +49,7 @@
                 return;
             }
 
-            // Fai la richiesta al server PHP che funge da proxy per ottenere il PUUID
-            const apiUrl = `api_riot/riot-proxy.php?gameName=${encodeURIComponent(gameName)}&tagline=${encodeURIComponent(tagline)}`;
+            const apiUrl = `api_riot/riot-proxy.php?gameName=${gameName}&tagline=${tagline}`;
 
             fetch(apiUrl)
                 .then(response => {
@@ -63,8 +60,6 @@
                 })
                 .then(data => {
                     if (data.puuid) {
-                        // Display the PUUID
-                        document.getElementById("result").innerHTML = `<p>PUUID: ${data.puuid}</p>`;
                         getMatches(data.puuid);  // Chiama la funzione per ottenere le partite
                     } else {
                         throw new Error("Puuid not found");
@@ -92,58 +87,40 @@
                             getMatchDetails(matchId);
                         });
                     } else {
-                        document.getElementById("result").innerHTML += `<p>No matches found.</p>`;
+                        document.getElementById("result").innerHTML = `<p>No matches found.</p>`;
                     }
                 })
                 .catch(error => {
                     console.error("There was a problem with the fetch operation:", error);
-                    document.getElementById("result").innerHTML += `<p>Error: ${error.message}</p>`;
+                    document.getElementById("result").innerHTML = `<p>Error: ${error.message}</p>`;
                 });
         }
 
         function getMatchDetails(matchId) {
-            name = document.getElementById("gameName").value;
-            const matchDetailsUrl = `api_riot/matchdetails-proxy.php?matchId=${matchId}&gameName=${name}`;
+            const gameName = document.getElementById("gameName").value;
+            const matchDetailsUrl = `api_riot/matchdetails-proxy.php?matchId=${matchId}&gameName=${encodeURIComponent(gameName)}`;
 
             fetch(matchDetailsUrl)
                 .then(response => {
                     if (!response.ok) {
+                        // Log response details for debugging
+                        console.error('Response:', response);
                         throw new Error("Network response was not ok: " + response.statusText);
                     }
+                    
                     return response.json();
                 })
                 .then(matchDetails => {
-                    displayMatchInfo(matchDetails);
+                    const resultDiv = document.getElementById("result");
+                    resultDiv.innerHTML += `<h3>Match ID: ${matchId}</h3><pre>${JSON.stringify(matchDetails, null, 2)}</pre>`;
                 })
                 .catch(error => {
                     console.error("There was a problem with the fetch operation:", error);
-                    document.getElementById("result").innerHTML += `<p>Error fetching match details: ${error.message}</p>`;
+                    document.getElementById("result").innerHTML += `<p>Error fetching match details for Match ID ${matchId}: ${error.message}</p>`;
                 });
         }
 
-        function displayMatchInfo(matchDetails) {
-            const resultDiv = document.getElementById("result");
-
-            // Estrarre le informazioni principali dalla risposta
-            const { info } = matchDetails;
-            const { participants, gameDuration } = info;
-
-            const matchInfoDiv = document.createElement('div');
-            matchInfoDiv.classList.add('match-info');
-            matchInfoDiv.innerHTML = `<h3>Match ID: ${matchDetails.id}</h3>
-                                       <p>Game Duration: ${gameDuration} seconds</p>`;
-
-            participants.forEach(participant => {
-                matchInfoDiv.innerHTML += `
-                    <h4>Player: ${participant.championName}</h4>
-                    <p>Kills: ${participant.kills}, Deaths: ${participant.deaths}, Assists: ${participant.assists}</p>
-                    <p>Damage Dealt: ${participant.totalDamageDealtToChampions}</p>
-                    <p>Win: ${participant.win}</p>
-                `;
-            });
-
-            resultDiv.appendChild(matchInfoDiv);
-        }
     </script>
 </body>
+
 </html>

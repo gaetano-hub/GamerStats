@@ -1,6 +1,6 @@
 <?php
 // config.php
-define('RIOT_API_KEY', 'RGAPI-19ca8e50-ce08-4393-9783-e1f2128b0237'); 
+define('RIOT_API_KEY', 'RGAPI-51162502-0129-4933-a397-b50b62dec410'); 
 
 
 ?>
