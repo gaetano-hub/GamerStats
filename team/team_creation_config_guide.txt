@@ -1,0 +1,4 @@
+*DATABASE TABLES*
+need a "teams" table with:
+id	varchar(100)	utf8mb4_general_ci	
+team_name	varchar(50)	utf8mb4_general_ci
