@@ -25,7 +25,7 @@ body {
     --object_color: rgb(52, 52, 52);
     --brand_color: rgb(217, 217, 217);
     --navbar_textCol: rgb(151, 151, 151);
-    --switch_color: rgb(74, 74, 74);
+    --switch_color: rgb(165, 165, 165);
     --separator_color: rgb(165, 165, 165);
     --transparent_col: rgba(0, 0, 0, 0.5);
     --text_color: rgb(191, 191, 191);
@@ -100,14 +100,14 @@ input[type="search"]::placeholder{
     font-family: 'Arial', sans-serif;
 }
 
-/* switch settings */
+/* switch settings 
 
 .ui-switch {
-    /* switch */
+    /* switch 
     --switch-bg: rgb(135, 150, 165);
     --switch-width: 48px;
     --switch-height: 20px;
-    /* circle */
+    /* circle 
     --circle-diameter: 32px;
     --circle-bg: rgb(0, 56, 146);
     --circle-inset: calc((var(--circle-diameter) - var(--switch-height)) / 2);
@@ -171,7 +171,7 @@ input[type="search"]::placeholder{
     opacity: 0;
 }
 
-/* actions */
+/* actions 
 
 .ui-switch input:checked+.slider .circle {
     left: calc(100% - var(--circle-diameter));
@@ -185,4 +185,4 @@ input[type="search"]::placeholder{
     opacity: 1;
     width: 0;
     height: 0;
-}
+} */
