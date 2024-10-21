@@ -60,7 +60,7 @@ if (isset($streams_data['data'])) {
                                 aria-expanded="false" style="color: var(--navbar_textCol);">
                                 Games
                             </a>
-                            <ul class="dropdown-menu">
+                            <ul class="dropdown-menu" style="background-color: var(--object_color);">
                                 <!-- TODO: aggiungere href per arrivare alle pagine dei giochi-->
                                 <li><a class="dropdown-item" href="#" style="color: var(--brand_color);">Valorant</a></li>
                                 <li><a class="dropdown-item" href="#" style="color: var(--brand_color);">League of Legends</a></li>
