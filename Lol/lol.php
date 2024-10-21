@@ -1,7 +1,7 @@
 <?php
-$access_token = 'swqwsxqrdbfu9snanpeqm2k2fjewkr'; // Replace with your access token
-$client_id = 'kdky4zjc7xuo41zu0v1bqf3y9hp41v'; // Replace with your client ID
-$game_id = '21779'; // Fortnite's game ID, replace with the actual one you obtained
+$access_token = 'swqwsxqrdbfu9snanpeqm2k2fjewkr'; 
+$client_id = 'kdky4zjc7xuo41zu0v1bqf3y9hp41v';
+$game_id = '21779';
 
 // Fetch the top 10 live streams for the specified game
 $api_url = 'https://api.twitch.tv/helix/streams?game_id=' . $game_id . '&first=10';
@@ -55,9 +55,6 @@ if (isset($streams_data['data'])) {
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <!-- <li class="nav-item" style="margin-left: 3px;">
-                        <a class="nav-link active" aria-current="page" href="home.html">Home</a>
-                    </li>       PER ELENA TI SERVE DOPO CIAO :) -->
                         <li class="nav-item dropdown" style="margin-left: 5px;">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                                 aria-expanded="false" style="color: var(--navbar_textCol);">
@@ -69,7 +66,7 @@ if (isset($streams_data['data'])) {
                                 <li><a class="dropdown-item" href="#" style="color: var(--brand_color);">League of Legends</a></li>
                                 <!-- <li><hr class="dropdown-divider"></li>
                                  <li><a class="dropdown-item" href="#">Something else here</a></li> 
-                                 Possono sempre servire                           -->
+                                 Possono sempre servire -->
                             </ul>
                         </li>
                         <li class="nav-item" style="margin-left: 7px; margin-top: 11px;">
