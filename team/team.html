@@ -4,65 +4,121 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../home/styleHome.css">
     <link rel="stylesheet" href="styleTeam.css">
+    <script src="../home/scriptHome.js" defer></script>
     <!-- Bootstrap CSS -->
     <link href="../assets/css/bootstrap.min.css" rel="stylesheet" />
     <!-- Bootstrap JS -->
     <script src="../assets/js/bootstrap.bundle.min.js"></script>
-    <title>Team</title>
+    <title>Team page</title>
 </head>
 
-<body class="vh-100 overflow-hidden">
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-            <a class="navbar-brand fs-3" href="#">GamerStats</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <!-- <li class="nav-item" style="margin-left: 3px;">
-                        <a class="nav-link active" aria-current="page" href="home.html">Home</a>
-                    </li>       PER ELENA TI SERVE DOPO CIAO :) -->
-                    <li class="nav-item dropdown" style="margin-left: 5px;">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            Games
-                        </a>
-                        <ul class="dropdown-menu">
-                            <!-- TODO: aggiungere href per arrivare alle pagine dei giochi-->
-                            <li><a class="dropdown-item" href="#">Valorant</a></li>
-                            <li><a class="dropdown-item" href="#">League of Legends</a></li>
-                            <!-- <li><hr class="dropdown-divider"></li>
+<body>
+
+    <!--
+    <video class="video-background" autoplay muted loop>
+        <source src="../assets/topographic.mp4" type="video/mp4">
+    </video>
+
+    <script>
+        // Seleziona il video e imposta la velocità di riproduzione
+        var video = document.getElementById('backgroundVideo');
+        video.playbackRate = 0.2; // Imposta la velocità a 50% (rallenta il video)
+    </script>
+    -->
+
+    <div class="content">
+        <nav class="navbar fixed-top navbar-expand-lg" style="background-color: var(--object_color);">
+            <div class="container-fluid" style="background-color: var(--object_color);">
+                <a class="navbar-brand fs-3" href="#" style="color: var(--brand_color);">GamerStats</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item dropdown" style="margin-top: 6px;">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                aria-expanded="false" style="color: var(--navbar_textCol);">Games</a>
+                            <ul class="dropdown-menu">
+                                <!-- TODO: aggiungere href per arrivare alle pagine dei giochi-->
+                                <li><a class="dropdown-item" href="#" style="color: var(--brand_color);">Valorant</a></li>
+                                <li><a class="dropdown-item" href="../Lol/lol.php" style="color: var(--brand_color);">League of Legends</a></li>
+                                <!-- <li><hr class="dropdown-divider"></li>
                                  <li><a class="dropdown-item" href="#">Something else here</a></li> 
-                                 Possono sempre servire                           -->
-                        </ul>
-                    </li>
-                    <a href="../home/home.html" class="btn btn-primary" id="homeref">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/></svg>
-                    </a>
-                </ul>
-        
-                <!-- TODO: modificare href e vari dettagli del signup e login-->
-                <ul class="navbar-nav mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <form class="d-flex" role="search">
-                            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                            <button class="btn btn-outline-success" id="search" type="submit">
+                                 Possono sempre servire -->
+                            </ul>
+                        </li>
+                        <li class="nav-item" style="margin-left: 7px; margin-top: 11px;">
+                            <a class="btn btn-outline-success" id="homeref" type="button" style=" background-color:var(--object_color);" href="../home/home.html">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/></svg>
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- TODO: modificare href e vari dettagli del signup e login-->
+                    <ul class="navbar-nav mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <form class="d-flex" role="search">
+                                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" 
+                                style=" background-color:var(--object_color);">
+                                <button class="btn btn-outline-success" id="search" type="submit"
+                                style=" background-color:var(--object_color);">
                                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/></svg>
-                            </button>
-                        </form>
-                    </li>
-                    <li class="separator">|</li>
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="../login/login.html">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="../signUp/signUp.html">Sign Up</a>
-                    </li>
-                </ul>
+                                </button>
+                            </form>
+                        </li>
+                        <li class="separator" style="color: var(--separator_color);">|</li>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="../login/login.html" style="color: var(--brand_color);">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="../signUp/signUp.html" style="color: var(--brand_color);">Sign Up</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div class="container text-center">
+        <!-- Team Header -->
+        <div class="team-header">
+            <h1>TEAM NAME</h1>
+        </div>
+
+        <!-- Team Members Section -->
+        <div class="row team justify-content-center">
+            <div class="col-2 position-relative">
+                <div class="member-circle mx-auto"></div>
+                <div class="crown"></div> <!-- Crown icon -->
+                <p>Member 1</p>
+            </div>
+            <div class="col-2">
+                <div class="member-circle mx-auto"></div>
+                <p>Member 2</p>
+            </div>
+            <div class="col-2">
+                <div class="member-circle mx-auto"></div>
+                <p>Member 3</p>
+            </div>
+            <div class="col-2">
+                <div class="member-circle mx-auto"></div>
+                <p>Member 4</p>
+            </div>
+            <div class="col-2">
+                <div class="member-circle mx-auto"></div>
+                <p>Member 5</p>
             </div>
         </div>
-    </nav>
+
+        <!-- Stats Section -->
+        <div class="stats-section text-start mx-auto">
+            <h2>STATS</h2>
+            <p class="stat">Stat 1</p>
+            <p class="stat">Stat 2</p>
+            <p class="stat">Stat 3</p>
+        </div>
+    </div>
+</body>
+</html>

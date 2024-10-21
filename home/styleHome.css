@@ -85,6 +85,14 @@ body {
     fill: var(--text_color);
 }
 
+#homeref {
+    border:none;
+}
+
+#homeref svg{
+    fill: var(--text_color);
+}
+
 input[type="search"]::placeholder{
     color: var(--text_color);
 }
