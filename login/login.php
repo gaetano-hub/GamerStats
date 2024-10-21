@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Qui puoi iniziare una sessione o reindirizzare l'utente
             session_start();
             $_SESSION['nickname'] = $nickname; // Memorizza il nickname nella sessione
-            header("Location: ../home/home.html");
+            header("Location: ../home/home.php");
             exit();
         } else {
             echo "Password errata.";
