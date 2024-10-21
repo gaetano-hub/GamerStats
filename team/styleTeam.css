@@ -1,15 +1,24 @@
-#search {
-    border:none;
+
+.team {
+    margin-bottom: 30px;
 }
 
-#homeref{
-    border:none;
+/*TODO: settare immagine profilo membri*/
+.member-circle {
+    width: 80px;
+    height: 80px;
+    border: 2px solid #0000ff;
+    border-radius: 50%;
+    background-image: url(../assets/valogo.webp);
+    background-size: cover;
+    background-position: center;
 }
-
-.separator {
-    margin: auto;
-    margin-left: 10px;
-    font-size: 25px;
-    color: rgb(165, 165, 165);
-    font-family: 'Arial', sans-serif;
-}
+/*.crown {
+    position: relative;
+    top: -75px;
+    left: 50px;
+    width: 20px;
+    height: 20px;
+    background-color: gold;
+    border-radius: 5px;
+}*/
