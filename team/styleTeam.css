@@ -1,24 +1,19 @@
-body {
-    background-color: #333;
-    color: #fff;
-}
-.team-header {
-    margin-bottom: 20px;
-}
-.team-header h1 {
-    color: #7fff00;
-}
+
 .team {
     margin-bottom: 30px;
 }
+
+/*TODO: settare immagine profilo membri*/
 .member-circle {
     width: 80px;
     height: 80px;
-    border: 2px solid #7fff00;
+    border: 2px solid #0000ff;
     border-radius: 50%;
-    margin-bottom: 10px;
+    background-image: url(../assets/valogo.webp);
+    background-size: cover;
+    background-position: center;
 }
-.crown {
+/*.crown {
     position: relative;
     top: -75px;
     left: 50px;
@@ -26,7 +21,4 @@ body {
     height: 20px;
     background-color: gold;
     border-radius: 5px;
-}
-.stats-section h2 {
-    color: #b266ff;
-}
+}*/
