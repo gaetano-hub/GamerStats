@@ -18,15 +18,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST['password'];
 
     // Prepara la query per trovare l'utente
-    $stmt = $conn->prepare("SELECT password FROM users WHERE nickname = ?");
+    $stmt = $conn->prepare("SELECT password, email FROM users WHERE nickname = ?");
     $stmt->bind_param("s", $nickname);
     $stmt->execute();
     $stmt->store_result();
 
-    // echo "Numero di utenti trovati: " . $nickname . "<br>";
     // Controlla se l'utente esiste
     if ($stmt->num_rows > 0) {
-        $stmt->bind_result($hashedPassword);
+        $stmt->bind_result($hashedPassword, $email);
         $stmt->fetch();
 
         // Verifica la password
@@ -35,6 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Qui puoi iniziare una sessione o reindirizzare l'utente
             session_start();
             $_SESSION['nickname'] = $nickname; // Memorizza il nickname nella sessione
+            $_SESSION['email'] = $email; // Memorizza l'email nella sessione
             header("Location: ../home/home.php");
             exit();
         } else {
@@ -49,3 +49,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 $conn->close();
 ?>
+

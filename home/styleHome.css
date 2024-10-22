@@ -93,6 +93,14 @@ body {
     fill: var(--text_color);
 }
 
+#edit {
+    border:none;
+}
+
+#edit svg{
+    fill: var(--text_color);
+}
+
 input[type="search"]::placeholder{
     color: var(--text_color);
 }

@@ -1,6 +1,17 @@
 <?php
-// Qui ci va ipoteticamente la roba del backend che devo aspoettare che esista
+session_start();
+// $_SESSION['nickname'] = 'testuser';
 
+// Converti l'array di sessione in formato JSON
+$sessionData = json_encode($_SESSION);
+// Controlla se l'utente è loggato con Discord
+if (isset($_SESSION['discord_user'])) {
+    echo "Benvenuto, " . $_SESSION['discord_user']['username'] . "! (Accesso tramite Discord)";
+} else if (isset($_SESSION['nickname'])) {
+    echo "Benvenuto, " . $_SESSION['nickname'] . "! (Accesso classico)";
+} else {
+    echo "Devi effettuare il login.";
+}
 ?>
 
 <!DOCTYPE html>
@@ -52,9 +63,9 @@
                         </li>
                     </ul>
                     <!-- TODO: modificare href e vari dettagli del signup e login-->
-                    <ul class="navbar-nav mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <form class="d-flex" role="search">
+                    <ul class="navbar-nav align-items-center mb-2 mb-lg-0">
+                        <li class="nav-item align-self-center">
+                            <form class="d-flex" role="search" style="margin-top: 10px;">
                                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"
                                     style=" background-color:var(--object_color);">
                                 <button class="btn btn-outline-success" id="search" type="submit"
@@ -66,12 +77,26 @@
                             </form>
                         </li>
                         <li class="separator" style="color: var(--separator_color);">|</li>
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="../login/login.html" style="color: var(--brand_color);">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="../signUp/signUp.html" style="color: var(--brand_color);">Sign Up</a>
-                        </li>
+                        <!-- Controllo se l'utente è loggato -->
+                        <?php if (isset($_SESSION['nickname'])): ?>
+                            <!-- L'utente è loggato, mostra Logout -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="../memberPage/myProfile.php" style="color: var(--brand_color); font-weight: bold;">
+                                    <?php echo $_SESSION['nickname']; ?>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="../logout/logout.php" style="color: var(--brand_color);">Logout</a>
+                            </li>
+                        <?php else: ?>
+                            <!-- L'utente non è loggato, mostra Login e Sign Up -->
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="../login/login.html" style="color: var(--brand_color);">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="../signUp/signUp.html" style="color: var(--brand_color);">Sign Up</a>
+                            </li>
+                        <?php endif; ?>
                     </ul>
                 </div>
             </div>
@@ -94,8 +119,8 @@
                             </div>
                         </div>
                     </div>
-                    <input type="text" class="form-control-plaintext text-center" value="NomeUtente" readonly style="color: var(--text_color); margin-top: 10px; font-size: 2rem; font-weight: bold;">
-                    <input type="text" class="form-control-plaintext text-center" value="mail@mail.com" readonly style="color: var(--text_color); margin-top: -10px; font-size: 1rem;">
+                    <input type="text" class="form-control-plaintext text-center" value="<?php echo isset($_SESSION['nickname']) ? $_SESSION['nickname'] : ''; ?>" readonly style="color: var(--text_color); margin-top: 10px; font-size: 2rem; font-weight: bold;">
+                    <input type="text" class="form-control-plaintext text-center" value="<?php echo isset($_SESSION['email']) ? $_SESSION['email'] : ''; ?>" readonly style="color: var(--text_color); margin-top: -10px; font-size: 1rem;">
                 </div>
                 <div class="col d-flex flex-column align-items-center" style="max-width: 2px;">
                     <hr style="width: 2px; border-width:0; background-color: var(--text_color); height: 90%; max-height: 90%;">
@@ -176,5 +201,13 @@
             <p style="font-weight: bold; color: var(--text_color);">Qui ci vanno le statistiche SIUUUUUUUUUU</p>
         </div>
     </div>
+    <script>
+        // Trasferisci i dati di sessione dal PHP al JavaScript
+        var sessionData = <?php echo $sessionData; ?>;
+
+        // Stampa i dati di sessione nella console del browser
+        console.log(sessionData);
+    </script>
 </body>
+
 </html>
