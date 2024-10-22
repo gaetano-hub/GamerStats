@@ -21,13 +21,13 @@ if (isset($_SESSION['discord_user'])) {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../home/styleHome.css">
-    <link rel="stylesheet" href="styleTeam.css">
+    <link rel="stylesheet" href="styleMemPage.css">
     <script src="../home/scriptHome.js" defer></script>
     <!-- Bootstrap CSS -->
     <link href="../assets/css/bootstrap.min.css" rel="stylesheet" />
     <!-- Bootstrap JS -->
     <script src="../assets/js/bootstrap.bundle.min.js"></script>
-    <title>Team page</title>
+    <title>My Profile Page</title>
 </head>
 
 <body>
@@ -127,7 +127,70 @@ if (isset($_SESSION['discord_user'])) {
                 </div>
                 <div class="col d-flex flex-column align-items-center">
                     <p style="color: var(--text_color); font-size: 2rem; font-weight: bold;">Teams</p>
-                    <div class="accordion" id="accordionExample" style="width: 100%;;">
+
+                    <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" style="background-color: var(--object_color); color: var(--text_color); border-color: var(--text_color); margin-bottom:10px;">
+                        Create new team
+                    </button>
+                    <div class="collapse" id="collapseExample" style="margin-bottom: 20px;">
+                        <div class="card card-body" id="cardTeam" style="background-color: var(--object_color); color: var(--text_color);">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="teamName" placeholder="teamName" style="height: 100%; margin-bottom: 5px; background-color: var(--object_color); color: var(--text_color);">
+                                <label for="teamName">Team Name</label>
+                            </div>
+                            <select class="form-select" aria-label="Default select example" style="margin-bottom: 5px; height: 3.5rem; background-color: var(--object_color); color: var(--text_color);">
+                                <option selected>Game</option>
+                                <option value="1">Valorant</option>
+                                <option value="2">LoL</option>
+                            </select>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" id="memberOne" placeholder="memberOne" style="height: 30%; margin-bottom: 5px; background-color: var(--object_color); color: var(--text_color);">
+                                        <label for="teamName">Member 1</label>
+                                    </div>
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" id="memberThree" placeholder="memberThree" style="height: 30%; margin-bottom: 5px; background-color: var(--object_color); color: var(--text_color);">
+                                        <label for="teamName">Member 3</label>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" id="memberTwo" placeholder="memberTwo" style="height: 30%; margin-bottom: 5px; background-color: var(--object_color); color: var(--text_color);">
+                                        <label for="teamName">Member 2</label>
+                                    </div>
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" id="memberFour" placeholder="memberFour" style="height: 30%; margin-bottom: 5px; background-color: var(--object_color); color: var(--text_color);">
+                                        <label for="teamName">Member 4</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: center;">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="memberFive" placeholder="memberFive" style="height: 30%; margin-bottom: 5px; background-color: var(--object_color); color: var(--text_color);">
+                                    <label for="teamName">Member 5</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <button type="button" class="btn btn-danger" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" style="height: 3.5rem; width: 10rem;" onclick="
+                                        document.getElementById('teamName').value = '';
+                                        document.getElementById('memberOne').value = '';
+                                        document.getElementById('memberTwo').value = '';
+                                        document.getElementById('memberThree').value = '';
+                                        document.getElementById('memberFour').value = '';
+                                        document.getElementById('memberFive').value = '';
+                                        document.querySelector('.form-select').selectedIndex = 0;">
+                                        Cancel
+                                    </button>
+                                </div>
+                                <div class="col">
+                                    <button type="button" class="btn btn-success" style="height: 3.5rem; width: 10rem;">Create</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion" id="accordionExample" style="width: 100%;">
                         <div class="accordion-item" style="background-color: var(--transparent_col); color: var(--text_color);">
                             <h2 class="accordion-header" style="color: var(--text_color);">
                                 <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="background-color: rgba(0,0,0,0); color: var(--text_color); font-weight: bold;">

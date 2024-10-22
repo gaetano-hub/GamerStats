@@ -18,6 +18,7 @@ body {
     --text_color: rgb(0, 0, 0);
     --btnTxt_col: aliceblue;
     --button_col: rgb(1, 110, 184);
+    --input_color: rgb(255, 255, 255);
 }
 
 .darkmode{
@@ -30,6 +31,7 @@ body {
     --text_color: rgb(191, 191, 191);
     --btnTxt_col: rgb(191, 191, 191);
     --button_col: rgb(42, 96, 133);
+    --input_color: rgb(67, 67, 67);
 }
 
 #ui-switch {
