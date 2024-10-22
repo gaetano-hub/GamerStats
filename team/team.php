@@ -25,6 +25,10 @@ $sql = "CREATE TABLE IF NOT EXISTS teams (
     leader VARCHAR(255) NOT NULL
 )";
 
+if ($conn->query($sql) !== TRUE) {
+    echo "Errore nella creazione della tabella: " . $conn->error;
+}
+
 session_start();
 // $_SESSION['nickname'] = 'testuser';
 
