@@ -7,6 +7,8 @@ $sessionData = json_encode($_SESSION);
 // Controlla se l'utente è loggato con Discord
 if (isset($_SESSION['discord_user'])) {
     echo "Benvenuto, " . $_SESSION['discord_user']['username'] . "! (Accesso tramite Discord)";
+}  else if (isset($_SESSION['steam_user'])) { // Check for Steam login
+    echo "Benvenuto, " . $_SESSION['steam_user']['displayname'] . "! (Accesso tramite Steam)";
 } else if (isset($_SESSION['nickname'])) {
     echo "Benvenuto, " . $_SESSION['nickname'] . "! (Accesso classico)";
 } else {
