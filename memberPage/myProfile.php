@@ -111,8 +111,8 @@ if (isset($_SESSION['discord_user'])) {
                                 <img src="../assets/profPicture.jpg" class="img-thumbnail" alt="profilePicture" style="width: 200px; height: 200px;">
                             </div>
                             <div class="col">
-                                <button style="background-color: rgba(0,0,0,0); color: var(--text_color); border: none; margin-top: 50px;">
-                                    <svg xmlns="http://www.w3.org/2000/svg" id='edit' height="24px" viewBox="0 -960 960 960" width="24px">
+                                <button style="background-color: rgba(0,0,0,0); margin-top: 50px;" id="edit">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px">
                                         <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z" />
                                     </svg>
                                 </button>
@@ -133,60 +133,62 @@ if (isset($_SESSION['discord_user'])) {
                     </button>
                     <div class="collapse" id="collapseExample" style="margin-bottom: 20px;">
                         <div class="card card-body" id="cardTeam" style="background-color: var(--object_color); color: var(--text_color);">
-                            <div class="form-floating">
-                                <input type="text" class="form-control" id="teamName" placeholder="teamName" style="height: 100%; margin-bottom: 5px; background-color: var(--object_color); color: var(--text_color);">
-                                <label for="teamName">Team Name</label>
-                            </div>
-                            <select class="form-select" aria-label="Default select example" style="margin-bottom: 5px; height: 3.5rem; background-color: var(--object_color); color: var(--text_color);">
-                                <option selected>Game</option>
-                                <option value="1">Valorant</option>
-                                <option value="2">LoL</option>
-                            </select>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" id="memberOne" placeholder="memberOne" style="height: 30%; margin-bottom: 5px; background-color: var(--object_color); color: var(--text_color);">
-                                        <label for="teamName">Member 1</label>
-                                    </div>
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" id="memberThree" placeholder="memberThree" style="height: 30%; margin-bottom: 5px; background-color: var(--object_color); color: var(--text_color);">
-                                        <label for="teamName">Member 3</label>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" id="memberTwo" placeholder="memberTwo" style="height: 30%; margin-bottom: 5px; background-color: var(--object_color); color: var(--text_color);">
-                                        <label for="teamName">Member 2</label>
-                                    </div>
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" id="memberFour" placeholder="memberFour" style="height: 30%; margin-bottom: 5px; background-color: var(--object_color); color: var(--text_color);">
-                                        <label for="teamName">Member 4</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div style="display: flex; justify-content: center;">
+                            <form action="../team/team.php" method="post">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="memberFive" placeholder="memberFive" style="height: 30%; margin-bottom: 5px; background-color: var(--object_color); color: var(--text_color);">
-                                    <label for="teamName">Member 5</label>
+                                    <input type="text" class="form-control" id="teamName" name="teamName" placeholder="teamName" style="height: 100%; margin-bottom: 5px; background-color: var(--object_color); color: var(--text_color);">
+                                    <label for="teamName">Team Name</label>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <button type="button" class="btn btn-danger" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" style="height: 3.5rem; width: 10rem;" onclick="
-                                        document.getElementById('teamName').value = '';
-                                        document.getElementById('memberOne').value = '';
-                                        document.getElementById('memberTwo').value = '';
-                                        document.getElementById('memberThree').value = '';
-                                        document.getElementById('memberFour').value = '';
-                                        document.getElementById('memberFive').value = '';
-                                        document.querySelector('.form-select').selectedIndex = 0;">
-                                        Cancel
-                                    </button>
+                                <select class="form-select" aria-label="Default select example" name="game" style="margin-bottom: 5px; height: 3.5rem; background-color: var(--object_color); color: var(--text_color);">
+                                    <option selected>Game</option>
+                                    <option value="Valorant">Valorant</option>
+                                    <option value="LoL">LoL</option>
+                                </select>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" id="memberOne" name="memberOne" placeholder="memberOne" style="height: 30%; margin-bottom: 5px; background-color: var(--object_color); color: var(--text_color);">
+                                            <label for="teamName">Member 1</label>
+                                        </div>
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" id="memberThree" name="memberThree" placeholder="memberThree" style="height: 30%; margin-bottom: 5px; background-color: var(--object_color); color: var(--text_color);">
+                                            <label for="teamName">Member 3</label>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" id="memberTwo" name="memberTwo" placeholder="memberTwo" style="height: 30%; margin-bottom: 5px; background-color: var(--object_color); color: var(--text_color);">
+                                            <label for="teamName">Member 2</label>
+                                        </div>
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" id="memberFour" name="memberFour" placeholder="memberFour" style="height: 30%; margin-bottom: 5px; background-color: var(--object_color); color: var(--text_color);">
+                                            <label for="teamName">Member 4</label>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col">
-                                    <button type="button" class="btn btn-success" style="height: 3.5rem; width: 10rem;">Create</button>
+                                <div style="display: flex; justify-content: center;">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" id="memberFive" name="memberFive" placeholder="memberFive" style="height: 30%; margin-bottom: 5px; background-color: var(--object_color); color: var(--text_color);">
+                                        <label for="teamName">Member 5</label>
+                                    </div>
                                 </div>
-                            </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <button type="button" class="btn btn-danger" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" style="height: 3.5rem; width: 10rem;" onclick="
+                                            document.getElementById('teamName').value = '';
+                                            document.getElementById('memberOne').value = '';
+                                            document.getElementById('memberTwo').value = '';
+                                            document.getElementById('memberThree').value = '';
+                                            document.getElementById('memberFour').value = '';
+                                            document.getElementById('memberFive').value = '';
+                                            document.querySelector('.form-select').selectedIndex = 0;">
+                                            Cancel
+                                        </button>
+                                    </div>
+                                    <div class="col">
+                                        <button type="submit" class="btn btn-success" style="height: 3.5rem; width: 10rem;">Create</button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
 
