@@ -1,3 +1,47 @@
+<?php
+session_start();
+if (isset($_GET['team']) && !empty($_GET['team'])) {
+    // Preleviamo il valore del nickname dall'URL
+    $visitingTeam = htmlspecialchars($_GET['team']);
+}
+// Converti l'array di sessione in formato JSON
+$sessionData = json_encode($_SESSION);
+// Controlla se l'utente è loggato con Discord o normalmente
+if (!isset($_SESSION['discord_user']) && !isset($_SESSION['nickname'])) {
+    header("Location: ../login/login.html");
+}
+
+// Connessione al database
+$servername = "localhost";
+$username = "root"; // Il nome utente predefinito di XAMPP è "root"
+$password = ""; // Di solito la password è vuota
+$dbname = "GamerStats";
+
+// Crea connessione
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Controlla la connessione
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Preleva il nickname dalla sessione
+$nickname = $_SESSION['nickname'];
+
+// Prepara la query per ottenere i nomi dei team
+$stmt = $conn->prepare("SELECT game, leader, member_one, member_two, member_three, member_four, member_five FROM teams WHERE team_name = ?");
+$stmt->bind_param("s", $visitingTeam);
+$stmt->execute();
+$result = $stmt->get_result();
+
+$teamData = array();
+if ($row = $result->fetch_assoc()) {
+    $teamData = $row;
+    $game = $teamData['game'];
+    unset($teamData['game']);
+}
+?>
+
 <!DOCTYPE html>
 <html lang="it">
 
@@ -52,7 +96,7 @@
                             </ul>
                         </li>
                         <li class="nav-item" style="margin-left: 7px; margin-top: 11px;">
-                            <a class="btn btn-outline-success" id="homeref" type="button" style=" background-color:var(--object_color);" href="../home/home.html">
+                            <a class="btn btn-outline-success" id="homeref" type="button" style=" background-color:var(--object_color);" href="../home/home.php">
                                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/></svg>
                             </a>
                         </li>
@@ -70,12 +114,25 @@
                             </form>
                         </li>
                         <li class="separator" style="color: var(--separator_color);">|</li>
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="../login/login.html" style="color: var(--brand_color);">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="../signUp/signUp.html" style="color: var(--brand_color);">Sign Up</a>
-                        </li>
+                        <?php if (isset($_SESSION['nickname'])): ?>
+                            <!-- L'utente è loggato, mostra Logout -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="../memberPage/myProfile.php" style="color: var(--brand_color); font-weight: bold;">
+                                    <?php echo $_SESSION['nickname']; ?>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="../logout/logout.php" style="color: var(--brand_color);">Logout</a>
+                            </li>
+                        <?php else: ?>
+                            <!-- L'utente non è loggato, mostra Login e Sign Up -->
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="../login/login.html" style="color: var(--brand_color);">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="../signUp/signUp.html" style="color: var(--brand_color);">Sign Up</a>
+                            </li>
+                        <?php endif; ?>
                     </ul>
                 </div>
             </div>
@@ -83,8 +140,8 @@
     </div>
     <div style="background-color: var(--transparent_col); height: 5rem; display: flex; justify-content: center; align-items: center; margin-top: 68px;">
         <!--TODO: insersici logo del gioco del team e il nome del team-->
-        <img src="../assets/lollogo.webp" class="card-img-top" alt="lolLogo" style="width: 50px; height: auto; margin-right: 10px;">
-        <p style="font-size: 2rem; font-weight: bold; color: var(--text_color);">Team name</p>
+        <img src="<?php echo ($game== "LoL") ? "../assets/lollogo.webp" : "../assets/valogo.webp" ?>" class="card-img-top" alt="lolLogo" style="width: 50px; height: auto; margin-right: 10px;">
+        <p style="font-size: 2rem; font-weight: bold; color: var(--text_color);"><?php echo $visitingTeam ?></p>
     </div>
     <p style="color: var(--text_color); margin-left: 2rem;">
         <b style="font-size: 2rem;">Team members</b>
@@ -92,30 +149,35 @@
 
     <!--TODO: sono 5 a scopo dimostrativo, ma aggiungere membri da script e corona al leader-->
     <div style="width: 100vw; margin-top: 2rem; margin-bottom: 2rem; height: auto;">
-        <div class="row w-100">
-            <div class="col">
-                <div class="member-circle mx-auto"></div>
-                <p style="color: var(--text_color); text-align: center;">Member 1</p>
-            </div>
-            <div class="col">
-                <div class="member-circle mx-auto"></div>
-                <p style="color: var(--text_color); text-align: center;">Member 2</p>
-            </div>
-            <div class="col">
-                <div class="member-circle mx-auto"></div>
-                <p style="color: var(--text_color); text-align: center;">Member 3</p>
-            </div>
-        </div>
-        <div class="row w-100" style="margin-top: 1rem;">
-            <div class="col">
-                <div class="member-circle mx-auto"></div>
-                <p style="color: var(--text_color); text-align: center;">Member 4</p>
-            </div>
-            <div class="col">
-                <div class="member-circle mx-auto"></div>
-                <p style="color: var(--text_color); text-align: center;">Member 5</p>
-            </div>
-        </div>
+        <?php
+        $row = [];
+        foreach ($teamData as $member) {
+            if ($member != null) {
+                $row[] = $member;
+                if (count($row) == 3) {
+                    echo '<div class="row w-100">';
+                    foreach ($row as $member) {
+                        echo '<div class="col">
+                                <div class="member-circle mx-auto" style="height: 100px; width: 100px;"></div>
+                                <p style="color: var(--text_color); text-align: center;">' . $member . '</p>
+                            </div>';
+                    }
+                    echo '</div>';
+                    $row = [];
+                }
+            }
+        }
+        if (count($row) > 0) {
+            echo '<div class="row w-100">';
+            foreach ($row as $member) {
+                echo '<div class="col">
+                        <div class="member-circle mx-auto" style="height: 100px; width: 100px;"></div>
+                        <p style="color: var(--text_color); text-align: center;">' . $member . '</p>
+                    </div>';
+            }
+            echo '</div>';
+        }
+        ?>
     </div>
     <p style="color: var(--text_color); margin-left: 2rem;">
         <b style="font-size: 2rem;">Stats</b>
@@ -123,5 +185,9 @@
     <div>
         <p style="color: var(--text_color); margin-left: 2rem;"> Qui inseriamo le statistiche ye</p>
     </div>
+    <?php
+    $stmt->close();
+    $conn->close();
+    ?>
 </body>
 </html>

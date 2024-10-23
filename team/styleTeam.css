@@ -1,12 +1,8 @@
 
-.team {
-    margin-bottom: 30px;
-}
+
 
 /*TODO: settare immagine profilo membri*/
 .member-circle {
-    width: 80px;
-    height: 80px;
     border: 2px solid #0000ff;
     border-radius: 50%;
     background-image: url(../assets/valogo.webp);

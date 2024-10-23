@@ -277,7 +277,7 @@ while ($row = $result->fetch_assoc()) {
                                         <p><?php echo $row['member_three']; ?></p>
                                         <p><?php echo $row['member_four']; ?></p>
                                         <p><?php echo $row['member_five']; ?></p>
-                                        <a href="../team/team.html?team=<?php echo $teamName; ?>" class="btn" style="background-color: var(--object_color); color: var(--text_color); border-color: var(--text_color);">Goto Team</a>
+                                        <a href="../team/teamPage.php?team=<?php echo $teamName; ?>" class="btn" style="background-color: var(--object_color); color: var(--text_color); border-color: var(--text_color);">Goto Team</a>
                                     </div>
                                 </div>
                             </div>
