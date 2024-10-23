@@ -41,7 +41,6 @@ if (isset($_GET['openid_mode']) && $_GET['openid_mode'] == 'id_res') {
         // Memorizza lo steamID64 nella sessione
         $_SESSION['steamID64'] = $steamID64;
 
-
         // Ora otteniamo le informazioni del profilo
         $apiKey = '8A345C81E607D2E02274B11D4834675A'; // Inserisci qui la tua chiave API
         $url = "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=$apiKey&steamids=$steamID64";
@@ -82,9 +81,9 @@ if (isset($_GET['openid_mode']) && $_GET['openid_mode'] == 'id_res') {
                 // L'utente non esiste, registriamo l'utente
                 $puuid = ''; // Manteniamo vuoto il campo puuid
                 $email = '';
-                $stmt_insert = $conn->prepare("INSERT INTO users (nickname, email, password, puuid) VALUES (?, ?, ?, ?)");
+                $stmt_insert = $conn->prepare("INSERT INTO users (nickname, email, password, puuid, steamID) VALUES (?, ?, ?, ?, ?)");
                 $password = ''; // Se non vuoi una password, puoi usare una stringa vuota
-                $stmt_insert->bind_param("ssss", $_SESSION['nickname'], $email, $password, $puuid);
+                $stmt_insert->bind_param("sssss", $_SESSION['nickname'], $email, $password, $puuid, $steamID64);
 
                 if ($stmt_insert->execute()) {
                     echo "Registrazione completata, " . $_SESSION['nickname'];

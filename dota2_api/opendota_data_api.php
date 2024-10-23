@@ -7,9 +7,30 @@
 /*
 TODO:
     - get player recent matches by using matchid to more detailed match history
+    - limit games downloaded (currently tested 6534 with raddan)
+    - fix leaderboard_rank (tests show NULL)
+    - fix average_rank (tests show NULL)
 */
-$account_id='221959239';
-$name='raddan';
+
+$name='AndreaBz';
+
+//Tested
+function getPlayerAccountId($name, $conn){
+    $stmt = $conn->prepare("SELECT steamID FROM users WHERE nickname = ?");
+    $stmt->bind_param("s", $name); // $steamid should be defined or passed into the function
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        return $row['steamID'] - 76561197960265728;
+    } else {
+        echo "The searched user does not have a Steam account associated.";
+    }
+
+    $stmt->close();
+}
+
 function getAccountInfo($account_id)
 {
     $url = "https://api.opendota.com/api/players/" . $account_id;
@@ -66,6 +87,30 @@ function getPlayerTotals($account_id)
     return $data;
 }
 
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "gamerstats";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error) {
+    echo json_encode(['error' => 'Connection failed: ' . $conn->connect_error]);
+    exit;
+}
+
+$account_id = getPlayerAccountId($name, $conn);
+//echo getPlayerAccountId($name, $conn);
+
+/*
+Tested with:
+
+$account_id='221959239'; //Steam32
+$name='Raddan';
+
+DOWNLOADS 6534 GAMES
+*/
+
 $account_info = getAccountInfo($account_id);
 $wl = getPlayerWL($account_id);
 $matches = getPlayerRecentMatches($account_id);
@@ -78,17 +123,6 @@ echo json_encode($recent_matches);
 echo json_encode($totals);
 */
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "gamerstats";
-
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-if ($conn->connect_error) {
-    echo json_encode(['error' => 'Connection failed: ' . $conn->connect_error]);
-    exit;
-}
 
 $sql = "DROP TABLE IF EXISTS `$name`";
 if ($conn->query($sql) !== TRUE) {
