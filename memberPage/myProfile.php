@@ -4,14 +4,14 @@ session_start();
 
 // Converti l'array di sessione in formato JSON
 $sessionData = json_encode($_SESSION);
-// Controlla se l'utente è loggato con Discord
-if (isset($_SESSION['discord_user'])) {
-    echo "Benvenuto, " . $_SESSION['discord_user']['username'] . "! (Accesso tramite Discord)";
-} else if (isset($_SESSION['nickname'])) {
-    echo "Benvenuto, " . $_SESSION['nickname'] . "! (Accesso classico)";
-} else {
-    echo "Devi effettuare il login.";
+// Controlla se l'utente è loggato con Discord o normalmente
+if (!isset($_SESSION['discord_user']) && !isset($_SESSION['nickname'])) {
+    header("Location: ../login/login.html");
 }
+
+$baseUrl = "http://localhost/GamerStats/memberPage/memberPage.php?user=";  // Modifica l'URL con il percorso della tua pagina
+$link = $baseUrl . urlencode($_SESSION['nickname']);
+
 ?>
 
 <!DOCTYPE html>
@@ -21,7 +21,6 @@ if (isset($_SESSION['discord_user'])) {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../home/styleHome.css">
-    <link rel="stylesheet" href="styleMemPage.css">
     <script src="../home/scriptHome.js" defer></script>
     <!-- Bootstrap CSS -->
     <link href="../assets/css/bootstrap.min.css" rel="stylesheet" />
@@ -121,6 +120,38 @@ if (isset($_SESSION['discord_user'])) {
                     </div>
                     <input type="text" class="form-control-plaintext text-center" value="<?php echo isset($_SESSION['nickname']) ? $_SESSION['nickname'] : ''; ?>" readonly style="color: var(--text_color); margin-top: 10px; font-size: 2rem; font-weight: bold;">
                     <input type="text" class="form-control-plaintext text-center" value="<?php echo isset($_SESSION['email']) ? $_SESSION['email'] : ''; ?>" readonly style="color: var(--text_color); margin-top: -10px; font-size: 1rem;">
+                    <div class="row">
+                        <!-- Il link personalizzato -->
+                        <span id="memberLink" style="visibility: hidden;"><?php echo $link; ?></span>
+                        <div id="liveAlertPlaceholder"></div>
+                        <div class="col">
+                            <button type="button" class="btn" style="background-color: var(--object_color); color: var(--text_color);">Steam</button>
+                        </div>
+                        <div class="col">
+                            <button type="button" class="btn btn-success" id="liveAlertBtn" style="color: var(--text_color);">Share</button>
+                            <script>
+                                const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
+                                const appendAlert = (message1, message2, type) => {
+                                    const wrapper = document.createElement('div')
+                                    wrapper.innerHTML = [
+                                        `<div class="alert alert-${type} alert-dismissible" role="alert">`,
+                                        `   <div>${message1} <br> ${message2}</div>`,
+                                        '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+                                        '</div>'
+                                    ].join('')
+
+                                    alertPlaceholder.append(wrapper)
+                                }
+                                const linkUser = document.getElementById('memberLink').textContent
+                                const alertTrigger = document.getElementById('liveAlertBtn')
+                                if (alertTrigger) {
+                                    alertTrigger.addEventListener('click', () => {
+                                        appendAlert('Copy this link:',linkUser, 'success')
+                                    })
+                                }
+                            </script>
+                        </div>
+                    </div>
                 </div>
                 <div class="col d-flex flex-column align-items-center" style="max-width: 2px;">
                     <hr style="width: 2px; border-width:0; background-color: var(--text_color); height: 90%; max-height: 90%;">

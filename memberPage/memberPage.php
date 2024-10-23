@@ -1,5 +1,15 @@
 <?php
-// Qui ci va ipoteticamente la roba del backend che devo aspoettare che esista
+session_start();
+if (isset($_GET['user']) && !empty($_GET['user'])) {
+    // Preleviamo il valore del nickname dall'URL
+    $visitingUser = htmlspecialchars($_GET['user']);
+}
+// Converti l'array di sessione in formato JSON
+$sessionData = json_encode($_SESSION);
+// Controlla se l'utente è loggato con Discord
+if (!isset($_SESSION['discord_user']) && !isset($_SESSION['nickname'])) {
+    header("Location: ../login/login.html");
+}
 
 ?>
 
@@ -66,12 +76,26 @@
                             </form>
                         </li>
                         <li class="separator" style="color: var(--separator_color);">|</li>
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="../login/login.html" style="color: var(--brand_color);">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="../signUp/signUp.html" style="color: var(--brand_color);">Sign Up</a>
-                        </li>
+                        <!-- Controllo se l'utente è loggato -->
+                        <?php if (isset($_SESSION['nickname'])): ?>
+                            <!-- L'utente è loggato, mostra Logout -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="../memberPage/myProfile.php" style="color: var(--brand_color); font-weight: bold;">
+                                    <?php echo $_SESSION['nickname']; ?>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="../logout/logout.php" style="color: var(--brand_color);">Logout</a>
+                            </li>
+                        <?php else: ?>
+                            <!-- L'utente non è loggato, mostra Login e Sign Up -->
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="../login/login.html" style="color: var(--brand_color);">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="../signUp/signUp.html" style="color: var(--brand_color);">Sign Up</a>
+                            </li>
+                        <?php endif; ?>
                     </ul>
                 </div>
             </div>
@@ -94,8 +118,7 @@
                             </div>
                         </div>
                     </div>
-                    <input type="text" class="form-control-plaintext text-center" value="NomeUtente" readonly style="color: var(--text_color); margin-top: 10px; font-size: 2rem; font-weight: bold;">
-                    <input type="text" class="form-control-plaintext text-center" value="mail@mail.com" readonly style="color: var(--text_color); margin-top: -10px; font-size: 1rem;">
+                    <input type="text" class="form-control-plaintext text-center" value="<?php echo $visitingUser ?>" readonly style="color: var(--text_color); margin-top: 10px; font-size: 2rem; font-weight: bold;">
                 </div>
                 <div class="col d-flex flex-column align-items-center" style="max-width: 2px;">
                     <hr style="width: 2px; border-width:0; background-color: var(--text_color); height: 90%; max-height: 90%;">
@@ -177,4 +200,5 @@
         </div>
     </div>
 </body>
+
 </html>
