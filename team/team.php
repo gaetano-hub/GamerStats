@@ -1,4 +1,7 @@
 <?php
+
+//TODO PER ANDREA: RICORDATI DI FARE IL CONTROLLO SUI NICKNAME DEGLI UTENTI
+
 // Connessione al database
 $servername = "localhost"; // Modifica con il tuo server DB
 $username = "root"; // Modifica con il tuo username DB

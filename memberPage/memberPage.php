@@ -11,6 +11,34 @@ if (!isset($_SESSION['discord_user']) && !isset($_SESSION['nickname'])) {
     header("Location: ../login/login.html");
 }
 
+// Connessione al database
+$servername = "localhost";
+$username = "root"; // Il nome utente predefinito di XAMPP è "root"
+$password = ""; // Di solito la password è vuota
+$dbname = "GamerStats";
+
+// Crea connessione
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Controlla la connessione
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Preleva il nickname dalla sessione
+$nickname = $_SESSION['nickname'];
+
+// Prepara la query per ottenere i nomi dei team
+$stmt = $conn->prepare("SELECT team_name FROM teams WHERE member_one = ? OR member_two = ? OR member_three = ? OR member_four = ? OR member_five = ? OR leader = ?");
+$stmt->bind_param("ssssss", $visitingUser, $visitingUser, $visitingUser, $visitingUser, $visitingUser, $visitingUser);
+$stmt->execute();
+$result = $stmt->get_result();
+
+$teamNames = array();
+while ($row = $result->fetch_assoc()) {
+    $teamNames[] = $row['team_name'];
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -110,8 +138,8 @@ if (!isset($_SESSION['discord_user']) && !isset($_SESSION['nickname'])) {
                                 <img src="../assets/profPicture.jpg" class="img-thumbnail" alt="profilePicture" style="width: 200px; height: 200px;">
                             </div>
                             <div class="col">
-                                <button style="background-color: rgba(0,0,0,0); color: var(--text_color); border: none; margin-top: 50px;">
-                                    <svg xmlns="http://www.w3.org/2000/svg" id='edit' height="24px" viewBox="0 -960 960 960" width="24px">
+                                <button style="background-color: rgba(0,0,0,0); margin-top: 50px;" id="edit">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px">
                                         <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z" />
                                     </svg>
                                 </button>
@@ -125,71 +153,34 @@ if (!isset($_SESSION['discord_user']) && !isset($_SESSION['nickname'])) {
                 </div>
                 <div class="col d-flex flex-column align-items-center">
                     <p style="color: var(--text_color); font-size: 2rem; font-weight: bold;">Teams</p>
-                    <div class="accordion" id="accordionExample" style="width: 100%;;">
-                        <div class="accordion-item" style="background-color: var(--transparent_col); color: var(--text_color);">
-                            <h2 class="accordion-header" style="color: var(--text_color);">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="background-color: rgba(0,0,0,0); color: var(--text_color); font-weight: bold;">
-                                    Team 1
-                                </button>
-                            </h2>
-                            <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample" style="color: var(--text_color);">
-                                <div class="accordion-body">
-                                    <p>Questo e' il nome del primo membro ciao</p>
-                                    <p>Questo e' il nome del secondo membro ciao</p>
-                                    <p>Questo e' il nome del terzo membro ciao</p>
-                                    <p>Questo e' il nome del quarto membro ciao</p>
-                                    <p>Questo e' il nome del quinto membro ciao</p>
+                    <div class="accordion" id="accordionExample" style="width: 100%;">
+                        <?php foreach ($teamNames as $index => $teamName) { ?>
+                            <div class="accordion-item" style="background-color: var(--transparent_col); color: var(--text_color);">
+                                <h2 class="accordion-header" style="color: var(--text_color);">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?php echo $index; ?>" aria-expanded="true" aria-controls="collapse<?php echo $index; ?>" style="background-color: rgba(0,0,0,0); color: var(--text_color); font-weight: bold;">
+                                        <?php echo $teamName; ?>
+                                    </button>
+                                </h2>
+                                <div id="collapse<?php echo $index; ?>" class="accordion-collapse collapse" data-bs-parent="#accordionExample" style="color: var(--text_color);">
+                                    <div class="accordion-body">
+                                        <?php
+                                        $stmt = $conn->prepare("SELECT member_one, member_two, member_three, member_four, member_five, leader FROM teams WHERE team_name = ?");
+                                        $stmt->bind_param("s", $teamName);
+                                        $stmt->execute();
+                                        $result = $stmt->get_result();
+                                        $row = $result->fetch_assoc();
+                                        ?>
+                                        <p><b>Leader: </b><?php echo $row['leader']; ?></p>
+                                        <p><?php echo $row['member_one']; ?></p>
+                                        <p><?php echo $row['member_two']; ?></p>
+                                        <p><?php echo $row['member_three']; ?></p>
+                                        <p><?php echo $row['member_four']; ?></p>
+                                        <p><?php echo $row['member_five']; ?></p>
+                                        <a href="../team/team.html?team=<?php echo $teamName; ?>" class="btn" style="background-color: var(--object_color); color: var(--text_color); border-color: var(--text_color);">Goto Team</a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="accordion-item" style="background-color: var(--transparent_col); color: var(--text_color);">
-                            <h2 class="accordion-header" style="color: var(--text_color);">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo" style="background-color: rgba(0,0,0,0); color: var(--text_color); font-weight: bold;">
-                                    Team 2
-                                </button>
-                            </h2>
-                            <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample" style="color: var(--text_color);">
-                                <div class="accordion-body">
-                                    <p>Questo e' il nome del primo membro ciao</p>
-                                    <p>Questo e' il nome del secondo membro ciao</p>
-                                    <p>Questo e' il nome del terzo membro ciao</p>
-                                    <p>Questo e' il nome del quarto membro ciao</p>
-                                    <p>Questo e' il nome del quinto membro ciao</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="accordion-item" style="background-color: var(--transparent_col); color: var(--text_color);">
-                            <h2 class="accordion-header" style="color: var(--text_color);">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree" style="background-color: rgba(0,0,0,0); color: var(--text_color); font-weight: bold;">
-                                    Team 3
-                                </button>
-                            </h2>
-                            <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample" style="color: var(--text_color);">
-                                <div class="accordion-body">
-                                    <p>Questo e' il nome del primo membro ciao</p>
-                                    <p>Questo e' il nome del secondo membro ciao</p>
-                                    <p>Questo e' il nome del terzo membro ciao</p>
-                                    <p>Questo e' il nome del quarto membro ciao</p>
-                                    <p>Questo e' il nome del quinto membro ciao</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="accordion-item" style="background-color: var(--transparent_col); color: var(--text_color);">
-                            <h2 class="accordion-header" style="color: var(--text_color);">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour" style="background-color: rgba(0,0,0,0); color: var(--text_color); font-weight: bold;">
-                                    Team 4
-                                </button>
-                            </h2>
-                            <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#accordionExample" style="color: var(--text_color);">
-                                <div class="accordion-body">
-                                    <p>Questo e' il nome del primo membro ciao</p>
-                                    <p>Questo e' il nome del secondo membro ciao</p>
-                                    <p>Questo e' il nome del terzo membro ciao</p>
-                                    <p>Questo e' il nome del quarto membro ciao</p>
-                                    <p>Questo e' il nome del quinto membro ciao</p>
-                                </div>
-                            </div>
-                        </div>
+                        <?php } ?>
                     </div>
                 </div>
             </div>
