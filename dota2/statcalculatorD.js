@@ -24,7 +24,6 @@ xhr.onload = function () {
     /*
     DEBUG
     */
-    const playerId = 'n7SZKNoH64wKOHGG6Vbs8t5ON6hdrGHBYAI4zItUz7ZSrcO80otKGKrrrRu0q1D0ZpuYhz8r789Utg'; // Replace with actual RIOT puid
     //computeMatchStatistics(data);
     console.log('matches:', data);
     computePlayerStatistics(data, playerId); // Test for a specific player
