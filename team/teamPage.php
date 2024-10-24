@@ -97,22 +97,55 @@ if ($row = $result->fetch_assoc()) {
                         </li>
                         <li class="nav-item" style="margin-left: 7px; margin-top: 11px;">
                             <a class="btn btn-outline-success" id="homeref" type="button" style=" background-color:var(--object_color);" href="../home/home.php">
-                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+                                    <path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z" />
+                                </svg>
                             </a>
                         </li>
                     </ul>
                     <!-- TODO: modificare href e vari dettagli del signup e login-->
                     <ul class="navbar-nav mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <form class="d-flex" role="search">
-                                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" 
-                                style=" background-color:var(--object_color);">
-                                <button class="btn btn-outline-success" id="search" type="submit"
-                                style=" background-color:var(--object_color);">
-                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/></svg>
-                                </button>
-                            </form>
+                        <li class="nav-item align-self-center">
+                            <div style="position: relative;">
+                                <form class="d-flex" role="search" id="searchForm" action="search.php" method="post" style="margin-top: 10px;">
+                                    <input class="form-control me-2" name="searchString" id="searchInput" type="search" placeholder="Search" aria-label="Search"
+                                        style="background-color:var(--object_color); color: var(--text_color); width: calc(100% - 40px);">
+                                    <button class="btn" type="button" id="searchButton">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+                                            <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z" />
+                                        </svg>
+                                    </button>
+                                </form>
+
+                                <ul class="dropdown-menu" id="resultDropdown" style="background-color: var(--object_color); position: absolute; top: 100%; left: 0; width: 13.5rem; z-index: 1000; display: none;"></ul>
+                            </div>
                         </li>
+
+                        <script>
+                            document.getElementById('searchButton').addEventListener('click', function() {
+                                const searchString = document.getElementById('searchInput').value;
+
+                                if (searchString.trim() === '') {
+                                    document.getElementById('resultDropdown').style.display = 'none';
+                                    return;
+                                }
+
+                                fetch('search.php', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/x-www-form-urlencoded'
+                                        },
+                                        body: 'searchString=' + encodeURIComponent(searchString)
+                                    })
+                                    .then(response => response.text())
+                                    .then(data => {
+                                        const resultDropdown = document.getElementById('resultDropdown');
+                                        resultDropdown.innerHTML = data;
+                                        resultDropdown.style.display = 'block';
+                                    })
+                                    .catch(error => console.error('Error:', error));
+                            });
+                        </script>
                         <li class="separator" style="color: var(--separator_color);">|</li>
                         <?php if (isset($_SESSION['nickname'])): ?>
                             <!-- L'utente è loggato, mostra Logout -->
@@ -139,8 +172,8 @@ if ($row = $result->fetch_assoc()) {
         </nav>
     </div>
     <div style="background-color: var(--transparent_col); height: 5rem; display: flex; justify-content: center; align-items: center; margin-top: 68px;">
-        
-        <img src="<?php echo ($game== "LoL") ? "../assets/lollogo.webp" : "../assets/valogo.webp" ?>" class="card-img-top" alt="lolLogo" style="width: 50px; height: auto; margin-right: 10px;">
+
+        <img src="<?php echo ($game == "LoL") ? "../assets/lollogo.webp" : "../assets/valogo.webp" ?>" class="card-img-top" alt="lolLogo" style="width: 50px; height: auto; margin-right: 10px;">
         <p style="font-size: 2rem; font-weight: bold; color: var(--text_color);"><?php echo $visitingTeam ?></p>
     </div>
     <div class="container text-center" style="margin-top: 10px; background-color: var(--transparent_col); padding: 15px;">
@@ -159,22 +192,22 @@ if ($row = $result->fetch_assoc()) {
                                     Change leader
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" style="background-color: var(--object_color);">';
-                                    if (!is_null($teamData['member_one'])) {
-                                        echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_one'] . '" style="color: var(--text_color);">' . $teamData['member_one'] . '</button></li>';
-                                    }
-                                    if (!is_null($teamData['member_two'])) {
-                                        echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_two'] . '" style="color: var(--text_color);">' . $teamData['member_two'] . '</button></li>';
-                                    }
-                                    if (!is_null($teamData['member_three'])) {
-                                        echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_three'] . '" style="color: var(--text_color);">' . $teamData['member_three'] . '</button></li>';
-                                    }
-                                    if (!is_null($teamData['member_four'])) {
-                                        echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_four'] . '" style="color: var(--text_color);">' . $teamData['member_four'] . '</button></li>';
-                                    }
-                                    if (!is_null($teamData['member_five'])) {
-                                        echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_five'] . '" style="color: var(--text_color);">' . $teamData['member_five'] . '</button></li>';
-                                    }
-                                    echo '</ul>
+            if (!is_null($teamData['member_one'])) {
+                echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_one'] . '" style="color: var(--text_color);">' . $teamData['member_one'] . '</button></li>';
+            }
+            if (!is_null($teamData['member_two'])) {
+                echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_two'] . '" style="color: var(--text_color);">' . $teamData['member_two'] . '</button></li>';
+            }
+            if (!is_null($teamData['member_three'])) {
+                echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_three'] . '" style="color: var(--text_color);">' . $teamData['member_three'] . '</button></li>';
+            }
+            if (!is_null($teamData['member_four'])) {
+                echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_four'] . '" style="color: var(--text_color);">' . $teamData['member_four'] . '</button></li>';
+            }
+            if (!is_null($teamData['member_five'])) {
+                echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_five'] . '" style="color: var(--text_color);">' . $teamData['member_five'] . '</button></li>';
+            }
+            echo '</ul>
                             </form>
                         </div>
                         <div class="col">
@@ -255,7 +288,7 @@ if ($row = $result->fetch_assoc()) {
                 ?>
             </div>
         </div>
-        
+
     </div>
     <div class="container text-center" style="margin-top: 10px; background-color: var(--transparent_col); padding: 15px;">
         <p style="color: var(--text_color); margin-left: 2rem;">
@@ -270,4 +303,5 @@ if ($row = $result->fetch_assoc()) {
     $conn->close();
     ?>
 </body>
+
 </html>

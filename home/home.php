@@ -50,7 +50,7 @@ if ($conn->query($createTf2Table) !== TRUE) {
 }
 
 // Query per ottenere tutti i dati degli utenti
-$query = "SELECT id, nickname, email, password, steamID, image FROM users WHERE steamID IS NOT NULL"; 
+$query = "SELECT id, nickname, email, password, steamID, image FROM users WHERE steamID IS NOT NULL";
 $result = $conn->query($query);
 
 // API Key di Steam
@@ -59,7 +59,8 @@ $tf2GameId = 440; // Team Fortress 2
 $cs2GameId = 730; // Counter-Strike 2
 
 // Funzione per ottenere le statistiche di un gioco
-function getGameStats($steamID, $apiKey, $gameId) {
+function getGameStats($steamID, $apiKey, $gameId)
+{
     $url = "https://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid={$gameId}&steamid={$steamID}&key={$apiKey}";
     $response = @file_get_contents($url);
 
@@ -67,12 +68,13 @@ function getGameStats($steamID, $apiKey, $gameId) {
     if ($response === false) {
         return null; // Handle the error as needed
     }
-    
+
     return json_decode($response, true);
 }
 
 // Funzione per inserire i dati nelle tabelle di classifica
-function insertIntoClassifica($conn, $tableName, $nickname, $steamID, $score) {
+function insertIntoClassifica($conn, $tableName, $nickname, $steamID, $score)
+{
     // Prepara la query per evitare SQL injection
     $stmt = $conn->prepare("INSERT INTO $tableName (nickname, steamID, punteggio) VALUES (?, ?, ?)
                              ON DUPLICATE KEY UPDATE punteggio = ?");
@@ -99,7 +101,7 @@ $userDetails = []; // Array per memorizzare dettagli utente
 // Recupera gli Steam ID e altre informazioni dal database
 if ($result->num_rows > 0) {
     // echo "<h2>Steam ID degli utenti nel database:</h2><ul>";
-    
+
     while ($row = $result->fetch_assoc()) {
         $steamID = $row['steamID'];
         $nickname = htmlspecialchars($row['nickname']);
@@ -129,7 +131,7 @@ if ($result->num_rows > 0) {
             $cs2StatsArray[$steamID] = $cs2Stats['playerstats']['stats'];
             $totalWins = 0;
             $totalMatches = 0;
-            
+
             foreach ($cs2StatsArray[$steamID] as $stat) {
                 if ($stat['name'] === 'total_matches_won') {
                     $totalWins = $stat['value'];
@@ -150,7 +152,8 @@ if ($result->num_rows > 0) {
 }
 
 // Funzione per generare la classifica di Team Fortress 2
-function generaClassificaTF2($tf2Stats, &$userDetails) {
+function generaClassificaTF2($tf2Stats, &$userDetails)
+{
     $userScores = [];
     $importantStats = ['iPointsScored'];
     $validClasses = ['Scout', 'Soldier', 'Pyro', 'Demoman', 'Heavy', 'Engineer', 'Medic', 'Sniper', 'Spy'];
@@ -186,7 +189,8 @@ function generaClassificaTF2($tf2Stats, &$userDetails) {
 }
 
 // Funzione per generare la classifica di Counter-Strike 2
-function generaClassificaCSGO($gameStatsArray, &$userDetails) {
+function generaClassificaCSGO($gameStatsArray, &$userDetails)
+{
     $classifica = [];
 
     foreach ($gameStatsArray as $steamID => $stats) {
@@ -213,7 +217,7 @@ function generaClassificaCSGO($gameStatsArray, &$userDetails) {
     }
 
     // Ordina la classifica in base alla percentuale di vittorie
-    usort($classifica, function($a, $b) {
+    usort($classifica, function ($a, $b) {
         return $b['win_percentage'] <=> $a['win_percentage'];
     });
 
@@ -310,21 +314,46 @@ $conn->close();
                     <!-- TODO: modificare href e vari dettagli del signup e login-->
                     <ul class="navbar-nav align-items-center mb-2 mb-lg-0">
                         <li class="nav-item align-self-center">
-                            <form class="d-flex position-relative" role="search" style="margin-top: 10px;">
-                                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"
-                                    style=" background-color:var(--object_color); width: calc(100% - 40px);">
-                                <button class="btn" type="button" id="search" data-bs-toggle="dropdown" data-bs-target="#collapseSearch" aria-expanded="false" aria-controls="collapseSearch">
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
-                                        <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z" />
-                                    </svg>
-                                </button>
-                                <ul class="dropdown-menu" id="collapseSearch" style="background-color: var(--object_color); position: absolute; top: 100%; left: 0; width: calc(100% - 54px);">
-                                    <li><a class="dropdown-item" style="color: var(--text_color);" href="#">Action</a></li>
-                                    <li><a class="dropdown-item" style="color: var(--text_color);" href="#">Another action</a></li>
-                                    <li><a class="dropdown-item" style="color: var(--text_color);" href="#">Something else here</a></li>
-                                </ul>
-                            </form>
+                            <div style="position: relative;">
+                                <form class="d-flex" role="search" id="searchForm" action="search.php" method="post" style="margin-top: 10px;">
+                                    <input class="form-control me-2" name="searchString" id="searchInput" type="search" placeholder="Search" aria-label="Search"
+                                        style="background-color:var(--object_color); color: var(--text_color); width: calc(100% - 40px);">
+                                    <button class="btn" type="button" id="searchButton">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+                                            <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z" />
+                                        </svg>
+                                    </button>
+                                </form>
+
+                                <ul class="dropdown-menu" id="resultDropdown" style="background-color: var(--object_color); position: absolute; top: 100%; left: 0; width: 13.5rem; z-index: 1000; display: none;"></ul>
+                            </div>
                         </li>
+
+                        <script>
+                            document.getElementById('searchButton').addEventListener('click', function() {
+                                const searchString = document.getElementById('searchInput').value;
+
+                                if (searchString.trim() === '') {
+                                    document.getElementById('resultDropdown').style.display = 'none';
+                                    return;
+                                }
+
+                                fetch('search.php', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/x-www-form-urlencoded'
+                                        },
+                                        body: 'searchString=' + encodeURIComponent(searchString)
+                                    })
+                                    .then(response => response.text())
+                                    .then(data => {
+                                        const resultDropdown = document.getElementById('resultDropdown');
+                                        resultDropdown.innerHTML = data;
+                                        resultDropdown.style.display = 'block';
+                                    })
+                                    .catch(error => console.error('Error:', error));
+                            });
+                        </script>
                         <li class="separator" style="color: var(--separator_color);">|</li>
                         <!-- Controllo se l'utente è loggato -->
                         <?php if (isset($_SESSION['nickname'])): ?>

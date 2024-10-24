@@ -130,17 +130,46 @@ while ($row = $result->fetch_assoc()) {
                     <!-- TODO: modificare href e vari dettagli del signup e login-->
                     <ul class="navbar-nav align-items-center mb-2 mb-lg-0">
                         <li class="nav-item align-self-center">
-                            <form class="d-flex" role="search" style="margin-top: 10px;">
-                                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"
-                                    style=" background-color:var(--object_color);">
-                                <button class="btn btn-outline-success" id="search" type="submit"
-                                    style=" background-color:var(--object_color);">
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
-                                        <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z" />
-                                    </svg>
-                                </button>
-                            </form>
+                            <div style="position: relative;">
+                                <form class="d-flex" role="search" action="search.php" method="post" id="searchForm" style="margin-top: 10px;">
+                                    <input class="form-control me-2" name="searchString" id="searchInput" type="search" placeholder="Search" aria-label="Search"
+                                        style="background-color:var(--object_color); color: var(--text_color); width: calc(100% - 40px);">
+                                    <button class="btn" type="button" id="searchButton">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+                                            <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z" />
+                                        </svg>
+                                    </button>
+                                </form>
+
+                                <ul class="dropdown-menu" id="resultDropdown" style="background-color: var(--object_color); position: absolute; top: 100%; left: 0; width: 13.5rem; z-index: 1000; display: none;"></ul>
+                            </div>
                         </li>
+
+                        <script>
+                            document.getElementById('searchButton').addEventListener('click', function() {
+                                const searchString = document.getElementById('searchInput').value;
+
+                                if (searchString.trim() === '') {
+                                    document.getElementById('resultDropdown').style.display = 'none';
+                                    return;
+                                }
+
+                                fetch('search.php', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/x-www-form-urlencoded'
+                                        },
+                                        body: 'searchString=' + encodeURIComponent(searchString)
+                                    })
+                                    .then(response => response.text())
+                                    .then(data => {
+                                        const resultDropdown = document.getElementById('resultDropdown');
+                                        resultDropdown.innerHTML = data;
+                                        resultDropdown.style.display = 'block';
+                                    })
+                                    .catch(error => console.error('Error:', error));
+                            });
+                        </script>
                         <li class="separator" style="color: var(--separator_color);">|</li>
                         <!-- Controllo se l'utente è loggato -->
                         <?php if (isset($_SESSION['nickname'])): ?>
@@ -703,7 +732,7 @@ while ($row = $result->fetch_assoc()) {
         }
         ?>
 
-        
+
 
     </div>
     <script>
