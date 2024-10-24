@@ -34,12 +34,9 @@ if (isset($_GET['openid_mode']) && $_GET['openid_mode'] == 'id_res') {
     curl_close($ch);
 
     // Verifica la risposta
-    if (strpos($response, 'is_valid:true') === false) { // Cambia == false a !== false per autenticazione riuscita
+    if (strpos($response, 'is_valid:true') === false) { // Cambiato == false a !== false per autenticazione riuscita
         // Autenticazione riuscita
         $steamID64 = str_replace('https://steamcommunity.com/openid/id/', '', $_GET['openid_identity']);
-
-
-
 
         // Ora otteniamo le informazioni del profilo
         $apiKey = '8A345C81E607D2E02274B11D4834675A'; // Inserisci qui la tua chiave API
@@ -52,8 +49,6 @@ if (isset($_GET['openid_mode']) && $_GET['openid_mode'] == 'id_res') {
         // Controlla se ci sono dati
         if (isset($profileData['response']['players']) && count($profileData['response']['players']) > 0) {
             $player = $profileData['response']['players'][0];
-
-            $_SESSION['nickname'] = $player['personaname'];
 
             // Connessione al database
             $servername = "localhost";
@@ -69,6 +64,23 @@ if (isset($_GET['openid_mode']) && $_GET['openid_mode'] == 'id_res') {
                 die("Connection failed: " . $conn->connect_error);
             }
 
+            // Crea la tabella se non esiste già
+            $sql = "CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nickname VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    steamID VARCHAR(255) NOT NULL
+)";
+
+            // Esegui la query
+            if ($conn->query($sql) === TRUE) {
+                echo "Tabella 'users' creata con successo.";
+            } else {
+                echo "Errore nella creazione della tabella: " . $conn->error;
+            }
+
+            // Prepara la query per verificare se lo steamID64 esiste nel database
             $stmt = $conn->prepare("SELECT * FROM users WHERE steamID = ?");
             $stmt->bind_param("s", $steamID64);
             $stmt->execute();
@@ -77,51 +89,41 @@ if (isset($_GET['openid_mode']) && $_GET['openid_mode'] == 'id_res') {
             // Verifica se lo steamID64 esiste nel database
             if ($result->num_rows > 0) {
                 // SteamID64 trovato, l'utente è già registrato
-                // Memorizza lo steamID64 nella sessione
-                $_SESSION['steamID64'] = $steamID64;
-
-                // Ottieni il nickname attuale dell'utente
-                $row = $result->fetch_assoc();
-                $_SESSION['nickname'] = $row['nickname'];
-
-                // // Controlla se il nickname nella sessione è diverso da quello attuale
-                // if ($currentNickname !== $_SESSION['nickname']) {
-                //     // Aggiorna il nickname nel database
-                //     $updateStmt = $conn->prepare("UPDATE users SET nickname = ? WHERE steamID = ?");
-                //     $updateStmt->bind_param("ss", $_SESSION['nickname'], $steamID64);
-                //     $updateStmt->execute();
-                //     $updateStmt->close();
-                // }
-
-                echo "Benvenuto, utente con SteamID: " . htmlspecialchars($_SESSION['steamID64']) . "!";
-                header("Location: ../../home/home.php");
+                $user = $result->fetch_assoc(); // Recupera i dati dell'utente
+                // $_SESSION['steamID64'] = $steamID64;
+                // $_SESSION['nickname'] = $user['nickname']; // Associa il nickname
+                echo "Benvenuto, " . htmlspecialchars($user['nickname']) . " con SteamID: " . $_SESSION['steamID64'] . "!";
+                header("Location: ../myProfile.php");
                 exit();
             } else {
-                $email = '';
-                $stmt_insert = $conn->prepare("INSERT INTO users (nickname, email, password, steamID) VALUES (?, ?, ?, ?)");
-                $password = ''; // Se non vuoi una password, puoi usare una stringa vuota
-                $stmt_insert->bind_param("ssss", $_SESSION['nickname'], $email, $password, $steamID64);
+                // SteamID64 non trovato, ora controlliamo se esiste già un nickname
+                $nickname = $_SESSION['nickname'];
 
-                if ($stmt_insert->execute()) {
-                    echo "Registrazione completata, " . $_SESSION['nickname'];
-                    // Puoi redirigere l'utente alla home dopo la registrazione
-                    header("Location: ../../home/home.php");
-                    exit();
+                // Prepara la query per cercare il nickname
+                $stmt = $conn->prepare("SELECT * FROM users WHERE nickname = ?");
+                $stmt->bind_param("s", $nickname);
+                $stmt->execute();
+                $result = $stmt->get_result();
+
+                if ($result->num_rows > 0) {
+                    // Nickname trovato, aggiorniamo lo Steam ID
+                    $updateStmt = $conn->prepare("UPDATE users SET steamID = ? WHERE nickname = ?");
+                    $updateStmt->bind_param("ss", $steamID64, $nickname);
+                    if ($updateStmt->execute()) {
+                        $_SESSION['steamID'] = $steamID64;
+                        echo "Steam ID aggiornato per l'utente: " . htmlspecialchars($nickname) . "!";
+                        header("Location: ../myProfile.php");
+                        exit();
+                    } else {
+                        echo "Errore nell'aggiornamento dello Steam ID.";
+                    }
                 } else {
-                    echo "Errore durante la registrazione.";
+                    // Nickname non trovato, reindirizza alla pagina di registrazione
+                    echo "Utente non trovato. Devi registrarti.";
+                    header("Location: ../myProfile.php");
+                    exit();
                 }
-                $stmt_insert->close();
             }
-
-
-
-            echo "Login effettuato con successo. Nome: " . htmlspecialchars($player['personaname']) . "<br>";
-            echo "Profilo URL: " . htmlspecialchars($player['profileurl']) . "<br>";
-            echo "Immagine Profilo: <img src='" . htmlspecialchars($player['avatar']) . "' /><br>";
-
-            // Reindirizza alla home page dopo 3 secondi
-            header("Location: ../../home/home.php");
-            exit;
         } else {
             echo "Nessun giocatore trovato con l'ID fornito.";
         }

@@ -79,16 +79,16 @@ if (isset($_GET['openid_mode']) && $_GET['openid_mode'] == 'id_res') {
                 exit();
             } else {
                 // L'utente non esiste, registriamo l'utente
-                $puuid = ''; // Manteniamo vuoto il campo puuid
+                // $puuid = ''; // Manteniamo vuoto il campo puuid
                 $email = '';
-                $stmt_insert = $conn->prepare("INSERT INTO users (nickname, email, password, puuid, steamID) VALUES (?, ?, ?, ?, ?)");
+                $stmt_insert = $conn->prepare("INSERT INTO users (nickname, email, password, steamID) VALUES (?, ?, ?, ?)");
                 $password = ''; // Se non vuoi una password, puoi usare una stringa vuota
-                $stmt_insert->bind_param("sssss", $_SESSION['nickname'], $email, $password, $puuid, $steamID64);
+                $stmt_insert->bind_param("ssss", $_SESSION['nickname'], $email, $password, $steamID64);
 
                 if ($stmt_insert->execute()) {
                     echo "Registrazione completata, " . $_SESSION['nickname'];
                     // Puoi redirigere l'utente alla home dopo la registrazione
-                    header("Location: ../../login/login.html");
+                    header("Location: ../../home/home.php");
                     exit();
                 } else {
                     echo "Errore durante la registrazione.";

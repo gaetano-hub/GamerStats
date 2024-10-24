@@ -17,8 +17,7 @@ $sql = "CREATE TABLE IF NOT EXISTS users (
     id INT(11) AUTO_INCREMENT PRIMARY KEY,
     nickname VARCHAR(50) NOT NULL UNIQUE,
     email VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
-    puuid VARCHAR(255) NOT NULL
+    password VARCHAR(255) NOT NULL
 )";
 
 if ($conn->query($sql) !== TRUE) {
@@ -31,7 +30,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nickname = trim($_POST['nickname']);
     $email = trim($_POST['email']);
     $password = $_POST['password'];
-    $puuid = "";
 
     // Validazione dell'email
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -57,8 +55,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $passwordHashed = password_hash($password, PASSWORD_DEFAULT);
 
     // Prepara ed esegui la query per inserire i dati
-    $stmt = $conn->prepare("INSERT INTO users (nickname, email, password, puuid) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("ssss", $nickname, $email, $passwordHashed, $puuid);
+    $steamID = '';
+    $stmt = $conn->prepare("INSERT INTO users (nickname, email, password, steamID) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("ssss", $nickname, $email, $passwordHashed, $steamID);
     
     if ($stmt->execute() === TRUE) {
         header("Location: ../login/login.html");
