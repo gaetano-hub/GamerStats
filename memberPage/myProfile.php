@@ -365,7 +365,6 @@ while ($row = $result->fetch_assoc()) {
             </div>
         </div>
         <?php
-        session_start(); // Assicurati di avviare la sessione
         $steamID = $_SESSION['steamID64'] ?? null; // Utilizza null coalescing per evitare errori
         $apiKey = '8A345C81E607D2E02274B11D4834675A'; // Inserisci la tua chiave API di Steam se necessario
 

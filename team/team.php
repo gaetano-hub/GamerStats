@@ -44,11 +44,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Ricevi dati dal form
     $teamName = $_POST['teamName'];
     $game = $_POST['game'];
-    $memberone = $_POST['memberOne']; 
-    $membertwo = $_POST['memberTwo']; 
-    $memberthree = $_POST['memberThree']; 
-    $memberfour = $_POST['memberFour']; 
-    $memberfive = $_POST['memberFive']; 
+    $memberone = $_POST['memberOne'];
+    $membertwo = $_POST['memberTwo'];
+    $memberthree = $_POST['memberThree'];
+    $memberfour = $_POST['memberFour'];
+    $memberfive = $_POST['memberFive'];
     $leader = $_SESSION['nickname'];
 
     $members = array($memberone, $membertwo, $memberthree, $memberfour, $memberfive, $leader);
@@ -77,10 +77,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $message .= " non sono registrati al sito";
             }
         }
-        die($message);
+        echo '<script>alert("'.$message.'"); window.history.back();</script>';
+        exit;
     }
 
-    
+
     $stmt = $conn->prepare("SELECT * FROM teams WHERE team_name = ?");
     $stmt->bind_param("s", $teamName);
     $stmt->execute();
@@ -93,7 +94,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Inserisci i dati del team nella tabella team
     $sql = "INSERT INTO teams (team_name, game, member_one, member_two, member_three, member_four, member_five, leader) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssssssss", $teamName, $game, $memberone, $membertwo, $memberthree, $memberfour, $memberfive, $leader); 
+    $stmt->bind_param("ssssssss", $teamName, $game, $memberone, $membertwo, $memberthree, $memberfour, $memberfive, $leader);
 
     if ($stmt->execute() === TRUE) {
         header("Location: ../memberPage/myProfile.php");
@@ -105,4 +106,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 // Chiudi la connessione
 $stmt->close();
 $conn->close();
-?>

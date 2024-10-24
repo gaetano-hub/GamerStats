@@ -396,7 +396,6 @@ $conn->close();
                             </div>
                             <div class="d-flex flex-column align-items-center">
                                 <p class="card-text" style="color: var(--text_color); text-align: center;">
-                                    
                                 </p>
                                 <ul class="list-group text-center" style="width: 100%; max-width: 400px; color: var(--text_color);">
                                     <?php
