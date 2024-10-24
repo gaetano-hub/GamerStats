@@ -310,15 +310,19 @@ $conn->close();
                     <!-- TODO: modificare href e vari dettagli del signup e login-->
                     <ul class="navbar-nav align-items-center mb-2 mb-lg-0">
                         <li class="nav-item align-self-center">
-                            <form class="d-flex" role="search" style="margin-top: 10px;">
+                            <form class="d-flex position-relative" role="search" style="margin-top: 10px;">
                                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"
-                                    style=" background-color:var(--object_color);">
-                                <button class="btn btn-outline-success" id="search" type="submit"
-                                    style=" background-color:var(--object_color);">
+                                    style=" background-color:var(--object_color); width: calc(100% - 40px);">
+                                <button class="btn" type="button" id="search" data-bs-toggle="dropdown" data-bs-target="#collapseSearch" aria-expanded="false" aria-controls="collapseSearch">
                                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
                                         <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z" />
                                     </svg>
                                 </button>
+                                <ul class="dropdown-menu" id="collapseSearch" style="background-color: var(--object_color); position: absolute; top: 100%; left: 0; width: calc(100% - 54px);">
+                                    <li><a class="dropdown-item" style="color: var(--text_color);" href="#">Action</a></li>
+                                    <li><a class="dropdown-item" style="color: var(--text_color);" href="#">Another action</a></li>
+                                    <li><a class="dropdown-item" style="color: var(--text_color);" href="#">Something else here</a></li>
+                                </ul>
                             </form>
                         </li>
                         <li class="separator" style="color: var(--separator_color);">|</li>
@@ -347,7 +351,7 @@ $conn->close();
             </div>
         </nav>
         <div
-            style="background-color: var(--transparent_col); height: 5rem; display: flex; justify-content: center; align-items: center; margin-top: 56px;">
+            style="background-color: var(--transparent_col); height: 5rem; display: flex; justify-content: center; align-items: center; margin-top: 70px;">
             <p style="font-size: 2rem; font-weight: bold; color: var(--text_color);">Game rankings</p>
         </div>
         <div class="d-flex justify-content-center" style="margin-top: 5rem; margin-bottom: 5rem; height: auto;">
