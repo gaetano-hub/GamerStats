@@ -1,7 +1,5 @@
 /* 
 STATUS:WIP
-TODO:
-    -IMPLEMENT computeMatchStatistics() USING A MATCHID if is decided to have data about teammates
 
 */
 
@@ -9,13 +7,14 @@ var data = [];
 const xhr = new XMLHttpRequest();
 console.log('XMLHttpRequest created');
 
-xhr.open('GET', 'opendota_data_api.php', true);
-console.log('Request opened: GET opendota_data_api.php');
+xhr.open('GET', 'dota2_db.php', true);
+console.log('Request opened: GET dota2_db.php');
 
 xhr.onload = function () {
     console.log('Request loaded');
     if (xhr.status === 200) {
         console.log('Request successful');
+        console.log(xhr.responseText);
         data = JSON.parse(xhr.responseText);
         console.log('Response data:', data);
     } else {
@@ -26,7 +25,7 @@ xhr.onload = function () {
     */
     //computeMatchStatistics(data);
     console.log('matches:', data);
-    computePlayerStatistics(data, playerId); // Test for a specific player
+    computePlayerStatistics(data, player_id); // Test for a specific player
     const resultsDiv = document.getElementById('results');
     resultsDiv.insertAdjacentHTML('beforeend', `<pre>${JSON.stringify(computePlayerStatistics(data, playerId), null, 2)}</pre>`);
 };
@@ -38,9 +37,6 @@ xhr.onerror = function () {
 console.log('Sending request');
 xhr.send();
 
-/*
-IMPLEMENT THIS CODE USING A MATCHID
-*/
 function computeMatchStatistics(matches) {
     console.log('Computing match statistics for', matches.length, 'matches');
 
@@ -53,13 +49,13 @@ function computeMatchStatistics(matches) {
     var totalGames = matches.length;
 
     matches.forEach((match) => {
-        match.participants.forEach((participant) => {
-            totalDamageDealt += participant.totalDamageDealt || 0;
-            totalKills += participant.kills || 0;
-            totalDeaths += participant.deaths || 0;
-            totalAssists += participant.assists || 0;
-            totalGoldEarned += participant.goldEarned || 0;
-            totalWins += participant.win ? 1 : 0;
+        match.players.forEach((player) => {
+            totalDamageDealt += player.damage_dealt || 0;
+            totalKills += player.kills || 0;
+            totalDeaths += player.deaths || 0;
+            totalAssists += player.assists || 0;
+            totalGoldEarned += player.gold_earned || 0;
+            totalWins += player.win ? 1 : 0;
         });
     });
 
@@ -110,21 +106,39 @@ Computes statistics for a specific player across multiple matches
 - winRate: win rate as a percentage
 - totalGames: total number of games played
  */
-function computePlayerStatistics(matches, playerId) {
-    console.log('Computing player statistics for player', playerId, 'across', matches.length, 'matches');
-    const playerMatches = matches.filter(match => match.puuid === playerId);
-    console.log('Found', playerMatches.length, 'matches for player', playerId);
-    const totalDamageDealt = playerMatches.reduce((acc, match) => acc + match.damage_dealt, 0);
+function computePlayerStatistics(matches, account_id) {
+    console.log('Computing player statistics for player', account_id, 'across', matches.length, 'matches');
+    const playerMatches = matches.filter(match => match.players && Array.isArray(match.players) && match.players.some(player => player.account_id === account_id));
+    console.log('Found', playerMatches.length, 'matches for player', account_id);
+    const totalDamageDealt = playerMatches.reduce((acc, match) => {
+        const player = match.players.find(player => player.account_id === account_id);
+        return acc + player.damage_dealt;
+    }, 0);
     console.log('Total damage dealt:', totalDamageDealt);
-    const totalKills = playerMatches.reduce((acc, match) => acc + match.kills, 0);
+    const totalKills = playerMatches.reduce((acc, match) => {
+        const player = match.players.find(player => player.account_id === account_id);
+        return acc + player.kills;
+    }, 0);
     console.log('Total kills:', totalKills);
-    const totalDeaths = playerMatches.reduce((acc, match) => acc + match.deaths, 0);
+    const totalDeaths = playerMatches.reduce((acc, match) => {
+        const player = match.players.find(player => player.account_id === account_id);
+        return acc + player.deaths;
+    }, 0);
     console.log('Total deaths:', totalDeaths);
-    const totalAssists = playerMatches.reduce((acc, match) => acc + match.assists, 0);
+    const totalAssists = playerMatches.reduce((acc, match) => {
+        const player = match.players.find(player => player.account_id === account_id);
+        return acc + player.assists;
+    }, 0);
     console.log('Total assists:', totalAssists);
-    const totalGoldEarned = playerMatches.reduce((acc, match) => acc + match.gold_earned, 0);
+    const totalGoldEarned = playerMatches.reduce((acc, match) => {
+        const player = match.players.find(player => player.account_id === account_id);
+        return acc + player.gold_earned;
+    }, 0);
     console.log('Total gold earned:', totalGoldEarned);
-    const totalWins = playerMatches.reduce((acc, match) => acc + (match.win ? 1 : 0), 0);
+    const totalWins = playerMatches.reduce((acc, match) => {
+        const player = match.players.find(player => player.account_id === account_id);
+        return acc + (player.win ? 1 : 0);
+    }, 0);
     console.log('Total wins:', totalWins);
     const totalGames = playerMatches.length;
     console.log('Total games:', totalGames);
@@ -158,3 +172,5 @@ function computePlayerStatistics(matches, playerId) {
         totalGames,
     };
 }
+
+
