@@ -36,6 +36,7 @@ $nickname = $_SESSION['nickname'];
 $createTeamsTable = "CREATE TABLE IF NOT EXISTS teams (
     id INT AUTO_INCREMENT PRIMARY KEY,
     team_name VARCHAR(255) NOT NULL,
+    game VARCHAR(255) NOT NULL,
     member_one VARCHAR(255),
     member_two VARCHAR(255),
     member_three VARCHAR(255),

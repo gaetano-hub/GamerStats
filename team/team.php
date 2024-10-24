@@ -51,6 +51,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $memberfive = $_POST['memberFive']; 
     $leader = $_SESSION['nickname'];
 
+    $members = array($memberone, $membertwo, $memberthree, $memberfour, $memberfive, $leader);
+
+    $notFoundMembers = [];
+    foreach ($members as $member) {
+        if (!empty($member)) {
+            $stmt = $conn->prepare("SELECT nickname FROM users WHERE nickname = ?");
+            $stmt->bind_param("s", $member);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            if ($result->num_rows == 0) {
+                $notFoundMembers[] = $member;
+            }
+        }
+    }
+
+    if (!empty($notFoundMembers)) {
+        $message = "Gli utenti ";
+        foreach ($notFoundMembers as $index => $member) {
+            $message .= $member;
+            if ($index < count($notFoundMembers) - 1) {
+                $message .= ", ";
+            } else {
+                $message .= " non sono registrati al sito";
+            }
+        }
+        die($message);
+    }
 
     
     $stmt = $conn->prepare("SELECT * FROM teams WHERE team_name = ?");

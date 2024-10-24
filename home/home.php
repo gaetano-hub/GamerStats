@@ -376,7 +376,7 @@ $conn->close();
                             </div>
 
                             <div class="d-flex justify-content-center mt-4">
-                                <p class="card-text" style="color: var(--text_color)">Boh qui non so come inserire i top winner ma lo scopriremo solo vivendo, no?</p>
+                                <p class="card-text" style="color: var(--text_color)"></p>
                             </div>
 
                             <br>
@@ -396,7 +396,7 @@ $conn->close();
                             </div>
                             <div class="d-flex flex-column align-items-center">
                                 <p class="card-text" style="color: var(--text_color); text-align: center;">
-                                    Boh qui non so come inserire i top winner ma lo scopriremo solo vivendo, no?
+                                    
                                 </p>
                                 <ul class="list-group text-center" style="width: 100%; max-width: 400px; color: var(--text_color);">
                                     <?php
