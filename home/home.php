@@ -1,20 +1,247 @@
 <?php
 session_start();
-// $_SESSION['nickname'] = 'testuser';
 
 // Converti l'array di sessione in formato JSON
 $sessionData = json_encode($_SESSION);
-// Controlla se l'utente è loggato con Discord
+
+// Controlla se l'utente è loggato
 if (isset($_SESSION['discord_user'])) {
-    echo "Benvenuto, " . $_SESSION['discord_user']['username'] . "! (Accesso tramite Discord)";
-}  else if (isset($_SESSION['steam_user'])) { // Check for Steam login
-    echo "Benvenuto, " . $_SESSION['steam_user']['displayname'] . "! (Accesso tramite Steam)";
-} else if (isset($_SESSION['nickname'])) {
-    echo "Benvenuto, " . $_SESSION['nickname'] . "! (Accesso classico)";
+    // echo "Benvenuto, " . htmlspecialchars($_SESSION['discord_user']['username']) . "! (Accesso tramite Discord)";
+} elseif (isset($_SESSION['steam_user'])) {
+    // echo "Benvenuto, " . htmlspecialchars($_SESSION['steam_user']['displayname']) . "! (Accesso tramite Steam)";
+} elseif (isset($_SESSION['nickname'])) {
+    // echo "Benvenuto, " . htmlspecialchars($_SESSION['nickname']) . "! (Accesso classico)";
 } else {
-    echo "Devi effettuare il login.";
+    // echo "Devi effettuare il login.";
 }
+
+// Connessione al database
+$servername = "localhost";
+$username = "root"; // Il nome utente predefinito di XAMPP è "root"
+$password = ""; // Di solito la password è vuota
+$dbname = "GamerStats";
+
+// Crea connessione
+$conn = new mysqli($servername, $username, $password, $dbname);
+if ($conn->connect_error) {
+    die("Connessione al database fallita: " . $conn->connect_error);
+}
+
+// Crea tabella per la classifica CS2 se non esiste
+$createCs2Table = "CREATE TABLE IF NOT EXISTS cs2_classifica (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nickname VARCHAR(255) NOT NULL,
+    steamID VARCHAR(255) NOT NULL UNIQUE,
+    punteggio FLOAT NOT NULL
+)";
+if ($conn->query($createCs2Table) !== TRUE) {
+    echo "Errore nella creazione della tabella cs2_classifica: " . $conn->error;
+}
+
+// Crea tabella per la classifica TF2 se non esiste
+$createTf2Table = "CREATE TABLE IF NOT EXISTS tf2_classifica (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nickname VARCHAR(255) NOT NULL,
+    steamID VARCHAR(255) NOT NULL UNIQUE,
+    punteggio FLOAT NOT NULL
+)";
+if ($conn->query($createTf2Table) !== TRUE) {
+    echo "Errore nella creazione della tabella tf2_classifica: " . $conn->error;
+}
+
+// Query per ottenere tutti i dati degli utenti
+$query = "SELECT id, nickname, email, password, steamID, image FROM users WHERE steamID IS NOT NULL"; 
+$result = $conn->query($query);
+
+// API Key di Steam
+$apiKey = '8A345C81E607D2E02274B11D4834675A';
+$tf2GameId = 440; // Team Fortress 2
+$cs2GameId = 730; // Counter-Strike 2
+
+// Funzione per ottenere le statistiche di un gioco
+function getGameStats($steamID, $apiKey, $gameId) {
+    $url = "https://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid={$gameId}&steamid={$steamID}&key={$apiKey}";
+    $response = @file_get_contents($url);
+
+    // Error handling
+    if ($response === false) {
+        return null; // Handle the error as needed
+    }
+    
+    return json_decode($response, true);
+}
+
+// Funzione per inserire i dati nelle tabelle di classifica
+function insertIntoClassifica($conn, $tableName, $nickname, $steamID, $score) {
+    // Prepara la query per evitare SQL injection
+    $stmt = $conn->prepare("INSERT INTO $tableName (nickname, steamID, punteggio) VALUES (?, ?, ?)
+                             ON DUPLICATE KEY UPDATE punteggio = ?");
+
+    // Bind dei parametri
+    $stmt->bind_param("ssdd", $nickname, $steamID, $score, $score); // 'ssdd' significa: string, string, double, double
+
+    // Esegui la query
+    if ($stmt->execute()) {
+        // echo "Dati inseriti con successo nella tabella $tableName per $nickname.<br>";
+    } else {
+        echo "Errore durante l'inserimento dei dati: " . $stmt->error . "<br>";
+    }
+
+    // Chiudi la dichiarazione
+    $stmt->close();
+}
+
+// Inizializza array per le statistiche
+$tf2StatsArray = [];
+$cs2StatsArray = [];
+$userDetails = []; // Array per memorizzare dettagli utente
+
+// Recupera gli Steam ID e altre informazioni dal database
+if ($result->num_rows > 0) {
+    // echo "<h2>Steam ID degli utenti nel database:</h2><ul>";
+    
+    while ($row = $result->fetch_assoc()) {
+        $steamID = $row['steamID'];
+        $nickname = htmlspecialchars($row['nickname']);
+        $image = $row['image'];
+
+        // Memorizza i dettagli utente
+        $userDetails[$steamID] = [
+            'nickname' => $nickname,
+            'tf2Score' => 0,
+            'cs2WinPercentage' => 0
+        ];
+
+        // Statistiche di Team Fortress 2
+        $tf2Stats = getGameStats($steamID, $apiKey, $tf2GameId);
+        if (isset($tf2Stats['playerstats']['stats'])) {
+            $tf2StatsArray[$steamID] = $tf2Stats['playerstats']['stats'];
+            foreach ($tf2StatsArray[$steamID] as $stat) {
+                if ($stat['name'] === 'iPointsScored') {
+                    $userDetails[$steamID]['tf2Score'] = $stat['value'];
+                }
+            }
+        }
+
+        // Statistiche di Counter-Strike 2
+        $cs2Stats = getGameStats($steamID, $apiKey, $cs2GameId);
+        if (isset($cs2Stats['playerstats']['stats'])) {
+            $cs2StatsArray[$steamID] = $cs2Stats['playerstats']['stats'];
+            $totalWins = 0;
+            $totalMatches = 0;
+            
+            foreach ($cs2StatsArray[$steamID] as $stat) {
+                if ($stat['name'] === 'total_matches_won') {
+                    $totalWins = $stat['value'];
+                }
+                if ($stat['name'] === 'total_matches_played') {
+                    $totalMatches = $stat['value'];
+                }
+            }
+            if ($totalMatches > 0) {
+                $userDetails[$steamID]['cs2WinPercentage'] = round(($totalWins / $totalMatches) * 100, 2);
+            }
+        }
+        // echo "<li><strong>Nickname:</strong> {$nickname} - <strong>Steam ID:</strong> {$steamID}</li>";
+    }
+    echo "</ul>";
+} else {
+    echo "Nessun utente trovato nel database.";
+}
+
+// Funzione per generare la classifica di Team Fortress 2
+function generaClassificaTF2($tf2Stats, &$userDetails) {
+    $userScores = [];
+    $importantStats = ['iPointsScored'];
+    $validClasses = ['Scout', 'Soldier', 'Pyro', 'Demoman', 'Heavy', 'Engineer', 'Medic', 'Sniper', 'Spy'];
+
+    foreach ($tf2Stats as $steamID => $stats) {
+        foreach ($stats as $stat) {
+            foreach ($importantStats as $importantStat) {
+                if (strpos($stat['name'], $importantStat) !== false) {
+                    $parts = explode('.', $stat['name']);
+                    if (count($parts) === 3) {
+                        $className = $parts[0];
+                        if (in_array($className, $validClasses)) {
+                            if (!isset($userScores[$steamID])) {
+                                $userScores[$steamID] = 0;
+                            }
+                            $userScores[$steamID] += $stat['value'];
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Aggiorna i punteggi degli utenti
+    foreach ($userScores as $steamID => $score) {
+        if (isset($userDetails[$steamID])) {
+            $userDetails[$steamID]['tf2Score'] = $score;
+        }
+    }
+
+    arsort($userScores); // Ordina i punteggi degli utenti in modo decrescente
+    return $userScores;
+}
+
+// Funzione per generare la classifica di Counter-Strike 2
+function generaClassificaCSGO($gameStatsArray, &$userDetails) {
+    $classifica = [];
+
+    foreach ($gameStatsArray as $steamID => $stats) {
+        $totalWins = 0;
+        $totalMatches = 0;
+
+        foreach ($stats as $stat) {
+            if ($stat['name'] === 'total_matches_won') {
+                $totalWins = $stat['value'];
+            }
+            if ($stat['name'] === 'total_matches_played') {
+                $totalMatches = $stat['value'];
+            }
+        }
+
+        if ($totalMatches > 0) {
+            $winPercentage = round(($totalWins / $totalMatches) * 100, 2);
+            $classifica[$steamID] = [
+                'nickname' => $userDetails[$steamID]['nickname'],
+                'steamID' => $steamID,
+                'win_percentage' => $winPercentage
+            ];
+        }
+    }
+
+    // Ordina la classifica in base alla percentuale di vittorie
+    usort($classifica, function($a, $b) {
+        return $b['win_percentage'] <=> $a['win_percentage'];
+    });
+
+    return $classifica;
+}
+
+// Genera le classifiche per TF2 e CS2
+$tf2Classifica = generaClassificaTF2($tf2StatsArray, $userDetails);
+$cs2Classifica = generaClassificaCSGO($cs2StatsArray, $userDetails);
+
+// Inserisci i dati nella tabella di classifica di Team Fortress 2
+foreach ($tf2Classifica as $steamID => $score) {
+    $nickname = htmlspecialchars($userDetails[$steamID]['nickname']);
+    insertIntoClassifica($conn, 'tf2_classifica', $nickname, $steamID, $score);
+}
+
+// Inserisci i dati nella tabella di classifica di Counter-Strike 2
+foreach ($cs2Classifica as $user) {
+    $steamID = $user['steamID'];
+    $nickname = htmlspecialchars($userDetails[$steamID]['nickname']);
+    $winPercentage = $user['win_percentage'];
+    insertIntoClassifica($conn, 'cs2_classifica', $nickname, $steamID, $winPercentage);
+}
+
+// Chiudi la connessione al database
+$conn->close();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="it">
@@ -132,11 +359,26 @@ if (isset($_SESSION['discord_user'])) {
                                 <img src="../assets/valogo.webp" class="card-img-top" alt="valLogo" style="width: 50px; height: auto; margin-right: 10px;">
                                 <h5 class="card-title text-center" style="color: var(--text_color)">Valorant Top Winners</h5>
                             </div>
-                            <div class="d-flex justify-content-center">
-                                <p class="card-text" style="color: var(--text_color)">Boh qui non so come inserire i top winner ma lo scopriremo solo
-                                    vivendo
-                                    no?</p>
+                            <div class="text-center mt-3">
+                                <h2 class="mb-4" style="color: var(--text_color)">Classifica</h2>
+                                <ul class="list-group">
+                                    <?php foreach ($tf2Classifica as $steamID => $totalScore): ?>
+                                        <?php
+                                        // Get the nickname from userDetails using the steamID
+                                        $nickname = isset($userDetails[$steamID]) ? htmlspecialchars($userDetails[$steamID]['nickname']) : 'Sconosciuto';
+                                        ?>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <strong><?php echo $nickname; ?> (Steam ID: <?php echo htmlspecialchars($steamID); ?>):</strong>
+                                            <span class="badge bg-primary rounded-pill"><?php echo htmlspecialchars($totalScore); ?> punti</span>
+                                        </li>
+                                    <?php endforeach; ?>
+                                </ul>
                             </div>
+
+                            <div class="d-flex justify-content-center mt-4">
+                                <p class="card-text" style="color: var(--text_color)">Boh qui non so come inserire i top winner ma lo scopriremo solo vivendo, no?</p>
+                            </div>
+
                             <br>
                             <div class="d-flex justify-content-center">
                                 <a href="#" class="btn btn-block"
@@ -152,11 +394,35 @@ if (isset($_SESSION['discord_user'])) {
                                 <img src="../assets/lollogo.webp" class="card-img-top" alt="lolLogo" style="width: 50px; height: auto; margin-right: 10px;">
                                 <h5 class="card-title text-center" style="color: var(--text_color)">LoL Top Winners</h5>
                             </div>
-                            <div class="d-flex justify-content-center">
-                                <p class="card-text" style="color: var(--text_color)">Boh qui non so come inserire i top winner ma lo scopriremo solo
-                                    vivendo
-                                    no?</p>
+                            <div class="d-flex flex-column align-items-center">
+                                <p class="card-text" style="color: var(--text_color); text-align: center;">
+                                    Boh qui non so come inserire i top winner ma lo scopriremo solo vivendo, no?
+                                </p>
+                                <ul class="list-group text-center" style="width: 100%; max-width: 400px; color: var(--text_color);">
+                                    <?php
+                                    // Check if cs2Classifica has elements and then iterate
+                                    if (!empty($cs2Classifica)) {
+                                        // Sort the leaderboard by percentage in descending order
+                                        foreach ($cs2Classifica as $user) {
+                                            // Extract nickname and win percentage from user
+                                            $nickname = htmlspecialchars($user['nickname']);
+                                            $winPercentage = htmlspecialchars($user['win_percentage']);
+
+                                            // Print each user in the list
+                                            echo "<li class='list-group-item d-flex justify-content-between align-items-center' style='background-color: rgba(255, 255, 255, 0.1);'>
+                        <span>Nickname: {$nickname}</span>
+                        <span>Steam ID: " . htmlspecialchars($user['steamID']) . "</span>
+                        <span class='badge bg-primary rounded-pill'>{$winPercentage}%</span>
+                      </li>";
+                                        }
+                                    } else {
+                                        // If the leaderboard is empty, show a message
+                                        echo "<li class='list-group-item text-center' style='background-color: rgba(255, 255, 255, 0.1);'>Nessun vincitore trovato</li>";
+                                    }
+                                    ?>
+                                </ul>
                             </div>
+
                             <br>
                             <div class="d-flex justify-content-center">
                                 <a href="#" class="btn btn-block"

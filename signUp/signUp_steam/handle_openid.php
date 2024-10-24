@@ -66,6 +66,19 @@ if (isset($_GET['openid_mode']) && $_GET['openid_mode'] == 'id_res') {
                 die("Connection failed: " . $conn->connect_error);
             }
 
+            // Crea la tabella se non esiste già
+            $sql = "CREATE TABLE IF NOT EXISTS users (
+    id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    nickname VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    image VARCHAR(255)
+)";
+
+            if ($conn->query($sql) !== TRUE) {
+                echo "Errore nella creazione della tabella: " . $conn->error;
+            }
+
             // Controlla se l'utente esiste nel database
             $stmt = $conn->prepare("SELECT * FROM users WHERE nickname = ?");
             $stmt->bind_param("s", $_SESSION['nickname']);
