@@ -7,9 +7,14 @@ TODO:
 var data = [];
 const xhr = new XMLHttpRequest();
 console.log('XMLHttpRequest created');
+var totalWinsD = 0;
+var totalLossesD = 0;
+var totalKillsD = 0;
+var totalDeathsD = 0;
+var totalAssistsD = 0;
 
 player_id = '107828036'; // GET ID OF THE PLAYER FROM SESSION
-xhr.open('GET', 'dota2_db.php?player_id='+ player_id, true);
+xhr.open('GET', '../dota2/dota2_db.php?player_id='+ player_id, true);
 console.log('Request opened: GET dota2_db.php');
 
 xhr.onload = function () {
@@ -29,7 +34,11 @@ xhr.onload = function () {
     console.log('matches:', data);
     computePlayerStatistics(data); // Test for a specific player
     const resultsDiv = document.getElementById('results');
-    resultsDiv.insertAdjacentHTML('beforeend', `<pre>${JSON.stringify(computePlayerStatistics(data), null, 2)}</pre>`);
+    console.log('totalWinsD:', totalWinsD);
+    console.log('totalLossesD:', totalLossesD);
+    getChart();
+    getChart2()
+    //resultsDiv.insertAdjacentHTML('beforeend', `<pre>${JSON.stringify(computePlayerStatistics(data), null, 2)}</pre>`);
 };
 
 xhr.onerror = function () {
@@ -39,9 +48,65 @@ xhr.onerror = function () {
 console.log('Sending request');
 xhr.send();
 
+
 /*
 Computes statistics for a specific player across multiple matches
  */
+
+function getChart() {
+    const winRatioChartD = new Chart(document.getElementById('winRatioChartD').getContext('2d'), {
+    type: 'doughnut',
+    data: {
+        labels: ['Wins', 'Losses'],
+        datasets: [{
+            data: [totalWinsD, totalLossesD],
+            backgroundColor: ['#4caf50', '#f44336'],
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            tooltip: {
+                callbacks: {
+                    label: function(tooltipItem) {
+                        const value = tooltipItem.raw;
+                        const total = totalWinsD+totalLossesD;
+                        const percentage = total ? ((value / total) * 100).toFixed(2) : 0;
+                        console.log('tooltipItem:', tooltipItem);
+                        console.log('percentage:', percentage);
+                        return tooltipItem.label + ': ' + value + ' (' + percentage + '%)';
+                    }
+                }
+            }
+        }
+    }
+    });
+}
+function getChart2() {
+    const kdaChart = new Chart(document.getElementById('kdaChartD').getContext('2d'), {
+    type: 'doughnut',
+    data: {
+        labels: ['Kills', 'Deaths', 'Assists'],
+        datasets: [{
+            data: [totalKillsD, totalDeathsD, totalAssistsD],
+            backgroundColor: ['#4caf50', '#f44336', '#ff9800'],
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            tooltip: {
+                callbacks: {
+                    label: function(tooltipItem) {
+                        const value = tooltipItem.raw;
+                        return tooltipItem.label + ': ' + value;
+                    }
+                }
+            }
+        },
+    }
+    });
+}
 function computePlayerStatistics(playerData) {
     console.log('Computing player statistics for player', playerData[0].personaname, 'across', playerData.length, 'matches');
 
@@ -54,43 +119,35 @@ function computePlayerStatistics(playerData) {
         };
     }
 
-    let totalDamageDealt = 0;
-    let totalKills = 0;
-    let totalDeaths = 0;
-    let totalAssists = 0;
-    let totalWins = 0;
-    let totalLosses = 0;
-
     playerData.forEach(match => {
-        totalKills += match.kills;
-        totalDeaths += match.deaths;
-        totalAssists += match.assists;
+        totalKillsD += match.kills;
+        totalDeathsD += match.deaths;
+        totalAssistsD += match.assists;
         
-        totalWins = match.win;
-        totalLosses = match.lose;
+        totalWinsD = match.win;
+        totalLossesD = match.lose;
     });
-    console.log('Total kills:', totalKills);
-    console.log('Total deaths:', totalDeaths);
-    console.log('Total assists:', totalAssists);
-    console.log('Total wins:', totalWins);
+    console.log('Total kills:', totalKillsD);
+    console.log('Total deaths:', totalDeathsD);
+    console.log('Total assists:', totalAssistsD);
+    console.log('Total wins:', totalWinsD);
 
-    const averageDamageDealt = totalDamageDealt / totalGames;
-    console.log('Average damage dealt:', averageDamageDealt);
-    const averageKills = totalKills / totalGames;
+    const averageKills = totalKillsD / totalGames;
     console.log('Average kills:', averageKills);
-    const averageDeaths = totalDeaths / totalGames;
+    const averageDeaths = totalDeathsD / totalGames;
     console.log('Average deaths:', averageDeaths);
-    const averageAssists = totalAssists / totalGames;
+    const averageAssists = totalAssistsD / totalGames;
     console.log('Average assists:', averageAssists);
-    const winRate = (totalWins / totalGames) * 100;
+    const winRate = (totalWinsD / totalGames) * 100;
     console.log('Win rate:', winRate);
 
     return {
-        averageDamageDealt,
         averageKills,
         averageDeaths,
         averageAssists,
         winRate,
+        totalWinsD,
+        totalLossesD,
         totalGames,
     };
 }

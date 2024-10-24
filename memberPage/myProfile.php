@@ -86,7 +86,6 @@ while ($row = $result->fetch_assoc()) {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../home/styleHome.css">
-    <script src="../memberPage/myProfile.js"></script>
     <script src="../home/scriptHome.js" defer></script>
     <!-- Bootstrap CSS -->
     <link href="../assets/css/bootstrap.min.css" rel="stylesheet" />
@@ -727,14 +726,81 @@ while ($row = $result->fetch_assoc()) {
             } else {
                 echo "<p>Statistiche non disponibili per Team Fortress 2.</p>";
             }
+            ?>
+            <!-- 
+            DOTA 2 STATS
+             -->
+            
+            <div class="container text-center" style="margin-top: 10px; background-color: var(--transparent_col); padding: 15px;">
+                <p style="font-size: 2rem; font-weight: bold; color: var(--text_color);">
+                Statistiche di Dota 2
+                <div class="charts-grid">
+                    <canvas id="winRatioChartD" width="300" height="150"></canvas>
+                    <canvas id="kdaChartD" width="300" height="150"></canvas>
+                </div>
+                    <div id="results">
+                    </div>
+                </p>
+            </div>
+            <style>
+                .charts-grid {
+                    display: flex;
+                    justify-content: space-around;
+                    padding: 20px;
+                }
+
+                canvas {
+                    max-width: 300px;
+                    /* Riduci la larghezza del canvas */
+                    max-height: 150px;
+                    /* Riduci l'altezza del canvas */
+                }
+
+                .stats-details {
+                    text-align: left;
+                    margin-top: 20px;
+                }
+
+                .stats-details h3 {
+                    margin-bottom: 10px;
+                    font-size: 1.5rem;
+                    color: var(--text_color);
+                    border-bottom: 2px solid var(--text_color);
+                    padding-bottom: 5px;
+                }
+
+                .stats-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                    gap: 15px;
+                    margin-top: 10px;
+                }
+
+                .stats-item {
+                    background-color: rgba(0, 0, 0, 0.1);
+                    padding: 10px;
+                    border-radius: 5px;
+                }
+
+                .stats-item strong {
+                    color: var(--text_color);
+                }
+            </style>
+
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <script src= "../dota2/statcalculatorD.js"></script>
+            
+            
+            <?php
         } else {
             echo "<p>Steam ID non trovato. Accedi per visualizzare le statistiche.</p>";
         }
-        ?>
+        ?> 
 
 
 
     </div>
+    
     <script>
         // Trasferisci i dati di sessione dal PHP al JavaScript
         var sessionData = <?php echo $sessionData; ?>;
@@ -748,6 +814,7 @@ while ($row = $result->fetch_assoc()) {
     $conn->close();
     ?>
 </body>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </html>

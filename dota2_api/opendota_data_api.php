@@ -216,6 +216,7 @@ foreach ($recent_matches as $match) {
 
     if (!$stmt->execute()) {
         echo json_encode(['error' => 'Error inserting data for participant: '. $account_id]);
+        //call code to take data from database
         exit;
     }
 }

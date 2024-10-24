@@ -4,7 +4,7 @@ $username = "root";
 $password = "";
 $dbname = "gamerstats";
 $name = "Raddan"; //debug
-
+$player_id = "";
 function getTableData($pdo, $name)
 {
     try {
