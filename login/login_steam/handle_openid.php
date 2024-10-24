@@ -78,7 +78,7 @@ if (isset($_GET['openid_mode']) && $_GET['openid_mode'] == 'id_res') {
             if ($result->num_rows > 0) {
                 // SteamID64 trovato, l'utente è già registrato
                 // Memorizza lo steamID64 nella sessione
-                $_SESSION['steamID64'] = $steamID64;
+                $_SESSION['steamID'] = $steamID64;
 
                 // Ottieni il nickname attuale dell'utente
                 $row = $result->fetch_assoc();

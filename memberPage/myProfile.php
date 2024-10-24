@@ -51,6 +51,22 @@ if ($conn->query($createTeamsTable) === TRUE) {
     echo "Errore nella creazione della tabella teams: " . $conn->error;
 }
 
+// Crea la tabella se non esiste
+$sql = "CREATE TABLE IF NOT EXISTS `users` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `nickname` VARCHAR(50) NOT NULL,
+    `email` VARCHAR(100) NOT NULL UNIQUE,
+    `password` VARCHAR(255) NOT NULL,
+    `steamID` VARCHAR(20) NOT NULL UNIQUE,
+    `image` VARCHAR(255) DEFAULT NULL
+)";
+
+if ($conn->query($sql) === TRUE) {
+    echo "Tabella 'users' creata con successo o già esistente.";
+} else {
+    echo "Errore nella creazione della tabella: " . $conn->error;
+}
+
 // Prepara la query per ottenere i nomi dei team
 $stmt = $conn->prepare("SELECT team_name FROM teams WHERE member_one = ? OR member_two = ? OR member_three = ? OR member_four = ? OR member_five = ? OR leader = ?");
 $stmt->bind_param("ssssss", $nickname, $nickname, $nickname, $nickname, $nickname, $nickname);
@@ -365,7 +381,7 @@ while ($row = $result->fetch_assoc()) {
             </div>
         </div>
         <?php
-        $steamID = $_SESSION['steamID64'] ?? null; // Utilizza null coalescing per evitare errori
+        $steamID = $_SESSION['steamID'] ?? null; // Utilizza null coalescing per evitare errori
         $apiKey = '8A345C81E607D2E02274B11D4834675A'; // Inserisci la tua chiave API di Steam se necessario
 
         // Game IDs
@@ -686,6 +702,8 @@ while ($row = $result->fetch_assoc()) {
             echo "<p>Steam ID non trovato. Accedi per visualizzare le statistiche.</p>";
         }
         ?>
+
+        
 
     </div>
     <script>

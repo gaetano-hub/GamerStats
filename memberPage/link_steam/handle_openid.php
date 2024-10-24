@@ -64,20 +64,17 @@ if (isset($_GET['openid_mode']) && $_GET['openid_mode'] == 'id_res') {
                 die("Connection failed: " . $conn->connect_error);
             }
 
-            // Crea la tabella se non esiste già
-            $sql = "CREATE TABLE IF NOT EXISTS users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nickname VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    steamID VARCHAR(255) NOT NULL
+            // Crea tabella users se non esiste
+            $createUsersTable = "CREATE TABLE IF NOT EXISTS `users` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `nickname` VARCHAR(255) NOT NULL,
+    `email` VARCHAR(255) NOT NULL UNIQUE,
+    `password` VARCHAR(255) NOT NULL,
+    `steamID` VARCHAR(255) NOT NULL UNIQUE,
+    `image` VARCHAR(255)
 )";
-
-            // Esegui la query
-            if ($conn->query($sql) === TRUE) {
-                echo "Tabella 'users' creata con successo.";
-            } else {
-                echo "Errore nella creazione della tabella: " . $conn->error;
+            if ($conn->query($createUsersTable) !== TRUE) {
+                echo "Errore nella creazione della tabella users: " . $conn->error;
             }
 
             // Prepara la query per verificare se lo steamID64 esiste nel database

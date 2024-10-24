@@ -58,8 +58,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Prepara ed esegui la query per inserire i dati
     $steamID = '';
-    $stmt = $conn->prepare("INSERT INTO users (nickname, email, password, steamID) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("ssss", $nickname, $email, $passwordHashed, $steamID);
+    $image = '';
+
+    $stmt = $conn->prepare("INSERT INTO users (nickname, email, password, steamID, image) VALUES (?, ?, ?, ?, ?)");
+    $stmt->bind_param("sssss", $nickname, $email, $passwordHashed, $steamID, $image);
     
     if ($stmt->execute() === TRUE) {
         header("Location: ../login/login.html");

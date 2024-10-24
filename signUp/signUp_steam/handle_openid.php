@@ -39,7 +39,7 @@ if (isset($_GET['openid_mode']) && $_GET['openid_mode'] == 'id_res') {
         $steamID64 = str_replace('https://steamcommunity.com/openid/id/', '', $_GET['openid_identity']);
 
         // Memorizza lo steamID64 nella sessione
-        $_SESSION['steamID64'] = $steamID64;
+        $_SESSION['steamID'] = $steamID64;
 
         // Ora otteniamo le informazioni del profilo
         $apiKey = '8A345C81E607D2E02274B11D4834675A'; // Inserisci qui la tua chiave API
@@ -66,18 +66,19 @@ if (isset($_GET['openid_mode']) && $_GET['openid_mode'] == 'id_res') {
                 die("Connection failed: " . $conn->connect_error);
             }
 
-            // Crea la tabella se non esiste già
-            $sql = "CREATE TABLE IF NOT EXISTS users (
-    id INT(11) AUTO_INCREMENT PRIMARY KEY,
-    nickname VARCHAR(50) NOT NULL UNIQUE,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
-    image VARCHAR(255)
+            // Crea tabella users se non esiste
+            $createUsersTable = "CREATE TABLE IF NOT EXISTS `users` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `nickname` VARCHAR(255) NOT NULL,
+    `email` VARCHAR(255) NOT NULL UNIQUE,
+    `password` VARCHAR(255) NOT NULL,
+    `steamID` VARCHAR(255) NOT NULL UNIQUE,
+    `image` TEXT
 )";
-
-            if ($conn->query($sql) !== TRUE) {
-                echo "Errore nella creazione della tabella: " . $conn->error;
+            if ($conn->query($createUsersTable) !== TRUE) {
+                echo "Errore nella creazione della tabella users: " . $conn->error;
             }
+
 
             // Controlla se l'utente esiste nel database
             $stmt = $conn->prepare("SELECT * FROM users WHERE nickname = ?");
