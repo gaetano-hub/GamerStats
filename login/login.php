@@ -17,15 +17,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nickname = trim($_POST['nickname']);
     $password = $_POST['password'];
 
-    // Prepara la query per trovare l'utente
-    $stmt = $conn->prepare("SELECT password, email FROM users WHERE nickname = ?");
+    // Prepara la query per trovare l'utente e il suo steamID
+    $stmt = $conn->prepare("SELECT password, email, steamID FROM users WHERE nickname = ?");
     $stmt->bind_param("s", $nickname);
     $stmt->execute();
     $stmt->store_result();
 
     // Controlla se l'utente esiste
     if ($stmt->num_rows > 0) {
-        $stmt->bind_result($hashedPassword, $email);
+        $stmt->bind_result($hashedPassword, $email, $steamID);
         $stmt->fetch();
 
         // Verifica la password
@@ -35,6 +35,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             session_start();
             $_SESSION['nickname'] = $nickname; // Memorizza il nickname nella sessione
             $_SESSION['email'] = $email; // Memorizza l'email nella sessione
+
+            // Se steamID esiste, memorizzalo nella sessione
+            if (!empty($steamID)) {
+                $_SESSION['steamID'] = $steamID;
+            }
+
             header("Location: ../home/home.php");
             exit();
         } else {
@@ -49,4 +55,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 $conn->close();
 ?>
-
