@@ -5,7 +5,6 @@
 .member-circle {
     border: 2px solid #0000ff;
     border-radius: 50%;
-    background-image: url(../assets/valogo.webp);
     background-size: cover;
     background-position: center;
 }

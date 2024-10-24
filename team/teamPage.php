@@ -192,22 +192,22 @@ if ($row = $result->fetch_assoc()) {
                                     Change leader
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" style="background-color: var(--object_color);">';
-            if (!is_null($teamData['member_one'])) {
-                echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_one'] . '" style="color: var(--text_color);">' . $teamData['member_one'] . '</button></li>';
-            }
-            if (!is_null($teamData['member_two'])) {
-                echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_two'] . '" style="color: var(--text_color);">' . $teamData['member_two'] . '</button></li>';
-            }
-            if (!is_null($teamData['member_three'])) {
-                echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_three'] . '" style="color: var(--text_color);">' . $teamData['member_three'] . '</button></li>';
-            }
-            if (!is_null($teamData['member_four'])) {
-                echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_four'] . '" style="color: var(--text_color);">' . $teamData['member_four'] . '</button></li>';
-            }
-            if (!is_null($teamData['member_five'])) {
-                echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_five'] . '" style="color: var(--text_color);">' . $teamData['member_five'] . '</button></li>';
-            }
-            echo '</ul>
+                                if (!is_null($teamData['member_one'])) {
+                                    echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_one'] . '" style="color: var(--text_color);">' . $teamData['member_one'] . '</button></li>';
+                                }
+                                if (!is_null($teamData['member_two'])) {
+                                    echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_two'] . '" style="color: var(--text_color);">' . $teamData['member_two'] . '</button></li>';
+                                }
+                                if (!is_null($teamData['member_three'])) {
+                                    echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_three'] . '" style="color: var(--text_color);">' . $teamData['member_three'] . '</button></li>';
+                                }
+                                if (!is_null($teamData['member_four'])) {
+                                    echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_four'] . '" style="color: var(--text_color);">' . $teamData['member_four'] . '</button></li>';
+                                }
+                                if (!is_null($teamData['member_five'])) {
+                                    echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_five'] . '" style="color: var(--text_color);">' . $teamData['member_five'] . '</button></li>';
+                                }
+                                echo '</ul>
                             </form>
                         </div>
                         <div class="col">
@@ -264,12 +264,16 @@ if ($row = $result->fetch_assoc()) {
                 $row = [];
                 foreach ($teamData as $member) {
                     if ($member != null) {
-                        $row[] = $member;
+                        $stmt = $conn->prepare("SELECT image FROM users WHERE nickname = ?");
+                        $stmt->bind_param("s", $member);
+                        $stmt->execute();
+                        $result = $stmt->get_result();
+                        $row[] = [$member, ($result->num_rows > 0) ? $result->fetch_assoc()['image'] : null];
                         if (count($row) == 3) {
                             foreach ($row as $member) {
                                 echo '<div class="col">
-                                        <div class="member-circle mx-auto" style="height: 100px; width: 100px;"></div>
-                                        <p style="color: var(--text_color); text-align: center;">' . $member . '</p>
+                                        <div class="member-circle mx-auto" style="height: 100px; width: 100px; background-image: url(\'' . $member[1] . '\'); background-size: cover;"></div>
+                                        <p style="color: var(--text_color); text-align: center;">' . $member[0] . '</p>
                                     </div>';
                             }
                             echo '</div><div class="row">';
@@ -280,8 +284,8 @@ if ($row = $result->fetch_assoc()) {
                 if (count($row) > 0) {
                     foreach ($row as $member) {
                         echo '<div class="col">
-                                <div class="member-circle mx-auto" style="height: 100px; width: 100px;"></div>
-                                <p style="color: var(--text_color); text-align: center;">' . $member . '</p>
+                                <div class="member-circle mx-auto" style="height: 100px; width: 100px; background-image: url(\'' . $member[1] . '\'); background-size: cover;"></div>
+                                <p style="color: var(--text_color); text-align: center;">' . $member[0] . '</p>
                             </div>';
                     }
                 }

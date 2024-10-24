@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST['searchString'])) {
     $searchString = $_POST['searchString'];
 
     // Query per cercare nickname che iniziano con il valore inserito
-    $stmt = $conn->prepare("SELECT nickname FROM users WHERE nickname LIKE ?");
+    $stmt = $conn->prepare("SELECT team_name FROM teams WHERE team_name LIKE ?");
     $searchParam = '%' . $searchString . '%';
     $stmt->bind_param("s", $searchParam);
     $stmt->execute();
@@ -25,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST['searchString'])) {
 
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
-            echo "<li><a class='dropdown-item' style='color: var(--text_color);' href='../memberPage/memberPage.php?user=" . htmlspecialchars(urlencode($row['nickname'])) . "'>" . htmlspecialchars($row['nickname']) . "</a></li>";
+            echo "<li><a class='dropdown-item' style='color: var(--text_color);' href='teamPage.php?team=" . htmlspecialchars(urlencode($row['team_name'])) . "'>" . htmlspecialchars($row['team_name']) . "</a></li>";
         }
     } else {
         echo "<li><a class='dropdown-item' style='color: var(--text_color);'>No results found</a></li>";
