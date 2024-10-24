@@ -133,17 +133,22 @@ while ($row = $result->fetch_assoc()) {
             <div class="row">
                 <div class="col d-flex flex-column align-items-center">
                     <div class="container text-center" style="background-color: rgba(0,0,0,0);">
-                        <div class="row">
-                            <div class="col">
-                                <img src="../assets/profPicture.jpg" class="img-thumbnail" alt="profilePicture" style="width: 200px; height: 200px;">
-                            </div>
-                            <div class="col">
-                                <button style="background-color: rgba(0,0,0,0); margin-top: 50px;" id="edit">
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px">
-                                        <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z" />
-                                    </svg>
-                                </button>
-                            </div>
+                        <div class="row justify-content-center text-center">
+                            <?php
+                            $query = "SELECT image FROM users WHERE nickname = ?";
+                            $stmt = $conn->prepare($query);
+                            $stmt->bind_param("s", $visitingUser);
+                            $stmt->execute();
+                            $result = $stmt->get_result();
+                            if ($result->num_rows > 0) {
+                                $row = $result->fetch_assoc();
+                                if (isset($row['image']) && file_exists($row['image'])) {
+                                    echo '<img src="' . $row['image'] . '" class="img-thumbnail" alt="profilePicture" style="width: 200px; height: 200px; border-color: var(--object_color); position: relative;">';
+                                } else {
+                                    echo '<img src=../assets/profPicture.jpg class="img-thumbnail" alt="profilePicture" style="width: 200px; height: 200px; position: relative;">';
+                                }
+                            }
+                            ?>
                         </div>
                     </div>
                     <input type="text" class="form-control-plaintext text-center" value="<?php echo $visitingUser ?>" readonly style="color: var(--text_color); margin-top: 10px; font-size: 2rem; font-weight: bold;">
