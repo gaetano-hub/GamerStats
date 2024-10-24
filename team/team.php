@@ -18,6 +18,7 @@ if ($conn->connect_error) {
 
 // Crea la tabella se non esiste già
 $sql = "CREATE TABLE IF NOT EXISTS teams (
+    id INT AUTO_INCREMENT PRIMARY KEY,
     team_name VARCHAR(255) NOT NULL,
     game VARCHAR(255) NOT NULL,
     member_one VARCHAR(255),
