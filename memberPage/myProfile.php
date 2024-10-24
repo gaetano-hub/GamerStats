@@ -155,69 +155,71 @@ while ($row = $result->fetch_assoc()) {
                 <div class="col d-flex flex-column align-items-center">
                     <div class="container text-center" style="background-color: rgba(0,0,0,0);">
                         <div class="row">
-                            <div class="col">
-                                <?php
-                                $query = "SELECT image FROM users WHERE nickname = ?";
-                                $stmt = $conn->prepare($query);
-                                $stmt->bind_param("s", $_SESSION['nickname']);
-                                $stmt->execute();
-                                $result = $stmt->get_result();
-                                if ($result->num_rows > 0) {
-                                    $row = $result->fetch_assoc();
-                                    if (isset($row['image']) && file_exists($row['image'])) {
-                                        echo '<img src="' . $row['image'] . '" class="img-thumbnail" alt="profilePicture" style="width: 200px; height: 200px; border-color: var(--object_color);">';
-                                    } else {
-                                        echo '<img src=../assets/profPicture.jpg class="img-thumbnail" alt="profilePicture" style="width: 200px; height: 200px;">';
+                            <div style="display: flex; justify-content: center; align-items: center;">
+                                <div class="row">
+                                    <?php
+                                    $query = "SELECT image FROM users WHERE nickname = ?";
+                                    $stmt = $conn->prepare($query);
+                                    $stmt->bind_param("s", $_SESSION['nickname']);
+                                    $stmt->execute();
+                                    $result = $stmt->get_result();
+                                    if ($result->num_rows > 0) {
+                                        $row = $result->fetch_assoc();
+                                        if (isset($row['image']) && file_exists($row['image'])) {
+                                            echo '<img src="' . $row['image'] . '" class="img-thumbnail" alt="profilePicture" style="width: 200px; height: 200px; border-color: var(--object_color); position: relative;">';
+                                        } else {
+                                            echo '<img src=../assets/profPicture.jpg class="img-thumbnail" alt="profilePicture" style="width: 200px; height: 200px; position: relative;">';
+                                        }
                                     }
-                                }
-                                ?>
-                            </div>
-                            <div class="col">
-                                <button class="btn" id="edit" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEdit" aria-expanded="false" aria-controls="collapseEdit" style="background-color: rgba(0,0,0,0); margin-top: 30px;">
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px">
-                                        <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z" />
-                                    </svg>
-                                </button>
-                                <div class="collapse" id="collapseEdit">
-                                    <div class="card card-body" style="background-color: var(--object_color); color: var(--text_color); width: 20rem;">
-                                        <h5>Edit your profile picture here:</h5>
+                                    ?>
+                                </div>
+                                <div class="row">
+                                    <button class="btn" id="edit" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEdit" aria-expanded="false" aria-controls="collapseEdit" style="background-color: rgba(0,0,0,0); z-index: 2; margin-bottom: 12rem;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px">
+                                            <path d="M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z" />
+                                        </svg>
+                                    </button>
+                                    <div class="collapse" id="collapseEdit" style="position: absolute; z-index: 1; max-width: 20rem;">
+                                        <div class="card card-body" style="background-color: var(--object_color); color: var(--text_color);">
+                                            <h5>Edit your profile picture here:</h5>
 
-                                        <form action="" method="post" enctype="multipart/form-data">
-                                            <div class="form-group">
-                                                <input type="file" name="profileImage" id="profileImage" class="form-control" accept="image/*" required style="background-color: var(--object_color); color: var(--text_color);">
-                                            </div>
-                                            <button type="submit" class="btn btn-success mt-1">Upload</button>
-                                        </form>
-                                        <?php
-                                        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['profileImage'])) {
-                                            $target_dir = "../assets/profileImages/";
-                                            $target_file = $target_dir . basename($_FILES["profileImage"]["name"]);
-                                            $uploadOk = 1;
-                                            $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+                                            <form action="" method="post" enctype="multipart/form-data">
+                                                <div class="form-group">
+                                                    <input type="file" name="profileImage" id="profileImage" class="form-control" accept="image/*" required style="background-color: var(--object_color); color: var(--text_color);">
+                                                </div>
+                                                <button type="submit" class="btn btn-success mt-1">Upload</button>
+                                            </form>
+                                            <?php
+                                            if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['profileImage'])) {
+                                                $target_dir = "../assets/profileImages/";
+                                                $target_file = $target_dir . basename($_FILES["profileImage"]["name"]);
+                                                $uploadOk = 1;
+                                                $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
-                                            if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg") {
-                                                echo "Spiacente, solo i formati JPG, PNG e JPEG sono permessi.";
-                                                $uploadOk = 0;
-                                            }
+                                                if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg") {
+                                                    echo "Spiacente, solo i formati JPG, PNG e JPEG sono permessi.";
+                                                    $uploadOk = 0;
+                                                }
 
-                                            if ($uploadOk == 0) {
-                                                echo "Spiacente, il file non è stato caricato.";
-                                            } else {
-                                                if (move_uploaded_file($_FILES["profileImage"]["tmp_name"], $target_file)) {
-                                                    $sql = "UPDATE users SET image=? WHERE nickname=?";
-                                                    $stmt = $conn->prepare($sql);
-                                                    $stmt->bind_param("ss", $target_file, $_SESSION['nickname']);
-                                                    if ($stmt->execute()) {
-                                                        echo "Immagine profilo aggiornata con successo.";
-                                                    } else {
-                                                        echo "Errore durante l'aggiornamento dell'immagine: " . $conn->error;
-                                                    }
+                                                if ($uploadOk == 0) {
+                                                    echo "Spiacente, il file non è stato caricato.";
                                                 } else {
-                                                    echo "Spiacente, c'è stato un errore durante il caricamento del file.";
+                                                    if (move_uploaded_file($_FILES["profileImage"]["tmp_name"], $target_file)) {
+                                                        $sql = "UPDATE users SET image=? WHERE nickname=?";
+                                                        $stmt = $conn->prepare($sql);
+                                                        $stmt->bind_param("ss", $target_file, $_SESSION['nickname']);
+                                                        if ($stmt->execute()) {
+                                                            echo "Immagine profilo aggiornata con successo.";
+                                                        } else {
+                                                            echo "Errore durante l'aggiornamento dell'immagine: " . $conn->error;
+                                                        }
+                                                    } else {
+                                                        echo "Spiacente, c'è stato un errore durante il caricamento del file.";
+                                                    }
                                                 }
                                             }
-                                        }
-                                        ?>
+                                            ?>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
