@@ -12,6 +12,8 @@ TODO:
         - made a function to get ONLY recemt matches
     - fix leaderboard_rank (tests show NULL) SOLVED
         - removed leaderboard_rank
+    - add a check on what team is the player
+    - add a table column to check if the player won by (player is in radiant team AND radiant_win = true)
 */
 
 $name='AndreaBz';
