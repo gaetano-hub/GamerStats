@@ -151,52 +151,79 @@ if ($row = $result->fetch_assoc()) {
         <?php
         if (isset($_SESSION['nickname']) && $_SESSION['nickname'] == $teamData['leader']) {
             echo '<div class="text-center">
-                    <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEdit" aria-expanded="false" aria-controls="collapseEdit" style="background-color: var(--object_color); color: var(--text_color); border-color: var(--text_color);">
-                        Edit team
-                    </button>
-                    <div class="collapse" id="collapseEdit">
-                        <div class="card card-body" style="background-color: var(--object_color); color: var(--text_color); max-width: 300px; margin: 0 auto;">
-                            <h5>Edit your team here:</h5>
-
-                            <form action="editTeam.php" method="post">
-                                <input type="hidden" name="team_name" value="' . $visitingTeam . '">
-                                <div class="form-group" style="margin-bottom: 10px; position: relative;">
-                                    <input type="text" name="memberOne" id="memberOne" class="form-control" value="' . $teamData['member_one'] . '" placeholder="Member 1" style="background-color: var(--object_color); color: var(--text_color);">
-                                    <button type="button" class="btn-close" style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); background-color: red;" aria-label="Close" onclick="document.getElementById(\'memberOne\').value = \'\';"></button>
-                                </div>
-                                <div class="form-group" style="margin-bottom: 10px; position: relative;">
-                                    <input type="text" name="memberTwo" id="memberTwo" class="form-control" value="' . $teamData['member_two'] . '" placeholder="Member 2" style="background-color: var(--object_color); color: var(--text_color);">
-                                    <button type="button" class="btn-close" style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); background-color: red;" aria-label="Close" onclick="document.getElementById(\'memberTwo\').value = \'\';"></button>
-                                </div>
-                                <div class="form-group" style="margin-bottom: 10px; position: relative;">
-                                    <input type="text" name="memberThree" id="memberThree" class="form-control" value="' . $teamData['member_three'] . '" placeholder="Member 3" style="background-color: var(--object_color); color: var(--text_color);">
-                                    <button type="button" class="btn-close" style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); background-color: red;" aria-label="Close" onclick="document.getElementById(\'memberThree\').value = \'\';"></button>
-                                </div>
-                                <div class="form-group" style="margin-bottom: 10px; position: relative;">
-                                    <input type="text" name="memberFour" id="memberFour" class="form-control" value="' . $teamData['member_four'] . '" placeholder="Member 4" style="background-color: var(--object_color); color: var(--text_color);">
-                                    <button type="button" class="btn-close" style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); background-color: red;" aria-label="Close" onclick="document.getElementById(\'memberFour\').value = \'\';"></button>
-                                </div>
-                                <div class="form-group" style="margin-bottom: 10px; position: relative;">
-                                    <input type="text" name="memberFive" id="memberFive" class="form-control" value="' . $teamData['member_five'] . '" placeholder="Member 5" style="background-color: var(--object_color); color: var(--text_color);">
-                                    <button type="button" class="btn-close" style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); background-color: red;" aria-label="Close" onclick="document.getElementById(\'memberFive\').value = \'\';"></button>
-                                </div>
-                                <div style="display: flex; justify-content: space-between;">
-                                    <button type="submit" class="btn btn-success">Edit</button>
-                                    <button type="button" class="btn btn-danger" onclick="
-                                            document.getElementById(\'memberOne\').value = \'' . $teamData['member_one'] . '\';
-                                            document.getElementById(\'memberTwo\').value = \'' . $teamData['member_two'] . '\';
-                                            document.getElementById(\'memberThree\').value = \'' . $teamData['member_three'] . '\';
-                                            document.getElementById(\'memberFour\').value = \'' . $teamData['member_four'] . '\';
-                                            document.getElementById(\'memberFive\').value = \'' . $teamData['member_five'] . '\';
-                                        ">Cancel</button>
-                                </div>
+                    <div class="row">
+                        <div class="col">
+                            <form action="changeLeader.php" method="post">
+                                <input type="hidden" name="teamName" value="' . $visitingTeam . '">
+                                <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: var(--object_color); color: var(--text_color); border-color: var(--text_color);">
+                                    Change leader
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" style="background-color: var(--object_color);">';
+                                    if (!is_null($teamData['member_one'])) {
+                                        echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_one'] . '" style="color: var(--text_color);">' . $teamData['member_one'] . '</button></li>';
+                                    }
+                                    if (!is_null($teamData['member_two'])) {
+                                        echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_two'] . '" style="color: var(--text_color);">' . $teamData['member_two'] . '</button></li>';
+                                    }
+                                    if (!is_null($teamData['member_three'])) {
+                                        echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_three'] . '" style="color: var(--text_color);">' . $teamData['member_three'] . '</button></li>';
+                                    }
+                                    if (!is_null($teamData['member_four'])) {
+                                        echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_four'] . '" style="color: var(--text_color);">' . $teamData['member_four'] . '</button></li>';
+                                    }
+                                    if (!is_null($teamData['member_five'])) {
+                                        echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_five'] . '" style="color: var(--text_color);">' . $teamData['member_five'] . '</button></li>';
+                                    }
+                                    echo '</ul>
                             </form>
+                        </div>
+                        <div class="col">
+                            <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEdit" aria-expanded="false" aria-controls="collapseEdit" style="background-color: var(--object_color); color: var(--text_color); border-color: var(--text_color); margin-bottom:10px;">
+                                Edit team
+                            </button>
+                            <div class="collapse" id="collapseEdit">
+                                <div class="card card-body" style="background-color: var(--object_color); color: var(--text_color); max-width: 300px; margin: 0 auto;">
+                                    <h5>Edit your team here:</h5>
+
+                                    <form action="editTeam.php" method="post">
+                                        <input type="hidden" name="team_name" value="' . $visitingTeam . '">
+                                        <div class="form-group" style="margin-bottom: 10px; position: relative;">
+                                            <input type="text" name="memberOne" id="memberOne" class="form-control" value="' . $teamData['member_one'] . '" placeholder="Member 1" style="background-color: var(--object_color); color: var(--text_color);">
+                                            <button type="button" class="btn-close" style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); background-color: red;" aria-label="Close" onclick="document.getElementById(\'memberOne\').value = \'\';"></button>
+                                        </div>
+                                        <div class="form-group" style="margin-bottom: 10px; position: relative;">
+                                            <input type="text" name="memberTwo" id="memberTwo" class="form-control" value="' . $teamData['member_two'] . '" placeholder="Member 2" style="background-color: var(--object_color); color: var(--text_color);">
+                                            <button type="button" class="btn-close" style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); background-color: red;" aria-label="Close" onclick="document.getElementById(\'memberTwo\').value = \'\';"></button>
+                                        </div>
+                                        <div class="form-group" style="margin-bottom: 10px; position: relative;">
+                                            <input type="text" name="memberThree" id="memberThree" class="form-control" value="' . $teamData['member_three'] . '" placeholder="Member 3" style="background-color: var(--object_color); color: var(--text_color);">
+                                            <button type="button" class="btn-close" style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); background-color: red;" aria-label="Close" onclick="document.getElementById(\'memberThree\').value = \'\';"></button>
+                                        </div>
+                                        <div class="form-group" style="margin-bottom: 10px; position: relative;">
+                                            <input type="text" name="memberFour" id="memberFour" class="form-control" value="' . $teamData['member_four'] . '" placeholder="Member 4" style="background-color: var(--object_color); color: var(--text_color);">
+                                            <button type="button" class="btn-close" style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); background-color: red;" aria-label="Close" onclick="document.getElementById(\'memberFour\').value = \'\';"></button>
+                                        </div>
+                                        <div class="form-group" style="margin-bottom: 10px; position: relative;">
+                                            <input type="text" name="memberFive" id="memberFive" class="form-control" value="' . $teamData['member_five'] . '" placeholder="Member 5" style="background-color: var(--object_color); color: var(--text_color);">
+                                            <button type="button" class="btn-close" style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); background-color: red;" aria-label="Close" onclick="document.getElementById(\'memberFive\').value = \'\';"></button>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between;">
+                                            <button type="submit" class="btn btn-success">Edit</button>
+                                            <button type="button" class="btn btn-danger" onclick="
+                                                    document.getElementById(\'memberOne\').value = \'' . $teamData['member_one'] . '\';
+                                                    document.getElementById(\'memberTwo\').value = \'' . $teamData['member_two'] . '\';
+                                                    document.getElementById(\'memberThree\').value = \'' . $teamData['member_three'] . '\';
+                                                    document.getElementById(\'memberFour\').value = \'' . $teamData['member_four'] . '\';
+                                                    document.getElementById(\'memberFive\').value = \'' . $teamData['member_five'] . '\';
+                                                ">Cancel</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>';
         }
-
-
         ?>
         <div style="width: 100%; margin-top: 2rem; margin-bottom: 2rem; height: auto;">
             <div class="row">

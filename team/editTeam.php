@@ -27,7 +27,7 @@ $stmt = $conn->prepare("UPDATE teams SET member_one = ?, member_two = ?, member_
 $stmt->bind_param("ssssss", $memberOne, $memberTwo, $memberThree, $memberFour, $memberFive, $teamName);
 
 if ($stmt->execute() === TRUE) {
-    header("Location: ../team/teamPage.php?team=" . $teamName);
+    header("Location: teamPage.php?team=" . $teamName);
 } else {
     echo "Errore: " . $stmt->error;
     error_log("Errore: " . $stmt->error, 3, "errors.log"); // Log degli errori
