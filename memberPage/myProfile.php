@@ -165,7 +165,7 @@ while ($row = $result->fetch_assoc()) {
                                 if ($result->num_rows > 0) {
                                     $row = $result->fetch_assoc();
                                     if (isset($row['image']) && file_exists($row['image'])) {
-                                        echo '<img src="' . $row['image'] . '" class="img-thumbnail" alt="profilePicture" style="width: 200px; height: 200px;">';
+                                        echo '<img src="' . $row['image'] . '" class="img-thumbnail" alt="profilePicture" style="width: 200px; height: 200px; border-color: var(--object_color);">';
                                     } else {
                                         echo '<img src=../assets/profPicture.jpg class="img-thumbnail" alt="profilePicture" style="width: 200px; height: 200px;">';
                                     }
@@ -179,15 +179,14 @@ while ($row = $result->fetch_assoc()) {
                                     </svg>
                                 </button>
                                 <div class="collapse" id="collapseEdit">
-                                    <div class="card card-body">
-                                        <h5>Edit your profile here:</h5>
+                                    <div class="card card-body" style="background-color: var(--object_color); color: var(--text_color); width: 20rem;">
+                                        <h5>Edit your profile picture here:</h5>
 
                                         <form action="" method="post" enctype="multipart/form-data">
                                             <div class="form-group">
-                                                <label for="profileImage">Upload new profile picture:</label>
-                                                <input type="file" name="profileImage" id="profileImage" class="form-control" accept="image/*" required>
+                                                <input type="file" name="profileImage" id="profileImage" class="form-control" accept="image/*" required style="background-color: var(--object_color); color: var(--text_color);">
                                             </div>
-                                            <button type="submit" class="btn btn-primary mt-1">Carica Immagine</button>
+                                            <button type="submit" class="btn btn-success mt-1">Upload</button>
                                         </form>
                                         <?php
                                         if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['profileImage'])) {
