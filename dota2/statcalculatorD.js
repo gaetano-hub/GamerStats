@@ -12,8 +12,9 @@ var totalLossesD = 0;
 var totalKillsD = 0;
 var totalDeathsD = 0;
 var totalAssistsD = 0;
+var player_id;
 
-player_id = '107828036'; // GET ID OF THE PLAYER FROM SESSION
+//'76561198182224967'; // GET ID OF THE PLAYER FROM SESSION
 
 xhr.open('GET', '../dota2_api/opendota_data_api.php?player_id=' + player_id, true);
 console.log('Request opened: GET opendota_data_api.php');
@@ -31,10 +32,24 @@ xhr.onload = function () {
         console.log('totalWinsD:', totalWinsD);
         console.log('totalLossesD:', totalLossesD);
         getChart();
-        getChart2()
+        getChart2();
         document.getElementById('totalKillsDota2').innerHTML = totalKillsD;
         document.getElementById('totalDeathsDota2').innerHTML = totalDeathsD;
         document.getElementById('totalWinsDota2').innerHTML = totalWinsD;
+        document.getElementById('totalLossesDota2').innerHTML = totalLossesD;
+        let lastMatchesStats = data.map(match => `
+        <div>
+            <span><strong>Match ID:</strong> ${match.match_id}</span><br>
+            <span><strong>Kills:</strong> ${match.kills}</span><br>
+            <span><strong>Deaths:</strong> ${match.deaths}</span><br>
+            <span><strong>Assists:</strong> ${match.assists}</span><br>
+            <span><strong>Radiant Score:</strong> ${match.radiant_score}</span><br>
+            <span><strong>Dire Score:</strong> ${match.dire_score}</span><br>
+        </div>
+    `).join('');
+    document.getElementById('lastDota2').innerHTML = lastMatchesStats;
+            document.getElementById('killDeathRatioDota2').innerHTML = totalKillsD / totalDeathsD;
+            document.getElementById('winLossRatioDota2').innerHTML = totalWinsD / totalLossesD;
     } else {
         console.error('Request failed with status:', xhr.status);
         if (xhr.responseText == '') { console.error('The OpenDotaAPI response is empty'); }
@@ -68,11 +83,25 @@ xhr.onload = function () {
             console.log('totalWinsD:', totalWinsD);
             console.log('totalLossesD:', totalLossesD);
             getChart();
-            getChart2()
+            getChart2();
             document.getElementById('totalKillsDota2').innerHTML = totalKillsD;
             document.getElementById('totalDeathsDota2').innerHTML = totalDeathsD;
             document.getElementById('totalWinsDota2').innerHTML = totalWinsD;
+            document.getElementById('totalLossesDota2').innerHTML = totalLossesD;
             //resultsDiv.insertAdjacentHTML('beforeend', `<pre>${JSON.stringify(computePlayerStatistics(data), null, 2)}</pre>`);
+            let lastMatchesStats = data.map(match => `
+                <div>
+                    <span><strong>Match ID:</strong> ${match.match_id}</span><br>
+                    <span><strong>Kills:</strong> ${match.kills}</span><br>
+                    <span><strong>Deaths:</strong> ${match.deaths}</span><br>
+                    <span><strong>Assists:</strong> ${match.assists}</span><br>
+                    <span><strong>Radiant Score:</strong> ${match.radiant_score}</span><br>
+                    <span><strong>Dire Score:</strong> ${match.dire_score}</span><br>
+                </div>
+            `).join('');
+            document.getElementById('lastDota2').innerHTML = lastMatchesStats;
+            document.getElementById('killDeathRatioDota2').innerHTML = totalKillsD / totalDeathsD;
+            document.getElementById('winLossRatioDota2').innerHTML = totalWinsD / totalLossesD;
         };
 
         xhr2.onerror = function () {

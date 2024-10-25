@@ -16,9 +16,9 @@ TODO:
     - add a table column to check if the player won by (player is in radiant team AND radiant_win = true)
 */
 
-$name='AndreaBz';
-
-//Tested
+/*Tested
+by injecting steamid of a player that played dota2 here
+*/
 //Returns SteamID32
 function getPlayerAccountId($name, $conn){
     $stmt = $conn->prepare("SELECT steamID FROM users WHERE nickname = ?");
@@ -120,6 +120,16 @@ function getPlayerTotals($account_id)
     return $data;
 }
 
+function getPlayerName($conn, $player_id){
+    $stmt = $conn->prepare("SELECT * FROM users WHERE steamID = ?");
+    $stmt->bind_param("s", $player_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    return $row ? $row['nickname'] : null;
+    $stmt->close();
+}
+
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -134,15 +144,14 @@ if ($conn->connect_error) {
 
 //$account_id = getPlayerAccountId($name, $conn);
 $player_id = isset($_GET['player_id']) ? $_GET['player_id'] : null;
-$account_id = $player_id;
+$account_id = (int) $player_id- 76561197960265728;
 //echo getPlayerAccountId($name, $conn);
 
 /*
 Tested with:
 */
 $account_id='221959239'; //Steam32
-$name='AndreaBz';
-
+$name = getPlayerName($conn, $account_id+76561197960265728);
 
 
 
@@ -225,6 +234,7 @@ foreach ($recent_matches as $match) {
 $i = 0;
 $data = array();
 foreach ($recent_matches as $match) {
+    $match_info = getMatchInfo($match['match_id']);
     $data[] = array(
         "account_id" => $account_id,
         "personaname" => $personaname,

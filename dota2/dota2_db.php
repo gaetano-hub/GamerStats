@@ -3,13 +3,11 @@ $servername = "localhost";
 $username = "root";
 $password = "";
 $dbname = "gamerstats";
-$name = "Raddan"; //debug
+$name = ""; //get player name from db
 $player_id = "";
 function getTableData($pdo, $name)
 {
     try {
-
-    
         // Query
         $stmt = $pdo->query("SELECT * FROM `$name`"); // Replace with your table name
         $results = [];
@@ -26,10 +24,19 @@ function getTableData($pdo, $name)
     }
 }
 
+function getPlayerName($pdo, $player_id){
+    $stmt = $pdo->query("SELECT * FROM `users` WHERE `steamID` = '$player_id'");
+     // Replace with your table name
+    $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $result ? $result['name'] : null; // assuming 'name' is the column for player name}
+};
+
 try {
     
             $pdo = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $name=getPlayerName($pdo, $player_id);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     // Call the function and save the results in a variable
     $data = json_encode(getTableData($pdo, $name));
 

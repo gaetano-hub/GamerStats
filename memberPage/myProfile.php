@@ -744,6 +744,7 @@ while ($row = $result->fetch_assoc()) {
                         <div class="stats-item"><strong>Total Kills:</strong> <span id="totalKillsDota2"></span></div>
                         <div class="stats-item"><strong>Total Deaths:</strong> <span id="totalDeathsDota2"></span></div>
                         <div class="stats-item"><strong>Total Wins:</strong> <span id="totalWinsDota2"></span></div>
+                        <div class="stats-item"><strong>Total Losses:</strong> <span id="totalLossesDota2"></span></div>
                         <!-- <div class="stats-item"><strong>Total Matches Played:</strong> <span><?php echo $totalMatchesPlayed; ?></span></div>
                         <div class="stats-item"><strong>Total Rounds Played:</strong> <span><?php echo $totalRoundsPlayed; ?></span></div>
                         <div class="stats-item"><strong>Kills Per Round:</strong> <span><?php echo number_format($killsPerRound, 2); ?></span></div>
@@ -751,17 +752,14 @@ while ($row = $result->fetch_assoc()) {
                         -->
                     </div>
 
-                    <h3>Statistiche Ultima Partita</h3>
-                    <div class="stats-grid">
-                        <div class="stats-item"><strong>Last Match Kills:</strong> <span><?php echo $lastMatchKills; ?></span></div>
-                        <div class="stats-item"><strong>Last Match Deaths:</strong> <span><?php echo $lastMatchDeaths; ?></span></div>
-                        <div class="stats-item"><strong>Last Match Wins:</strong> <span><?php echo $lastMatchWins; ?></span></div>
+                    <h3>Statistiche Ultime Partite</h3>
+                    <div class="stats-grid" id="lastDota2">
                     </div>
 
                     <h3>Rapporti</h3>
                     <div class="stats-grid">
-                        <div class="stats-item"><strong>Kill/Death Ratio:</strong> <span><?php echo number_format($killDeathRatio, 2); ?></span></div>
-                        <div class="stats-item"><strong>Win/Loss Ratio:</strong> <span><?php echo number_format($winLossRatio, 2); ?></span></div>
+                        <div class="stats-item"><strong>Kill/Death Ratio:</strong> <span id="killDeathRatioDota2"></span></div>
+                        <div class="stats-item"><strong>Win/Loss Ratio:</strong> <span id="winLossRatioDota2"></span></div>
                     </div>
                 </div>
                     <div id="results">
@@ -812,8 +810,10 @@ while ($row = $result->fetch_assoc()) {
                     color: var(--text_color);
                 }
             </style>
-
-            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <script>
+                var player_id = <?php echo json_encode($steamID); ?>;
+            </script>
+            <script src="https://cdn.jsdelivr.net/npm/chart.js">var steamID = "<?php echo $steamID; ?>";</script>
             <script src= "../dota2/statcalculatorD.js"></script>
             
             
