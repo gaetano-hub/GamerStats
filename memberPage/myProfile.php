@@ -111,8 +111,8 @@ while ($row = $result->fetch_assoc()) {
                                 aria-expanded="false" style="color: var(--navbar_textCol);">Games</a>
                             <ul class="dropdown-menu" style="background-color: var(--object_color);">
                                 <!-- TODO: aggiungere href per arrivare alle pagine dei giochi-->
-                                <li><a class="dropdown-item" href="#" style="color: var(--brand_color);">Valorant</a></li>
-                                <li><a class="dropdown-item" href="../Lol/lol.php" style="color: var(--brand_color);">League of Legends</a></li>
+                                <li><a class="dropdown-item" href="../team_fortess2/team_fortess2.php" style="color: var(--brand_color);">Valorant</a></li>
+                                <li><a class="dropdown-item" href="../csgo/csgo.php" style="color: var(--brand_color);">League of Legends</a></li>
                                 <!-- <li><hr class="dropdown-divider"></li>
                                  <li><a class="dropdown-item" href="#">Something else here</a></li> 
                                  Possono sempre servire -->
@@ -399,7 +399,7 @@ while ($row = $result->fetch_assoc()) {
                                         <p><?php echo $row['member_three']; ?></p>
                                         <p><?php echo $row['member_four']; ?></p>
                                         <p><?php echo $row['member_five']; ?></p>
-                                        <a href="../team/teamPage.php?team=<?php echo $teamName; ?>" class="btn" style="background-color: var(--object_color); color: var(--text_color); border-color: var(--text_color);">Goto Team</a>
+                                        <a href="setSession.php?team=<?php echo urlencode($teamName); ?>" class="btn" style="background-color: var(--object_color); color: var(--text_color); border-color: var(--text_color);">Goto Team</a>
                                     </div>
                                 </div>
                             </div>

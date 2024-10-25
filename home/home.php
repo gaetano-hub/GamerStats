@@ -293,8 +293,8 @@ $conn->close();
                                 aria-expanded="false" style="color: var(--navbar_textCol);">Games</a>
                             <ul class="dropdown-menu" style="background-color: var(--object_color);">
                                 <!-- TODO: aggiungere href per arrivare alle pagine dei giochi-->
-                                <li><a class="dropdown-item" href="#" style="color: var(--brand_color);">Valorant</a></li>
-                                <li><a class="dropdown-item" href="../Lol/lol.php" style="color: var(--brand_color);">League of Legends</a></li>
+                                <li><a class="dropdown-item" href="../team_fortess2/team_fortess2.php" style="color: var(--brand_color);">Team Fortess 2</a></li>
+                                <li><a class="dropdown-item" href="../csgo/csgo.php" style="color: var(--brand_color);">League of Legends</a></li>
                                 <!-- <li><hr class="dropdown-divider"></li>
                                  <li><a class="dropdown-item" href="#">Something else here</a></li> 
                                  Possono sempre servire -->
@@ -393,7 +393,7 @@ $conn->close();
                                 <h5 class="card-title text-center" style="color: var(--text_color)">Valorant Top Winners</h5>
                             </div>
                             <div class="text-center mt-3">
-                                <h2 class="mb-4" style="color: var(--text_color)">Classifica</h2>
+                                <h2 class="mb-4" style="color: var(--text_color)" name="rank_tf2">Classifica</h2>
                                 <ul class="list-group">
                                     <?php foreach ($tf2Classifica as $steamID => $totalScore): ?>
                                         <?php
@@ -430,7 +430,7 @@ $conn->close();
                             <div class="d-flex flex-column align-items-center">
                                 <p class="card-text" style="color: var(--text_color); text-align: center;">
                                 </p>
-                                <ul class="list-group text-center" style="width: 100%; max-width: 400px; color: var(--text_color);">
+                                <ul class="list-group text-center" style="width: 100%; max-width: 400px; color: var(--text_color);" name="rank_csgo">
                                     <?php
                                     // Check if cs2Classifica has elements and then iterate
                                     if (!empty($cs2Classifica)) {
