@@ -505,22 +505,22 @@ $averageWinPercentage = $totalUsers > 0 ? round($totalWinPercentage / $totalUser
                                     Change leader
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" style="background-color: var(--object_color);">';
-            if (!is_null($teamData['member_one'])) {
-                echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_one'] . '" style="color: var(--text_color);">' . $teamData['member_one'] . '</button></li>';
-            }
-            if (!is_null($teamData['member_two'])) {
-                echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_two'] . '" style="color: var(--text_color);">' . $teamData['member_two'] . '</button></li>';
-            }
-            if (!is_null($teamData['member_three'])) {
-                echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_three'] . '" style="color: var(--text_color);">' . $teamData['member_three'] . '</button></li>';
-            }
-            if (!is_null($teamData['member_four'])) {
-                echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_four'] . '" style="color: var(--text_color);">' . $teamData['member_four'] . '</button></li>';
-            }
-            if (!is_null($teamData['member_five'])) {
-                echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_five'] . '" style="color: var(--text_color);">' . $teamData['member_five'] . '</button></li>';
-            }
-            echo '</ul>
+                                    if (!is_null($teamData['member_one'])) {
+                                        echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_one'] . '" style="color: var(--text_color);">' . $teamData['member_one'] . '</button></li>';
+                                    }
+                                    if (!is_null($teamData['member_two'])) {
+                                        echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_two'] . '" style="color: var(--text_color);">' . $teamData['member_two'] . '</button></li>';
+                                    }
+                                    if (!is_null($teamData['member_three'])) {
+                                        echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_three'] . '" style="color: var(--text_color);">' . $teamData['member_three'] . '</button></li>';
+                                    }
+                                    if (!is_null($teamData['member_four'])) {
+                                        echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_four'] . '" style="color: var(--text_color);">' . $teamData['member_four'] . '</button></li>';
+                                    }
+                                    if (!is_null($teamData['member_five'])) {
+                                        echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_five'] . '" style="color: var(--text_color);">' . $teamData['member_five'] . '</button></li>';
+                                    }
+                                    echo '</ul>
                             </form>
                         </div>
                         <div class="col">
@@ -529,9 +529,7 @@ $averageWinPercentage = $totalUsers > 0 ? round($totalWinPercentage / $totalUser
                                     window.location.href = \'deleteTeam.php?teamName=\' + encodeURIComponent(\'' . $visitingTeam . '\');
                                 }
                             ">Delete team</button>
-                        </div>';
-        }
-        ?>
+                        </div>;
                         <div class="col">
                             <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEdit" aria-expanded="false" aria-controls="collapseEdit" style="background-color: var(--object_color); color: var(--text_color); border-color: var(--text_color); margin-bottom:10px;">
                                 Edit team
