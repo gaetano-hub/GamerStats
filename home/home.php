@@ -619,7 +619,7 @@ $conn->close();
                                             echo "<li class='list-group-item d-flex justify-content-between align-items-center' style='background-color: rgba(255, 255, 255, 0.1);'>
                         <span>Nickname: {$nickname}</span>
                         <span>Steam ID: " . htmlspecialchars($user['steamID']) . "</span>
-                        <span class='badge bg-primary rounded-pill'>{$kdr}%</span>
+                        <span class='badge bg-primary rounded-pill'>{$kdr}</span>
                       </li>";
                                         }
                                     } else {
