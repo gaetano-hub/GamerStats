@@ -60,7 +60,7 @@ $streams_data = json_decode($response, true);
 if (isset($streams_data['data'])) {
     $streams = $streams_data['data'];
 } else {
-    echo "Error fetching streams.";
+    // echo "Error fetching streams.";
 }
 
 // Connessione al database
@@ -105,7 +105,7 @@ function insertIntoClassifica($conn, $tableName, $nickname, $steamID, $score)
     $stmt->bind_param("ssdd", $nickname, $steamID, $score, $score);
     if ($stmt->execute()) {
     } else {
-        echo "Errore durante l'inserimento dei dati: " . $stmt->error . "<br>";
+        // echo "Errore durante l'inserimento dei dati: " . $stmt->error . "<br>";
     }
 
     $stmt->close();
@@ -128,6 +128,12 @@ if ($result->num_rows > 0) {
             'cs2WinPercentage' => 0
         ];
 
+        $cs2StatsArray[$steamID] = [
+            'kills' => 0,
+            'deaths' => 0,
+            'mvps' => 0
+        ];
+
         $cs2Stats = getGameStats($steamID, $apiKey, $cs2GameId);
         if (isset($cs2Stats['playerstats']['stats'])) {
             $cs2StatsArray[$steamID] = $cs2Stats['playerstats']['stats'];
@@ -148,12 +154,22 @@ if ($result->num_rows > 0) {
         }
     }
 } else {
-    echo "Nessun utente trovato nel database.";
+    // echo "Nessun utente trovato nel database.";
 }
 
 function generaClassificaCSGO($gameStatsArray, &$userDetails, $apiKey, $gameId)
 {
     $classifica = [];
+
+    // Initialize classifica for all users in userDetails
+    foreach ($userDetails as $steamID => $details) {
+        $classifica[$steamID] = [
+            'nickname' => $details['nickname'],
+            'steamID' => $steamID,
+            'win_percentage' => 0, // Default win percentage to 0
+            'last_match' => null // Default last match stats to null
+        ];
+    }
 
     foreach ($gameStatsArray as $steamID => $stats) {
         $totalWins = 0;
@@ -172,21 +188,20 @@ function generaClassificaCSGO($gameStatsArray, &$userDetails, $apiKey, $gameId)
             $winPercentage = round(($totalWins / $totalMatches) * 100, 2);
             $lastMatchStats = getLastMatchStats($steamID, $apiKey, $gameId);
 
-            $classifica[$steamID] = [
-                'nickname' => $userDetails[$steamID]['nickname'],
-                'steamID' => $steamID,
-                'win_percentage' => $winPercentage,
-                'last_match' => $lastMatchStats
-            ];
+            // Update the corresponding entry in the classifica
+            $classifica[$steamID]['win_percentage'] = $winPercentage;
+            $classifica[$steamID]['last_match'] = $lastMatchStats;
         }
     }
 
+    // Sort the classifica by win percentage in descending order
     usort($classifica, function ($a, $b) {
         return $b['win_percentage'] <=> $a['win_percentage'];
     });
 
     return $classifica;
 }
+
 
 $cs2Classifica = generaClassificaCSGO($cs2StatsArray, $userDetails, $apiKey, $cs2GameId);
 
@@ -225,10 +240,6 @@ function getLastMatchStats($steamID, $apiKey, $gameId)
 
 
 
-
-
-
-
 // Inizializza array per le statistiche
 $cs2StatsArray = [];
 $userDetails = [];
@@ -263,7 +274,7 @@ if ($result->num_rows > 0) {
         }
     }
 } else {
-    echo "Nessun utente trovato nel database.";
+    // echo "Nessun utente trovato nel database.";
 }
 
 
@@ -426,35 +437,35 @@ $conn->close();
                             <div class="d-flex justify-content-center">
                                 <?php
                                 if (!empty($cs2Classifica_kill)) {
-                                echo '<table class="table table-dark table-striped">';
+                                    echo '<table class="table table-dark table-striped">';
                                     echo '<thead>';
-                                        echo '<tr>';
-                                            echo '<th>Nickname</th>';
-                                            echo '<th>Kills</th>';
-                                            echo '<th>Morti</th>';
-                                            echo '<th>Danni Totali</th>'; // Change to Danni Totali
-                                            echo '</tr>';
-                                        echo '</thead>';
+                                    echo '<tr>';
+                                    echo '<th>Nickname</th>';
+                                    echo '<th>Kills</th>';
+                                    echo '<th>Morti</th>';
+                                    echo '<th>Danni Totali</th>'; // Change to Danni Totali
+                                    echo '</tr>';
+                                    echo '</thead>';
                                     echo '<tbody>';
 
-                                        foreach ($cs2Classifica_kill as $data) {
+                                    foreach ($cs2Classifica_kill as $data) {
                                         $nickname = htmlspecialchars($data['nickname']);
                                         $kills = htmlspecialchars($data['totalKills']);
                                         $deaths = htmlspecialchars($data['totalDeaths']);
                                         $totalDamageDone = htmlspecialchars($data['totalDamageDone']); // Change to totalDamageDone
 
                                         echo '<tr>';
-                                            echo "<td>{$nickname}</td>";
-                                            echo "<td>{$kills}</td>";
-                                            echo "<td>{$deaths}</td>";
-                                            echo "<td>{$totalDamageDone}</td>"; // Change to totalDamageDone
-                                            echo '</tr>';
-                                        }
+                                        echo "<td>{$nickname}</td>";
+                                        echo "<td>{$kills}</td>";
+                                        echo "<td>{$deaths}</td>";
+                                        echo "<td>{$totalDamageDone}</td>"; // Change to totalDamageDone
+                                        echo '</tr>';
+                                    }
 
-                                        echo '</tbody>';
+                                    echo '</tbody>';
                                     echo '</table>';
                                 } else {
-                                echo "Nessuna classifica disponibile.<br>";
+                                    echo "<li class='list-group-item text-center' style='background-color: rgba(255, 255, 255, 0.1);'>No stats available.</li>";
                                 }
 
                                 ?>
@@ -473,33 +484,37 @@ $conn->close();
                                 <?php
                                 if (!empty($cs2Classifica)) {
                                     echo "<table class='table table-dark table-striped'>
-            <thead>
-                <tr>
-                    <th>Nickname</th>
-                    <th>Win Percentage</th>
-                    <th>Last Match Stats</th>
-                </tr>
-            </thead>
-            <tbody>";
+                                    <thead>
+            <tr>
+                <th>Nickname</th>
+                <th>Win Percentage</th>
+                <th>Last Match Stats</th>
+            </tr>
+        </thead>
+        <tbody>";
+
                                     foreach ($cs2Classifica as $player) {
                                         echo "<tr>";
                                         echo "<td>" . htmlspecialchars($player['nickname']) . "</td>";
-                                        echo "<td>" . htmlspecialchars($player['win_percentage']) . "%</td>";
-                                        if ($player['last_match']) {
+                                        echo "<td><span class='badge bg-primary rounded-pill'>" . htmlspecialchars($player['win_percentage']) . "%</span></td>";
+
+                                        if (!empty($player['last_match'])) {
                                             echo "<td class='last-match'>Kills: " . htmlspecialchars($player['last_match']['kills']) .
                                                 ", Deaths: " . htmlspecialchars($player['last_match']['deaths']) .
                                                 ", MVPs: " . htmlspecialchars($player['last_match']['mvps']) . "</td>";
                                         } else {
                                             echo "<td class='last-match'>N/A</td>";
                                         }
+
                                         echo "</tr>";
                                     }
                                     echo "</tbody>
-        </table>";
+    </table>";
                                 } else {
-                                    echo "<h2>Nessuna classifica disponibile.</h2>";
+                                    echo "<li class='list-group-item text-center' style='background-color: rgba(255, 255, 255, 0.1);'>No stats available.</li>";
                                 }
                                 ?>
+
 
 
 

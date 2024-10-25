@@ -37,6 +37,7 @@ $stmt->bind_param("s", $visitingTeam);
 $stmt->execute();
 $result = $stmt->get_result();
 
+$game = "";
 $teamData = array();
 if ($row = $result->fetch_assoc()) {
     $teamData = $row;
@@ -387,101 +388,101 @@ $averageWinPercentage = $totalUsers > 0 ? round($totalWinPercentage / $totalUser
 
     <div class="content">
         <nav class="navbar fixed-top navbar-expand-lg" style="background-color: var(--object_color);">
-            <div class="container-fluid" style="background-color: var(--object_color);">
-                <a class="navbar-brand fs-3" href="#" style="color: var(--brand_color);">GamerStats</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item dropdown" style="margin-top: 6px;">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                                aria-expanded="false" style="color: var(--navbar_textCol);">Games</a>
-                            <ul class="dropdown-menu" style="background-color: var(--object_color);">
-                                <!-- TODO: aggiungere href per arrivare alle pagine dei giochi-->
-                                <li><a class="dropdown-item" href="../csgo/csgo.php" style="color: var(--brand_color);">Csgo</a></li>
-                                <li><a class="dropdown-item" href="../team_fortress2/team_fortress2.php" style="color: var(--brand_color);">Team Fortress 2</a></li>
-                                <!-- <li><hr class="dropdown-divider"></li>
+        <div class="container-fluid" style="background-color: var(--object_color);">
+            <a class="navbar-brand fs-3" href="#" style="color: var(--brand_color);">GamerStats</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item dropdown" style="margin-top: 6px;">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false" style="color: var(--navbar_textCol);">Games</a>
+                        <ul class="dropdown-menu" style="background-color: var(--object_color);">
+                            <!-- TODO: aggiungere href per arrivare alle pagine dei giochi-->
+                            <li><a class="dropdown-item" href="../csgo/csgo.php" style="color: var(--brand_color);">Csgo</a></li>
+                            <li><a class="dropdown-item" href="../team_fortress2/team_fortress2.php" style="color: var(--brand_color);">Team Fortress 2</a></li>
+                            <!-- <li><hr class="dropdown-divider"></li>
                                  <li><a class="dropdown-item" href="#">Something else here</a></li> 
                                  Possono sempre servire -->
-                            </ul>
-                        </li>
-                        <li class="nav-item" style="margin-left: 7px; margin-top: 11px;">
-                            <a class="btn btn-outline-success" id="homeref" type="button" style=" background-color:var(--object_color);" href="../home/home.php">
-                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
-                                    <path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z" />
-                                </svg>
+                        </ul>
+                    </li>
+                    <li class="nav-item" style="margin-left: 7px; margin-top: 11px;">
+                        <a class="btn btn-outline-success" id="homeref" type="button" style=" background-color:var(--object_color);" href="../home/home.php">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+                                <path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z" />
+                            </svg>
+                        </a>
+                    </li>
+                </ul>
+                <!-- TODO: modificare href e vari dettagli del signup e login-->
+                <ul class="navbar-nav mb-2 mb-lg-0">
+                    <li class="nav-item align-self-center">
+                        <div style="position: relative;">
+                            <form class="d-flex" role="search" id="searchForm" action="search.php" method="post" style="margin-top: 10px;">
+                                <input class="form-control me-2" name="searchString" id="searchInput" type="search" placeholder="Search" aria-label="Search"
+                                    style="background-color:var(--object_color); color: var(--text_color); width: calc(100% - 40px);">
+                                <button class="btn" type="button" id="searchButton">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+                                        <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z" />
+                                    </svg>
+                                </button>
+                            </form>
+
+                            <ul class="dropdown-menu" id="resultDropdown" style="background-color: var(--object_color); position: absolute; top: 100%; left: 0; width: 13.5rem; z-index: 1000; display: none;"></ul>
+                        </div>
+                    </li>
+
+                    <script>
+                        document.getElementById('searchButton').addEventListener('click', function() {
+                            const searchString = document.getElementById('searchInput').value;
+
+                            if (searchString.trim() === '') {
+                                document.getElementById('resultDropdown').style.display = 'none';
+                                return;
+                            }
+
+                            fetch('search.php', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/x-www-form-urlencoded'
+                                    },
+                                    body: 'searchString=' + encodeURIComponent(searchString)
+                                })
+                                .then(response => response.text())
+                                .then(data => {
+                                    const resultDropdown = document.getElementById('resultDropdown');
+                                    resultDropdown.innerHTML = data;
+                                    resultDropdown.style.display = 'block';
+                                })
+                                .catch(error => console.error('Error:', error));
+                        });
+                    </script>
+                    <li class="separator" style="color: var(--separator_color);">|</li>
+                    <?php if (isset($_SESSION['nickname'])): ?>
+                        <!-- L'utente è loggato, mostra Logout -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="../memberPage/myProfile.php" style="color: var(--brand_color); font-weight: bold;">
+                                <?php echo $_SESSION['nickname']; ?>
                             </a>
                         </li>
-                    </ul>
-                    <!-- TODO: modificare href e vari dettagli del signup e login-->
-                    <ul class="navbar-nav mb-2 mb-lg-0">
-                        <li class="nav-item align-self-center">
-                            <div style="position: relative;">
-                                <form class="d-flex" role="search" id="searchForm" action="search.php" method="post" style="margin-top: 10px;">
-                                    <input class="form-control me-2" name="searchString" id="searchInput" type="search" placeholder="Search" aria-label="Search"
-                                        style="background-color:var(--object_color); color: var(--text_color); width: calc(100% - 40px);">
-                                    <button class="btn" type="button" id="searchButton">
-                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
-                                            <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z" />
-                                        </svg>
-                                    </button>
-                                </form>
-
-                                <ul class="dropdown-menu" id="resultDropdown" style="background-color: var(--object_color); position: absolute; top: 100%; left: 0; width: 13.5rem; z-index: 1000; display: none;"></ul>
-                            </div>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="../logout/logout.php" style="color: var(--brand_color);">Logout</a>
                         </li>
-
-                        <script>
-                            document.getElementById('searchButton').addEventListener('click', function() {
-                                const searchString = document.getElementById('searchInput').value;
-
-                                if (searchString.trim() === '') {
-                                    document.getElementById('resultDropdown').style.display = 'none';
-                                    return;
-                                }
-
-                                fetch('search.php', {
-                                        method: 'POST',
-                                        headers: {
-                                            'Content-Type': 'application/x-www-form-urlencoded'
-                                        },
-                                        body: 'searchString=' + encodeURIComponent(searchString)
-                                    })
-                                    .then(response => response.text())
-                                    .then(data => {
-                                        const resultDropdown = document.getElementById('resultDropdown');
-                                        resultDropdown.innerHTML = data;
-                                        resultDropdown.style.display = 'block';
-                                    })
-                                    .catch(error => console.error('Error:', error));
-                            });
-                        </script>
-                        <li class="separator" style="color: var(--separator_color);">|</li>
-                        <?php if (isset($_SESSION['nickname'])): ?>
-                            <!-- L'utente è loggato, mostra Logout -->
-                            <li class="nav-item">
-                                <a class="nav-link" href="../memberPage/myProfile.php" style="color: var(--brand_color); font-weight: bold;">
-                                    <?php echo $_SESSION['nickname']; ?>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="../logout/logout.php" style="color: var(--brand_color);">Logout</a>
-                            </li>
-                        <?php else: ?>
-                            <!-- L'utente non è loggato, mostra Login e Sign Up -->
-                            <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="../login/login.html" style="color: var(--brand_color);">Login</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="../signUp/signUp.html" style="color: var(--brand_color);">Sign Up</a>
-                            </li>
-                        <?php endif; ?>
-                    </ul>
-                </div>
+                    <?php else: ?>
+                        <!-- L'utente non è loggato, mostra Login e Sign Up -->
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="../login/login.html" style="color: var(--brand_color);">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="../signUp/signUp.html" style="color: var(--brand_color);">Sign Up</a>
+                        </li>
+                    <?php endif; ?>
+                </ul>
             </div>
+        </div>
         </nav>
     </div>
     <div style="background-color: var(--transparent_col); height: 5rem; display: flex; justify-content: center; align-items: center; margin-top: 68px;">
@@ -505,22 +506,22 @@ $averageWinPercentage = $totalUsers > 0 ? round($totalWinPercentage / $totalUser
                                     Change leader
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" style="background-color: var(--object_color);">';
-                                    if (!is_null($teamData['member_one'])) {
-                                        echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_one'] . '" style="color: var(--text_color);">' . $teamData['member_one'] . '</button></li>';
-                                    }
-                                    if (!is_null($teamData['member_two'])) {
-                                        echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_two'] . '" style="color: var(--text_color);">' . $teamData['member_two'] . '</button></li>';
-                                    }
-                                    if (!is_null($teamData['member_three'])) {
-                                        echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_three'] . '" style="color: var(--text_color);">' . $teamData['member_three'] . '</button></li>';
-                                    }
-                                    if (!is_null($teamData['member_four'])) {
-                                        echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_four'] . '" style="color: var(--text_color);">' . $teamData['member_four'] . '</button></li>';
-                                    }
-                                    if (!is_null($teamData['member_five'])) {
-                                        echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_five'] . '" style="color: var(--text_color);">' . $teamData['member_five'] . '</button></li>';
-                                    }
-                                    echo '</ul>
+            if (!is_null($teamData['member_one'])) {
+                echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_one'] . '" style="color: var(--text_color);">' . $teamData['member_one'] . '</button></li>';
+            }
+            if (!is_null($teamData['member_two'])) {
+                echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_two'] . '" style="color: var(--text_color);">' . $teamData['member_two'] . '</button></li>';
+            }
+            if (!is_null($teamData['member_three'])) {
+                echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_three'] . '" style="color: var(--text_color);">' . $teamData['member_three'] . '</button></li>';
+            }
+            if (!is_null($teamData['member_four'])) {
+                echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_four'] . '" style="color: var(--text_color);">' . $teamData['member_four'] . '</button></li>';
+            }
+            if (!is_null($teamData['member_five'])) {
+                echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_five'] . '" style="color: var(--text_color);">' . $teamData['member_five'] . '</button></li>';
+            }
+            echo '</ul>
                             </form>
                         </div>
                         <div class="col">
@@ -616,16 +617,13 @@ $averageWinPercentage = $totalUsers > 0 ? round($totalWinPercentage / $totalUser
 
     </div>
     <div class="container text-center" style="margin-top: 10px; background-color: var(--transparent_col); padding: 15px;">
-        <p style="color: var(--text_color);">
-            <b style="font-size: 2rem;">Stats TF2</b>
-        </p>
         <div class="row">
             <div class="col-md-6">
-                <p style="color: var(--text_color);">Qui inseriamo le statistiche ye</p>
                 <?php
                 // Print user statistics
-                if (!empty($userDetails)) {
+                if (!empty($userDetails) && $game === "Team Fortress 2") {
                     echo "<h2>Statistiche di Team Fortress 2</h2>";
+                    echo "uliiii" . $game;
                     echo '<div style="overflow-x:auto;">';
                     echo '<table class="table table-dark table-striped">';
                     echo '<thead>';
@@ -667,22 +665,22 @@ $averageWinPercentage = $totalUsers > 0 ? round($totalWinPercentage / $totalUser
                             'playTime' => $aggregateStats['playTime'] / $numUsers,
                             'buildingsDestroyed' => $aggregateStats['buildingsDestroyed'] / $numUsers
                         ];
-
-                        echo "<h3>Media Statistiche</h3>";
-                        echo '<div style="overflow-x:auto;">';
-                        echo '<table class="table table-dark table-striped">';
-                        echo '<thead>';
-                        echo '<tr>';
-                        echo '<th>Kills</th>';
-                        echo '<th>Damage</th>';
-                        echo '<th>Kill Assists</th>';
-                        echo '<th>Punti Scavati</th>';
-                        echo '<th>Tempo di Gioco</th>';
-                        echo '<th>Edifici Distrutti</th>';
-                        echo '</tr>';
-                        echo '</thead>';
-                        echo '<tbody>';
-                        echo '<tr>
+                    }
+                    echo "<h3>Media Statistiche</h3>";
+                    echo '<div style="overflow-x:auto;">';
+                    echo '<table class="table table-dark table-striped">';
+                    echo '<thead>';
+                    echo '<tr>';
+                    echo '<th>Kills</th>';
+                    echo '<th>Damage</th>';
+                    echo '<th>Kill Assists</th>';
+                    echo '<th>Punti Scavati</th>';
+                    echo '<th>Tempo di Gioco</th>';
+                    echo '<th>Edifici Distrutti</th>';
+                    echo '</tr>';
+                    echo '</thead>';
+                    echo '<tbody>';
+                    echo '<tr>
                         <td>' . number_format($averageStats['kills'], 2) . '</td>
                         <td>' . number_format($averageStats['damage'], 2) . '</td>
                         <td>' . number_format($averageStats['killAssists'], 2) . '</td>
@@ -690,282 +688,216 @@ $averageWinPercentage = $totalUsers > 0 ? round($totalWinPercentage / $totalUser
                         <td>' . number_format($averageStats['playTime'], 2) . '</td>
                         <td>' . number_format($averageStats['buildingsDestroyed'], 2) . '</td>
                     </tr>';
-                        echo '</tbody>';
-                        echo '</table></div>';
+                    echo '</tbody>';
+                    echo '</table></div>';
 
-                        // Prepare data for pie charts
-                        $labels = [];
-                        $killsData = [];
-                        $damageData = [];
-                        $killAssistsData = [];
+                    // Prepare data for pie charts
+                    $labels = [];
+                    $killsData = [];
+                    $damageData = [];
+                    $killAssistsData = [];
 
-                        foreach ($userDetails as $stats) {
-                            $labels[] = htmlspecialchars($stats['nickname']);
-                            $killsData[] = $stats['kills'];
-                            $damageData[] = $stats['damage'];
-                            $killAssistsData[] = $stats['killAssists'];
-                        }
+                    foreach ($userDetails as $stats) {
+                        $labels[] = htmlspecialchars($stats['nickname']);
+                        $killsData[] = $stats['kills'];
+                        $damageData[] = $stats['damage'];
+                        $killAssistsData[] = $stats['killAssists'];
+                    }
+
+
+                    // Assuming $labels, $killsData, $damageData, and $killAssistsData are defined earlier in your PHP code
+
+                    // Start outputting HTML with echo
+                    echo '<div class="col-md-6">';
+                    echo '    <h3>Grafici delle Statistiche</h3>';
+                    echo '    <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 20px;">';
+                    echo '        <canvas id="killsChart"></canvas>';
+                    echo '        <canvas id="damageChart"></canvas>';
+                    echo '        <canvas id="killAssistsChart"></canvas>';
+                    echo '    </div>';
+                    echo '    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>';
+                    echo '    <script>';
+                    echo '        function createChart(ctx, chartLabel, data, backgroundColors) {';
+                    echo '            return new Chart(ctx, {';
+                    echo '                type: "pie",';
+                    echo '                data: {';
+                    echo '                    labels: ' . json_encode($labels) . ',';
+                    echo '                    datasets: [{';
+                    echo '                        label: chartLabel,';
+                    echo '                        data: data,';
+                    echo '                        backgroundColor: backgroundColors,';
+                    echo '                        borderColor: "rgba(255, 255, 255, 1)",';
+                    echo '                        borderWidth: 1';
+                    echo '                    }]';
+                    echo '                },';
+                    echo '                options: {';
+                    echo '                    responsive: true,';
+                    echo '                    plugins: {';
+                    echo '                        legend: { position: "top" },';
+                    echo '                        tooltip: {';
+                    echo '                            callbacks: {';
+                    echo '                                label: function(tooltipItem) {';
+                    echo '                                    return tooltipItem.label + ": " + tooltipItem.raw;';
+                    echo '                                }';
+                    echo '                            }';
+                    echo '                        }';
+                    echo '                    }';
+                    echo '                }';
+                    echo '            });';
+                    echo '        }';
+
+                    echo '        const ctxKills = document.getElementById("killsChart").getContext("2d");';
+                    echo '        const ctxDamage = document.getElementById("damageChart").getContext("2d");';
+                    echo '        const ctxKillAssists = document.getElementById("killAssistsChart").getContext("2d");';
+
+                    echo '        const backgroundColors = [';
+                    echo '            "rgba(255, 99, 132, 0.6)",';
+                    echo '            "rgba(54, 162, 235, 0.6)",';
+                    echo '            "rgba(255, 206, 86, 0.6)",';
+                    echo '            "rgba(75, 192, 192, 0.6)",';
+                    echo '            "rgba(153, 102, 255, 0.6)",';
+                    echo '            "rgba(255, 159, 64, 0.6)"';
+                    echo '        ];';
+
+                    echo '        createChart(ctxKills, "Kills", ' . json_encode($killsData) . ', backgroundColors);';
+                    echo '        createChart(ctxDamage, "Damage", ' . json_encode($damageData) . ', backgroundColors);';
+                    echo '        createChart(ctxKillAssists, "Kill Assists", ' . json_encode($killAssistsData) . ', backgroundColors);';
+
+                    echo '    </script>';
+                    echo '</div>';
+                } else {
+                    // echo "No stats available.<br>";
+                }
                 ?>
             </div>
-        </div>
-        <div class="col-md-6">
-            <h3>Grafici delle Statistiche</h3>
-            <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 20px;">
-                <canvas id="killsChart" max-width="200px" max-height="200px"></canvas>
-                <canvas id="damageChart" max-width="200px" max-height="200px"></canvas>
-                <canvas id="killAssistsChart" max-width="200px" max-height="200px"></canvas>
-            </div>
-            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-            <script>
-                const ctxKills = document.getElementById('killsChart').getContext('2d');
-                const killsChart = new Chart(ctxKills, {
-                    type: 'pie',
-                    data: {
-                        labels: <?php echo json_encode($labels); ?>,
-                        datasets: [{
-                            label: 'Kills',
-                            data: <?php echo json_encode($killsData); ?>,
-                            backgroundColor: [
-                                'rgba(255, 99, 132, 0.6)',
-                                'rgba(54, 162, 235, 0.6)',
-                                'rgba(255, 206, 86, 0.6)',
-                                'rgba(75, 192, 192, 0.6)',
-                                'rgba(153, 102, 255, 0.6)',
-                                'rgba(255, 159, 64, 0.6)'
-                            ],
-                            borderColor: 'rgba(255, 255, 255, 1)',
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: {
-                                position: 'top',
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(tooltipItem) {
-                                        return tooltipItem.label + ': ' + tooltipItem.raw;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
 
-                const ctxDamage = document.getElementById('damageChart').getContext('2d');
-                const damageChart = new Chart(ctxDamage, {
-                    type: 'pie',
-                    data: {
-                        labels: <?php echo json_encode($labels); ?>,
-                        datasets: [{
-                            label: 'Damage',
-                            data: <?php echo json_encode($damageData); ?>,
-                            backgroundColor: [
-                                'rgba(255, 99, 132, 0.6)',
-                                'rgba(54, 162, 235, 0.6)',
-                                'rgba(255, 206, 86, 0.6)',
-                                'rgba(75, 192, 192, 0.6)',
-                                'rgba(153, 102, 255, 0.6)',
-                                'rgba(255, 159, 64, 0.6)'
-                            ],
-                            borderColor: 'rgba(255, 255, 255, 1)',
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: {
-                                position: 'top',
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(tooltipItem) {
-                                        return tooltipItem.label + ': ' + tooltipItem.raw;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
+            <?php
+            // Stampa la classifica
+            if (!empty($cs2Classifica) && $game === "Csgo") {
+                echo "<h2>Statistiche di CSGO 2</h2>";
+                echo '<div style="overflow-x:auto;">';
+                echo '<table class="table table-dark table-striped">';
+                echo "<thead>
+        <tr>
+            <th>Nickname</th>
+            <th>Steam ID</th>
+            <th>Win Percentage (%)</th>
+            <th>Total Kills</th>
+            <th>Total Deaths</th>
+            <th>Total Damage Done</th>
+            <th>Last Match Kills</th>
+            <th>Last Match Deaths</th>
+            <th>Last Match MVPs</th>
+        </tr>
+    </thead>";
+                echo "<tbody>"; // Add tbody for better structure
 
-                const ctxKillAssists = document.getElementById('killAssistsChart').getContext('2d');
-                const killAssistsChart = new Chart(ctxKillAssists, {
-                    type: 'pie',
-                    data: {
-                        labels: <?php echo json_encode($labels); ?>,
-                        datasets: [{
-                            label: 'Kill Assists',
-                            data: <?php echo json_encode($killAssistsData); ?>,
-                            backgroundColor: [
-                                'rgba(255, 99, 132, 0.6)',
-                                'rgba(54, 162, 235, 0.6)',
-                                'rgba(255, 206, 86, 0.6)',
-                                'rgba(75, 192, 192, 0.6)',
-                                'rgba(153, 102, 255, 0.6)',
-                                'rgba(255, 159, 64, 0.6)'
-                            ],
-                            borderColor: 'rgba(255, 255, 255, 1)',
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: {
-                                position: 'top',
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(tooltipItem) {
-                                        return tooltipItem.label + ': ' + tooltipItem.raw;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-            </script>
-    <?php
-                    }
-                } else {
-                    echo "No stats available.<br>";
+                foreach ($cs2Classifica as $user) {
+                    echo "<tr>
+            <td>{$user['nickname']}</td>
+            <td>{$user['steamID']}</td>
+            <td>{$user['cs2WinPercentage']}</td>
+            <td>{$user['totalKills']}</td>
+            <td>{$user['totalDeaths']}</td>
+            <td>{$user['totalDamageDone']}</td>
+            <td>{$user['last_match']['last_match_kills']}</td>
+            <td>{$user['last_match']['last_match_deaths']}</td>
+            <td>{$user['last_match']['last_match_mvps']}</td>
+        </tr>";
                 }
-    ?>
-        </div>
-        <?php
-        // Stampa la classifica
-        if (!empty($cs2Classifica)) {
-            echo "<h2>Statistiche di CSGO 2</h2>";
-            echo '<div style="overflow-x:auto;">';
-            echo '<table class="table table-dark table-striped">';
-            echo "<thead>
-            <tr>
-                <th>Nickname</th>
-                <th>Steam ID</th>
-                <th>Win Percentage (%)</th>
-                <th>Total Kills</th>
-                <th>Total Deaths</th>
-                <th>Total Damage Done</th>
-                <th>Last Match Kills</th>
-                <th>Last Match Deaths</th>
-                <th>Last Match MVPs</th>
-            </tr>
-          </thead>";
-            echo "<tbody>"; // Add tbody for better structure
 
-            foreach ($cs2Classifica as $user) {
-                echo "<tr>
-                <td>{$user['nickname']}</td>
-                <td>{$user['steamID']}</td>
-                <td>{$user['cs2WinPercentage']}</td>
-                <td>{$user['totalKills']}</td>
-                <td>{$user['totalDeaths']}</td>
-                <td>{$user['totalDamageDone']}</td>
-                <td>{$user['last_match']['last_match_kills']}</td>
-                <td>{$user['last_match']['last_match_deaths']}</td>
-                <td>{$user['last_match']['last_match_mvps']}</td>
-              </tr>";
+                echo "</tbody>"; // Close tbody
+                echo "</table>";
+                echo "</div>"; // Close the leaderboard div
+            } else {
+                echo "<div class='leaderboard'>";
+                // echo "<p>Nessun utente trovato con statistiche valide.</p>";
+                echo "</div>"; // Close the leaderboard div
             }
 
-            echo "</tbody>"; // Close tbody
-            echo "</table>";
-            echo "</div>"; // Close the leaderboard div
-        } else {
-            echo "<div class='leaderboard'>";
-            echo "<p>Nessun utente trovato con statistiche valide.</p>";
-            echo "</div>"; // Close the leaderboard div
-        }
-
-        // Stampa le medie
-        echo "<h2>Statistiche Medie</h2>";
-        echo '<div style="overflow-x:auto;">';
-        echo '<table class="table table-dark table-striped">';
-        echo "<thead>
+            // Stampa le medie
+            if ((isset($averageKills) || isset($averageDeaths) || isset($averageDamageDone) || isset($averageWinPercentage)) && $game === "Csgo") {
+                echo "<h2>Statistiche Medie</h2>";
+                echo '<div style="overflow-x:auto;">';
+                echo '<table class="table table-dark table-striped">';
+                echo "<thead>
         <tr>
             <th>Media Kills</th>
             <th>Media Deaths</th>
             <th>Media Danno Totale</th>
             <th>Media Win Percentage (%)</th>
         </tr>
-      </thead>";
-        echo "<tbody>";
+    </thead>";
+                echo "<tbody>";
+                echo "<tr>";
+                echo "<td>" . (isset($averageKills) ? $averageKills : '-') . "</td>";
+                echo "<td>" . (isset($averageDeaths) ? $averageDeaths : '-') . "</td>";
+                echo "<td>" . (isset($averageDamageDone) ? $averageDamageDone : '-') . "</td>";
+                echo "<td>" . (isset($averageWinPercentage) ? $averageWinPercentage : '-') . "%</td>";
+                echo "</tr>";
+                echo "</tbody>"; // Close tbody
+                echo "</table>";
+                echo "</div>"; // Close the averages div
 
-        if (isset($averageKills) || isset($averageDeaths) || isset($averageDamageDone) || isset($averageWinPercentage)) {
-            echo "<tr>";
-            echo "<td>" . (isset($averageKills) ? $averageKills : '-') . "</td>";
-            echo "<td>" . (isset($averageDeaths) ? $averageDeaths : '-') . "</td>";
-            echo "<td>" . (isset($averageDamageDone) ? $averageDamageDone : '-') . "</td>";
-            echo "<td>" . (isset($averageWinPercentage) ? $averageWinPercentage : '-') . "%</td>";
-            echo "</tr>";
-        } else {
-            echo "<tr><td colspan='4'>Nessun dato disponibile per le statistiche medie.</td></tr>";
-        }
+                // Pie chart
+                echo "<canvas id='statisticsPieChart' width='400' height='400'></canvas>";
+            ?>
 
-        echo "</tbody>"; // Close tbody
-        echo "</table>";
-        echo "</div>"; // Close the averages div
+                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                <script>
+                    const ctx = document.getElementById('statisticsPieChart').getContext('2d');
 
-        // Your existing code to fetch and display statistics goes here...
+                    // Data for the pie chart
+                    const labels = ['Total Kills', 'Total Deaths', 'Total Damage Done', 'Average Win Percentage'];
+                    const data = [
+                        <?php echo isset($averageKills) ? $averageKills : 0; ?>,
+                        <?php echo isset($averageDeaths) ? $averageDeaths : 0; ?>,
+                        <?php echo isset($averageDamageDone) ? $averageDamageDone : 0; ?>,
+                        <?php echo isset($averageWinPercentage) ? $averageWinPercentage : 0; ?>
+                    ];
 
-        // Prepare data for pie charts
-        $labels = ['Total Kills', 'Total Deaths', 'Total Damage Done', 'Average Win Percentage'];
-        $data = [
-            isset($averageKills) ? $averageKills : 0,
-            isset($averageDeaths) ? $averageDeaths : 0,
-            isset($averageDamageDone) ? $averageDamageDone : 0,
-            isset($averageWinPercentage) ? $averageWinPercentage : 0,
-        ];
-
-        ?>
-        <div class="container">
-            <!-- Pie Chart for Averages -->
-            <h2>Grafico delle Statistiche Medie</h2>
-            <canvas id="averagesChart" style="max-width: 600px; max-height: 400px;"></canvas>
-            <script>
-                var ctx = document.getElementById('averagesChart').getContext('2d');
-                var averagesChart = new Chart(ctx, {
-                    type: 'pie',
-                    data: {
-                        labels: <?php echo json_encode($labels); ?>,
-                        datasets: [{
-                            data: <?php echo json_encode($data); ?>,
-                            backgroundColor: [
-                                'rgba(255, 99, 132, 0.2)',
-                                'rgba(54, 162, 235, 0.2)',
-                                'rgba(255, 206, 86, 0.2)',
-                                'rgba(75, 192, 192, 0.2)',
-                            ],
-                            borderColor: [
-                                'rgba(255, 99, 132, 1)',
-                                'rgba(54, 162, 235, 1)',
-                                'rgba(255, 206, 86, 1)',
-                                'rgba(75, 192, 192, 1)',
-                            ],
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: {
-                                position: 'top',
-                            },
-                            title: {
-                                display: true,
-                                text: 'Statistiche Medie'
+                    const statisticsPieChart = new Chart(ctx, {
+                        type: 'pie',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Average Statistics',
+                                data: data,
+                                backgroundColor: [
+                                    'rgba(255, 99, 132, 0.2)',
+                                    'rgba(54, 162, 235, 0.2)',
+                                    'rgba(255, 206, 86, 0.2)',
+                                    'rgba(75, 192, 192, 0.2)'
+                                ],
+                                borderColor: [
+                                    'rgba(255, 99, 132, 1)',
+                                    'rgba(54, 162, 235, 1)',
+                                    'rgba(255, 206, 86, 1)',
+                                    'rgba(75, 192, 192, 1)'
+                                ],
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    position: 'top',
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Average Statistics Overview'
+                                }
                             }
                         }
-                    }
-                });
-            </script>
-            
+                    });
+                </script>
+            <?php
+            } else {
+                // echo "<tr><td colspan='4'>Nessun dato disponibile per le statistiche medie.</td></tr>";
+            }
+            ?>
         </div>
-
-
-    </div>
 
     </div>
 

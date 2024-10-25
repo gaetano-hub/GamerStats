@@ -49,6 +49,20 @@ if ($conn->query($createTf2Table) !== TRUE) {
     echo "Errore nella creazione della tabella tf2_classifica: " . $conn->error;
 }
 
+// Crea la tabella se non esiste già
+$sql = "CREATE TABLE IF NOT EXISTS users (
+    id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    nickname VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    steamID VARCHAR(255),
+    image VARCHAR(255)
+)";
+
+if ($conn->query($sql) !== TRUE) {
+    echo "Errore nella creazione della tabella: " . $conn->error;
+}
+
 // Query per ottenere tutti i dati degli utenti
 $query = "SELECT id, nickname, email, password, steamID, image FROM users WHERE steamID IS NOT NULL";
 $result = $conn->query($query);
@@ -73,25 +87,6 @@ function getGameStats($steamID, $apiKey, $gameId)
 }
 
 // Funzione per inserire i dati nelle tabelle di classifica
-function insertIntoClassifica($conn, $tableName, $nickname, $steamID, $score)
-{
-    // Prepara la query per evitare SQL injection
-    $stmt = $conn->prepare("INSERT INTO $tableName (nickname, steamID, punteggio) VALUES (?, ?, ?)
-                             ON DUPLICATE KEY UPDATE punteggio = ?");
-
-    // Bind dei parametri
-    $stmt->bind_param("ssdd", $nickname, $steamID, $score, $score); // 'ssdd' significa: string, string, double, double
-
-    // Esegui la query
-    if ($stmt->execute()) {
-        // echo "Dati inseriti con successo nella tabella $tableName per $nickname.<br>";
-    } else {
-        echo "Errore durante l'inserimento dei dati: " . $stmt->error . "<br>";
-    }
-
-    // Chiudi la dichiarazione
-    $stmt->close();
-}
 
 // Inizializza array per le statistiche
 $tf2StatsArray = [];
@@ -148,7 +143,7 @@ if ($result->num_rows > 0) {
     }
     echo "</ul>";
 } else {
-    echo "Nessun utente trovato nel database.";
+    // echo "Nessun utente trovato nel database.";
 }
 
 // Funzione per generare la classifica di Team Fortress 2
@@ -158,6 +153,12 @@ function generaClassificaTF2($tf2Stats, &$userDetails)
     $importantStats = ['iPointsScored'];
     $validClasses = ['Scout', 'Soldier', 'Pyro', 'Demoman', 'Heavy', 'Engineer', 'Medic', 'Sniper', 'Spy'];
 
+    // Initialize user scores for all users
+    foreach ($userDetails as $steamID => $details) {
+        $userScores[$steamID] = 0; // Default score to 0
+    }
+
+    // Populate scores based on TF2 stats
     foreach ($tf2Stats as $steamID => $stats) {
         foreach ($stats as $stat) {
             foreach ($importantStats as $importantStat) {
@@ -166,9 +167,7 @@ function generaClassificaTF2($tf2Stats, &$userDetails)
                     if (count($parts) === 3) {
                         $className = $parts[0];
                         if (in_array($className, $validClasses)) {
-                            if (!isset($userScores[$steamID])) {
-                                $userScores[$steamID] = 0;
-                            }
+                            // Accumulate score
                             $userScores[$steamID] += $stat['value'];
                         }
                     }
@@ -177,22 +176,33 @@ function generaClassificaTF2($tf2Stats, &$userDetails)
         }
     }
 
-    // Aggiorna i punteggi degli utenti
+    // Update user details with the scores
     foreach ($userScores as $steamID => $score) {
         if (isset($userDetails[$steamID])) {
             $userDetails[$steamID]['tf2Score'] = $score;
         }
     }
 
-    arsort($userScores); // Ordina i punteggi degli utenti in modo decrescente
+    arsort($userScores); // Sort scores in descending order
     return $userScores;
 }
+
 
 // Funzione per generare la classifica di Counter-Strike 2
 function generaClassificaCSGO($gameStatsArray, &$userDetails)
 {
     $classifica = [];
 
+    // Initialize user scores for all users
+    foreach ($userDetails as $steamID => $details) {
+        $classifica[$steamID] = [
+            'nickname' => $details['nickname'],
+            'steamID' => $steamID,
+            'win_percentage' => 0 // Default win percentage
+        ];
+    }
+
+    // Populate win percentages based on game stats
     foreach ($gameStatsArray as $steamID => $stats) {
         $totalWins = 0;
         $totalMatches = 0;
@@ -206,13 +216,10 @@ function generaClassificaCSGO($gameStatsArray, &$userDetails)
             }
         }
 
+        // Calculate win percentage if there are matches played
         if ($totalMatches > 0) {
             $winPercentage = round(($totalWins / $totalMatches) * 100, 2);
-            $classifica[$steamID] = [
-                'nickname' => $userDetails[$steamID]['nickname'],
-                'steamID' => $steamID,
-                'win_percentage' => $winPercentage
-            ];
+            $classifica[$steamID]['win_percentage'] = $winPercentage; // Update only if matches are played
         }
     }
 
@@ -224,6 +231,7 @@ function generaClassificaCSGO($gameStatsArray, &$userDetails)
     return $classifica;
 }
 
+
 // Genera le classifiche per TF2 e CS2
 $tf2Classifica = generaClassificaTF2($tf2StatsArray, $userDetails);
 $cs2Classifica = generaClassificaCSGO($cs2StatsArray, $userDetails);
@@ -231,7 +239,6 @@ $cs2Classifica = generaClassificaCSGO($cs2StatsArray, $userDetails);
 // Inserisci i dati nella tabella di classifica di Team Fortress 2
 foreach ($tf2Classifica as $steamID => $score) {
     $nickname = htmlspecialchars($userDetails[$steamID]['nickname']);
-    insertIntoClassifica($conn, 'tf2_classifica', $nickname, $steamID, $score);
 }
 
 // Inserisci i dati nella tabella di classifica di Counter-Strike 2
@@ -239,7 +246,6 @@ foreach ($cs2Classifica as $user) {
     $steamID = $user['steamID'];
     $nickname = htmlspecialchars($userDetails[$steamID]['nickname']);
     $winPercentage = $user['win_percentage'];
-    insertIntoClassifica($conn, 'cs2_classifica', $nickname, $steamID, $winPercentage);
 }
 
 // Chiudi la connessione al database
@@ -394,16 +400,36 @@ $conn->close();
                             </div>
                             <div class="text-center mt-3">
                                 <ul class="list-group">
-                                    <?php foreach ($tf2Classifica as $steamID => $totalScore): ?>
-                                        <?php
+                                    <?php
+                                    echo '<table class="table table-dark table-striped">';
+                                    echo '<thead>';
+                                    echo '<tr>';
+                                    echo '<th>Nickname</th>';
+                                    echo '<th>Steam ID</th>';
+                                    echo '<th>Total Score</th>'; // Change this if "total score" should represent something else
+                                    echo '</tr>';
+                                    echo '</thead>';
+                                    echo '<tbody>';
+
+                                    // Iterate through the leaderboard data
+                                    foreach ($tf2Classifica as $steamID => $totalScore) { // Assuming $tf2Classifica is the correct variable name
                                         // Get the nickname from userDetails using the steamID
                                         $nickname = isset($userDetails[$steamID]) ? htmlspecialchars($userDetails[$steamID]['nickname']) : 'Sconosciuto';
-                                        ?>
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            <strong><?php echo $nickname; ?> (Steam ID: <?php echo htmlspecialchars($steamID); ?>):</strong>
-                                            <span class="badge bg-primary rounded-pill"><?php echo htmlspecialchars($totalScore); ?> punti</span>
-                                        </li>
-                                    <?php endforeach; ?>
+
+                                        // Print each user's data in the table
+                                        echo '<tr>';
+                                        echo '<td>' . $nickname . '</td>'; // Nickname
+                                        echo '<td>' . $steamID . '</td>'; // Steam ID
+                                        echo '<td><span class="badge bg-primary">' . htmlspecialchars($totalScore) . ' punti</span></td>'; // Total Score highlighted in blue
+                                        echo '</tr>'; // Close the table row
+                                    }
+
+                                    echo '</tbody>';
+                                    echo '</table>';
+                                    ?>
+
+
+
                                 </ul>
                             </div>
 
@@ -421,7 +447,7 @@ $conn->close();
                 </div>
                 <div class="col">
                     <div class="card" style="width: 30rem; background-color: var(--object_color);">
-                        <div class="card-body">
+                        <div class="card-body" style="min-width: 504px; min-height: 227px;">
                             <div class="d-flex justify-content-center align-items-center">
                                 <img src="../assets/csgologo.png" class="card-img-top" alt="csgoLogo" style="width: 70px; height: auto; margin-right: 10px;">
                                 <h5 class="card-title text-center" style="color: var(--text_color)">Csgo Top Winners</h5>
@@ -431,26 +457,39 @@ $conn->close();
                                 </p>
                                 <ul class="list-group text-center" style="width: 100%; max-width: 400px; color: var(--text_color);" name="rank_csgo">
                                     <?php
-                                    // Check if cs2Classifica has elements and then iterate
                                     if (!empty($cs2Classifica)) {
-                                        // Sort the leaderboard by percentage in descending order
+                                        echo '<table class="table table-dark table-striped">';
+                                        echo '<thead>';
+                                        echo '<tr>';
+                                        echo '<th>Nickname</th>';
+                                        echo '<th>Steam ID</th>';
+                                        echo '<th>Win Percentage (%)</th>';
+                                        echo '</tr>';
+                                        echo '</thead>';
+                                        echo '<tbody>';
+
+                                        // Iterate through the leaderboard
                                         foreach ($cs2Classifica as $user) {
-                                            // Extract nickname and win percentage from user
+                                            // Extract nickname, win percentage, and Steam ID from user data
                                             $nickname = htmlspecialchars($user['nickname']);
                                             $winPercentage = htmlspecialchars($user['win_percentage']);
+                                            $steamID = htmlspecialchars($user['steamID']);
 
-                                            // Print each user in the list
-                                            echo "<li class='list-group-item d-flex justify-content-between align-items-center' style='background-color: rgba(255, 255, 255, 0.1);'>
-                        <span>Nickname: {$nickname}</span>
-                        <span>Steam ID: " . htmlspecialchars($user['steamID']) . "</span>
-                        <span class='badge bg-primary rounded-pill'>{$winPercentage}%</span>
-                      </li>";
+                                            // Print each user's data in the table
+                                            echo '<tr>';
+                                            echo '<td>' . $nickname . '</td>'; // Nickname
+                                            echo '<td>' . $steamID . '</td>'; // Steam ID
+                                            echo '<td><span class="badge bg-primary">' . $winPercentage . '%</span></td>'; // Win Percentage highlighted in blue
+                                            echo '</tr>'; // Close the table row
                                         }
+
+                                        echo '</tbody>';
+                                        echo '</table>';
                                     } else {
-                                        // If the leaderboard is empty, show a message
-                                        echo "<li class='list-group-item text-center' style='background-color: rgba(255, 255, 255, 0.1);'>Nessun vincitore trovato</li>";
+                                        echo "<div class='alert alert-warning text-center' style='background-color: rgba(255, 255, 255, 0.1);'>No stats available.</div>";
                                     }
                                     ?>
+
                                 </ul>
                             </div>
 
@@ -589,7 +628,7 @@ $conn->close();
                 Players can collect gold and experience points by killing creeps, destroying enemy structures, and killing
                 enemy heroes. This gold can be used to buy items from a shared pool, which can be combined to create more powerful
                 items.
-            <br>
+                <br>
             <p style="display: flex; justify-content: center; align-items: center; color: var(--text_color);">
                 <b style="font-size: 2rem;">Tutorials</b>
             </p>

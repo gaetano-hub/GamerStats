@@ -60,7 +60,7 @@ $streams_data = json_decode($response, true);
 if (isset($streams_data['data'])) {
     $streams = $streams_data['data'];
 } else {
-    echo "Error fetching streams.";
+    // echo "Error fetching streams.";
 }
 
 // Connessione al database
@@ -76,7 +76,7 @@ if ($conn->connect_error) {
 }
 
 // Query per ottenere tutti i dati degli utenti
-$query = "SELECT id, nickname, email, password, steamID, image FROM users WHERE steamID IS NOT NULL";
+$query = "SELECT id, nickname, steamID FROM users WHERE steamID IS NOT NULL";
 $result = $conn->query($query);
 
 // API Key di Steam
@@ -111,7 +111,7 @@ function insertIntoClassifica($conn, $tableName, $nickname, $steamID, $score)
     if ($stmt->execute()) {
         // echo "Dati inseriti con successo nella tabella $tableName per $nickname.<br>";
     } else {
-        echo "Errore durante l'inserimento dei dati: " . $stmt->error . "<br>";
+        // echo "Errore durante l'inserimento dei dati: " . $stmt->error . "<br>";
     }
 
     // Chiudi la dichiarazione
@@ -124,12 +124,10 @@ $userDetails = []; // Array per memorizzare dettagli utente
 
 // Recupera gli Steam ID e altre informazioni dal database
 if ($result->num_rows > 0) {
-    // echo "<h2>Steam ID degli utenti nel database:</h2><ul>";
 
     while ($row = $result->fetch_assoc()) {
         $steamID = $row['steamID'];
         $nickname = htmlspecialchars($row['nickname']);
-        $image = $row['image'];
 
         // Memorizza i dettagli utente
         $userDetails[$steamID] = [
@@ -152,7 +150,7 @@ if ($result->num_rows > 0) {
     }
     echo "</ul>";
 } else {
-    echo "Nessun utente trovato nel database.";
+    // echo "Nessun utente trovato nel database.";
 }
 
 // Funzione per generare la classifica di Team Fortress 2
@@ -162,6 +160,11 @@ function generaClassificaTF2($tf2Stats, &$userDetails)
     $importantStats = ['iPointsScored'];
     $validClasses = ['Scout', 'Soldier', 'Pyro', 'Demoman', 'Heavy', 'Engineer', 'Medic', 'Sniper', 'Spy'];
 
+    // Initialize scores for all users in userDetails
+    foreach ($userDetails as $steamID => $details) {
+        $userScores[$steamID] = 0; // Default score to 0
+    }
+
     foreach ($tf2Stats as $steamID => $stats) {
         foreach ($stats as $stat) {
             foreach ($importantStats as $importantStat) {
@@ -170,9 +173,6 @@ function generaClassificaTF2($tf2Stats, &$userDetails)
                     if (count($parts) === 3) {
                         $className = $parts[0];
                         if (in_array($className, $validClasses)) {
-                            if (!isset($userScores[$steamID])) {
-                                $userScores[$steamID] = 0;
-                            }
                             $userScores[$steamID] += $stat['value'];
                         }
                     }
@@ -191,6 +191,7 @@ function generaClassificaTF2($tf2Stats, &$userDetails)
     arsort($userScores); // Ordina i punteggi degli utenti in modo decrescente
     return $userScores;
 }
+
 
 
 
@@ -213,7 +214,7 @@ $result = $conn->query($query);
 if ($result === false) {
     die("Error executing query: " . $conn->error);
 } else {
-    echo "Query executed successfully. Found users: " . $result->num_rows . "<br>"; // Debugging output
+    // echo "Query executed successfully. Found users: " . $result->num_rows . "<br>"; // Debugging output
 }
 
 
@@ -224,6 +225,7 @@ $userDetails = [];
 // Fetch user details and stats
 if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
+
         $steamID = $row['steamID'];
         $nickname = htmlspecialchars($row['nickname']);
 
@@ -238,7 +240,7 @@ if ($result->num_rows > 0) {
         // Fetch TF2 stats
         $tf2Stats = getGameStats($steamID, $apiKey, $tf2GameId);
         if ($tf2Stats === null) {
-            echo "Error fetching stats for Steam ID: $steamID<br>"; // Debugging output
+            // echo "Error fetching stats for Steam ID: $steamID<br>"; // Debugging output
         } else {
             // Initialize temporary variables for aggregating stats
             $kills = $damage = $killAssists = 0;
@@ -259,7 +261,7 @@ if ($result->num_rows > 0) {
         }
     }
 } else {
-    echo "No users found in the database.<br>";
+    // echo "No users found in the database.<br>";
 }
 
 // Create a ranking score for each user
@@ -278,8 +280,9 @@ foreach ($userDetails as $steamID => $stats) {
 
 // Sort the ranking scores in descending order based on score
 usort($rankingScores, function ($a, $b) {
-    return $b['score'] <=> $a['score']; // Sort by score in descending order
+    return $b['kills'] <=> $a['kills']; // Sort by kills in descending order
 });
+
 
 
 
@@ -437,7 +440,7 @@ $conn->close();
                                     echo '<th>Kills</th>';
                                     echo '<th>Damage</th>';
                                     echo '<th>Kill Assists</th>';
-                                    echo '<th>Punti Totali</th>';
+                                    echo '<th>Total points</th>';
                                     echo '</tr>';
                                     echo '</thead>';
                                     echo '<tbody>';
@@ -462,7 +465,7 @@ $conn->close();
                                     echo '</tbody>';
                                     echo '</table>';
                                 } else {
-                                    echo "No stats available.<br>";
+                                    echo "<li class='list-group-item text-center' style='background-color: rgba(255, 255, 255, 0.1);'>No stats available.</li>";
                                 }
                                 ?>
 
@@ -478,28 +481,40 @@ $conn->close();
                                 <h5 class="card-title text-center" style="color: var(--text_color)">Team Fortress 2 Top Game Points</h5>
                             </div>
                             <div class="d-flex justify-content-center">
-                                <table class="table table-dark table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>Nickname</th>
-                                            <th>Punti Totali</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($tf2Classifica as $steamID => $totalScore): ?>
-                                            <?php
-                                            // Get the nickname from userDetails using the steamID
-                                            $nickname = isset($userDetails[$steamID]) ? htmlspecialchars($userDetails[$steamID]['nickname']) : 'Sconosciuto';
-                                            ?>
-                                            <tr>
-                                                <td><?php echo $nickname; ?></td>
-                                                <td>
-                                                    <span class="badge bg-primary rounded-pill"><?php echo htmlspecialchars($totalScore); ?> punti</span>
-                                                </td>
-                                            </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
+                                <?php
+                                if (!empty($tf2Classifica)) {
+
+                                    // Display the second table (if needed)
+                                    echo '<table class="table table-dark table-striped">';
+                                    echo '    <thead>';
+                                    echo '        <tr>';
+                                    echo '            <th>Nickname</th>';
+                                    echo '            <th>Total game points</th>';
+                                    echo '        </tr>';
+                                    echo '    </thead>';
+                                    echo '    <tbody>';
+
+                                    // Iterate through the TF2 leaderboard data
+                                    foreach ($tf2Classifica as $steamID => $totalScore) {
+                                        // Get the nickname from userDetails using the steamID
+                                        $nickname = isset($userDetails[$steamID]) ? htmlspecialchars($userDetails[$steamID]['nickname']) : 'Sconosciuto';
+
+                                        echo '        <tr>';
+                                        echo '            <td>' . $nickname . '</td>';
+                                        echo '            <td>';
+                                        echo '                <span class="badge bg-primary rounded-pill">' . htmlspecialchars($totalScore) . ' punti</span>';
+                                        echo '            </td>';
+                                        echo '        </tr>';
+                                    }
+
+                                    echo '    </tbody>';
+                                    echo '</table>';
+                                } else {
+                                    echo "<li class='list-group-item text-center' style='background-color: rgba(255, 255, 255, 0.1);'>No stats available.</li>";
+                                }
+                                ?>
+
+
 
                             </div>
                         </div>
