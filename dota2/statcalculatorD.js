@@ -36,7 +36,8 @@ xhr.onload = function () {
         document.getElementById('totalKillsDota2').innerHTML = totalKillsD;
         document.getElementById('totalDeathsDota2').innerHTML = totalDeathsD;
         document.getElementById('totalWinsDota2').innerHTML = totalWinsD;
-    let lastMatchesStats = data.map(match => `
+        document.getElementById('totalLossesDota2').innerHTML = totalLossesD;
+        let lastMatchesStats = data.map(match => `
         <div>
             <span><strong>Match ID:</strong> ${match.match_id}</span><br>
             <span><strong>Kills:</strong> ${match.kills}</span><br>
@@ -47,6 +48,8 @@ xhr.onload = function () {
         </div>
     `).join('');
     document.getElementById('lastDota2').innerHTML = lastMatchesStats;
+            document.getElementById('killDeathRatioDota2').innerHTML = totalKillsD / totalDeathsD;
+            document.getElementById('winLossRatioDota2').innerHTML = totalWinsD / totalLossesD;
     } else {
         console.error('Request failed with status:', xhr.status);
         if (xhr.responseText == '') { console.error('The OpenDotaAPI response is empty'); }
@@ -80,10 +83,11 @@ xhr.onload = function () {
             console.log('totalWinsD:', totalWinsD);
             console.log('totalLossesD:', totalLossesD);
             getChart();
-            getChart2()
+            getChart2();
             document.getElementById('totalKillsDota2').innerHTML = totalKillsD;
             document.getElementById('totalDeathsDota2').innerHTML = totalDeathsD;
             document.getElementById('totalWinsDota2').innerHTML = totalWinsD;
+            document.getElementById('totalLossesDota2').innerHTML = totalLossesD;
             //resultsDiv.insertAdjacentHTML('beforeend', `<pre>${JSON.stringify(computePlayerStatistics(data), null, 2)}</pre>`);
             let lastMatchesStats = data.map(match => `
                 <div>
@@ -96,7 +100,8 @@ xhr.onload = function () {
                 </div>
             `).join('');
             document.getElementById('lastDota2').innerHTML = lastMatchesStats;
-            
+            document.getElementById('killDeathRatioDota2').innerHTML = totalKillsD / totalDeathsD;
+            document.getElementById('winLossRatioDota2').innerHTML = totalWinsD / totalLossesD;
         };
 
         xhr2.onerror = function () {

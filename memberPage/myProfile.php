@@ -744,6 +744,7 @@ while ($row = $result->fetch_assoc()) {
                         <div class="stats-item"><strong>Total Kills:</strong> <span id="totalKillsDota2"></span></div>
                         <div class="stats-item"><strong>Total Deaths:</strong> <span id="totalDeathsDota2"></span></div>
                         <div class="stats-item"><strong>Total Wins:</strong> <span id="totalWinsDota2"></span></div>
+                        <div class="stats-item"><strong>Total Losses:</strong> <span id="totalLossesDota2"></span></div>
                         <!-- <div class="stats-item"><strong>Total Matches Played:</strong> <span><?php echo $totalMatchesPlayed; ?></span></div>
                         <div class="stats-item"><strong>Total Rounds Played:</strong> <span><?php echo $totalRoundsPlayed; ?></span></div>
                         <div class="stats-item"><strong>Kills Per Round:</strong> <span><?php echo number_format($killsPerRound, 2); ?></span></div>
@@ -757,8 +758,8 @@ while ($row = $result->fetch_assoc()) {
 
                     <h3>Rapporti</h3>
                     <div class="stats-grid">
-                        <div class="stats-item"><strong>Kill/Death Ratio:</strong> <span><?php echo number_format($killDeathRatio, 2); ?></span></div>
-                        <div class="stats-item"><strong>Win/Loss Ratio:</strong> <span><?php echo number_format($winLossRatio, 2); ?></span></div>
+                        <div class="stats-item"><strong>Kill/Death Ratio:</strong> <span id="killDeathRatioDota2"></span></div>
+                        <div class="stats-item"><strong>Win/Loss Ratio:</strong> <span id="winLossRatioDota2"></span></div>
                     </div>
                 </div>
                     <div id="results">
