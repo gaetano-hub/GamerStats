@@ -812,8 +812,10 @@ while ($row = $result->fetch_assoc()) {
                     color: var(--text_color);
                 }
             </style>
-
-            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <script>
+                var player_id = <?php echo json_encode($steamID); ?>;
+            </script>
+            <script src="https://cdn.jsdelivr.net/npm/chart.js">var steamID = "<?php echo $steamID; ?>";</script>
             <script src= "../dota2/statcalculatorD.js"></script>
             
             

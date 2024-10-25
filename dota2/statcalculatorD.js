@@ -12,8 +12,9 @@ var totalLossesD = 0;
 var totalKillsD = 0;
 var totalDeathsD = 0;
 var totalAssistsD = 0;
+var player_id;
 
-player_id = '107828036'; // GET ID OF THE PLAYER FROM SESSION
+//'76561198182224967'; // GET ID OF THE PLAYER FROM SESSION
 
 xhr.open('GET', '../dota2_api/opendota_data_api.php?player_id=' + player_id, true);
 console.log('Request opened: GET opendota_data_api.php');
@@ -31,7 +32,7 @@ xhr.onload = function () {
         console.log('totalWinsD:', totalWinsD);
         console.log('totalLossesD:', totalLossesD);
         getChart();
-        getChart2()
+        getChart2();
         document.getElementById('totalKillsDota2').innerHTML = totalKillsD;
         document.getElementById('totalDeathsDota2').innerHTML = totalDeathsD;
         document.getElementById('totalWinsDota2').innerHTML = totalWinsD;
