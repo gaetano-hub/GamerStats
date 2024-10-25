@@ -1,30 +1,53 @@
-// JS for Youtube Player API
 
-// 1. This code loads the IFrame Player API code asynchronously.
-var tag = document.createElement('script');
+(function() {
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+})();
 
-tag.src = "https://www.youtube.com/iframe_api";
-var firstScriptTag = document.getElementsByTagName('script')[0];
-firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+// Array per memorizzare i tre player
+let players = [];
 
-// 2. This function creates an <iframe> (and YouTube player)
-//    after the API code downloads.
-var player;
+// Funzione per rimuovere tutti i player attivi
+function clearPlayers() {
+    players.forEach(player => {
+        if (player && typeof player.destroy === "function") {
+            player.destroy();  // Distrugge il player
+        }
+    });
+    players = []; // Svuota l'array dei player
+}
+
+// Funzione chiamata quando l'API YouTube è pronta
 function onYouTubeIframeAPIReady() {
-    player1 = new YT.Player('player1', {
-        height: '360',
+    // Pulisce i player esistenti prima di creare i nuovi
+    clearPlayers();
+
+    players[1] = new YT.Player('player1', {
+        height: '390',
         width: '640',
-        videoId: 'kjBo6jNKfPw',
+        videoId: 'vHJ2C976Rt4', // Sostituisci con l'ID del primo video
         events: {
             'onReady': onPlayerReady,
             'onStateChange': onPlayerStateChange
         }
     });
 
-    player2 = new YT.Player('player2', {
-        height: '360',
+    players[2] = new YT.Player('player2', {
+        height: '390',
         width: '640',
-        videoId: '34P2acg-Wdo',
+        videoId: 'EnFHmRxj4hA', // Sostituisci con l'ID del secondo video
+        events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange
+        }
+    });
+
+    players[3] = new YT.Player('player3', {
+        height: '390',
+        width: '640',
+        videoId: 'ATnETqrWbwo', // Sostituisci con l'ID del terzo video
         events: {
             'onReady': onPlayerReady,
             'onStateChange': onPlayerStateChange
@@ -32,22 +55,23 @@ function onYouTubeIframeAPIReady() {
     });
 }
 
-// 3. The API will call this function when the video player is ready.
+// Funzione di callback quando il player è pronto
 function onPlayerReady(event) {
-    event.target.pauseVideo();
+    console.log("Il video è pronto per essere riprodotto");
 }
 
-// 4. The API calls this function when the player's state changes.
-//    The function indicates that when playing a video (state=1),
-//    the player should play for six seconds and then stop.
-var done = false;
+// Funzione di callback per gestire il cambio di stato
 function onPlayerStateChange(event) {
-    event.data == YT.PlayerState.PLAYING //it seems to work, and it doesn't stop :)
-    //if (event.data == YT.PlayerState.PLAYING && !done) {
-        //setTimeout(stopVideo, 10000);
-        //done = true;
-    //}
+    if (event.data == YT.PlayerState.ENDED) {
+        console.log("Il video è terminato");
+    }
 }
-function stopVideo() {
-    player.stopVideo();
+
+// Funzioni per controllare i video in base all'indice
+function playVideo(index) {
+    players[index].playVideo();
+}
+
+function pauseVideo(index) {
+    players[index].pauseVideo();
 }
