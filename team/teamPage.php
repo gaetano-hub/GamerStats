@@ -401,8 +401,8 @@ $averageWinPercentage = $totalUsers > 0 ? round($totalWinPercentage / $totalUser
                                 aria-expanded="false" style="color: var(--navbar_textCol);">Games</a>
                             <ul class="dropdown-menu" style="background-color: var(--object_color);">
                                 <!-- TODO: aggiungere href per arrivare alle pagine dei giochi-->
-                                <li><a class="dropdown-item" href="#" style="color: var(--brand_color);">Valorant</a></li>
-                                <li><a class="dropdown-item" href="../Lol/lol.php" style="color: var(--brand_color);">League of Legends</a></li>
+                                <li><a class="dropdown-item" href="../csgo/csgo.php" style="color: var(--brand_color);">Csgo</a></li>
+                                <li><a class="dropdown-item" href="../team_fortress2/team_fortress2.php" style="color: var(--brand_color);">Team Fortress 2</a></li>
                                 <!-- <li><hr class="dropdown-divider"></li>
                                  <li><a class="dropdown-item" href="#">Something else here</a></li> 
                                  Possono sempre servire -->
@@ -486,7 +486,7 @@ $averageWinPercentage = $totalUsers > 0 ? round($totalWinPercentage / $totalUser
     </div>
     <div style="background-color: var(--transparent_col); height: 5rem; display: flex; justify-content: center; align-items: center; margin-top: 68px;">
 
-        <img src="<?php echo ($game == "LoL") ? "../assets/lollogo.webp" : "../assets/valogo.webp" ?>" class="card-img-top" alt="lolLogo" style="width: 50px; height: auto; margin-right: 10px;">
+        <img src="<?php echo ($game == "Csgo") ? "../assets/csgologo.png" : "../assets/tf2.png" ?>" class="card-img-top" alt="Logo" style="width: 50px; height: auto; margin-right: 10px;">
         <p style="font-size: 2rem; font-weight: bold; color: var(--text_color);"><?php echo $visitingTeam ?></p>
     </div>
     <div class="container text-center" style="margin-top: 10px; background-color: var(--transparent_col); padding: 15px;">

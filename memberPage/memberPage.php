@@ -103,8 +103,8 @@ while ($row = $result->fetch_assoc()) {
                                 aria-expanded="false" style="color: var(--navbar_textCol);">Games</a>
                             <ul class="dropdown-menu" style="background-color: var(--object_color);">
                                 <!-- TODO: aggiungere href per arrivare alle pagine dei giochi-->
-                                <li><a class="dropdown-item" href="#" style="color: var(--brand_color);">Valorant</a></li>
-                                <li><a class="dropdown-item" href="../Lol/lol.php" style="color: var(--brand_color);">League of Legends</a></li>
+                                <li><a class="dropdown-item" href="../csgo/csgo.php" style="color: var(--brand_color);">Csgo</a></li>
+                                <li><a class="dropdown-item" href="../team_fortress2/team_fortress2.php" style="color: var(--brand_color);">Team Fortress 2</a></li>
                                 <!-- <li><hr class="dropdown-divider"></li>
                                  <li><a class="dropdown-item" href="#">Something else here</a></li> 
                                  Possono sempre servire -->

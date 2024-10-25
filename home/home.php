@@ -294,7 +294,7 @@ $conn->close();
                             <ul class="dropdown-menu" style="background-color: var(--object_color);">
                                 <!-- TODO: aggiungere href per arrivare alle pagine dei giochi-->
                                 <li><a class="dropdown-item" href="../team_fortess2/team_fortess2.php" style="color: var(--brand_color);">Team Fortess 2</a></li>
-                                <li><a class="dropdown-item" href="../csgo/csgo.php" style="color: var(--brand_color);">League of Legends</a></li>
+                                <li><a class="dropdown-item" href="../csgo/csgo.php" style="color: var(--brand_color);">Csgo</a></li>
                                 <!-- <li><hr class="dropdown-divider"></li>
                                  <li><a class="dropdown-item" href="#">Something else here</a></li> 
                                  Possono sempre servire -->
@@ -389,11 +389,10 @@ $conn->close();
                     <div class="card" style="width: 30rem; background-color: var(--object_color);">
                         <div class="card-body">
                             <div class="d-flex justify-content-center align-items-center">
-                                <img src="../assets/valogo.webp" class="card-img-top" alt="valLogo" style="width: 50px; height: auto; margin-right: 10px;">
-                                <h5 class="card-title text-center" style="color: var(--text_color)">Valorant Top Winners</h5>
+                                <img src="../assets/tf2.png" class="card-img-top" alt="tf2Logo" style="width: 70px; height: auto; margin-right: 10px;">
+                                <h5 class="card-title text-center" style="color: var(--text_color)">Team Fortress 2 Top Winners</h5>
                             </div>
                             <div class="text-center mt-3">
-                                <h2 class="mb-4" style="color: var(--text_color)" name="rank_tf2">Classifica</h2>
                                 <ul class="list-group">
                                     <?php foreach ($tf2Classifica as $steamID => $totalScore): ?>
                                         <?php
@@ -415,7 +414,7 @@ $conn->close();
                             <br>
                             <div class="d-flex justify-content-center">
                                 <a href="#" class="btn btn-block"
-                                    style="background-color: var(--button_col); color: var(--btnTxt_col);">Valorant Page</a>
+                                    style="background-color: var(--button_col); color: var(--btnTxt_col);">Team Fortress 2 Page</a>
                             </div>
                         </div>
                     </div>
@@ -424,8 +423,8 @@ $conn->close();
                     <div class="card" style="width: 30rem; background-color: var(--object_color);">
                         <div class="card-body">
                             <div class="d-flex justify-content-center align-items-center">
-                                <img src="../assets/lollogo.webp" class="card-img-top" alt="lolLogo" style="width: 50px; height: auto; margin-right: 10px;">
-                                <h5 class="card-title text-center" style="color: var(--text_color)">LoL Top Winners</h5>
+                                <img src="../assets/csgologo.png" class="card-img-top" alt="csgoLogo" style="width: 70px; height: auto; margin-right: 10px;">
+                                <h5 class="card-title text-center" style="color: var(--text_color)">Csgo Top Winners</h5>
                             </div>
                             <div class="d-flex flex-column align-items-center">
                                 <p class="card-text" style="color: var(--text_color); text-align: center;">
@@ -458,7 +457,7 @@ $conn->close();
                             <br>
                             <div class="d-flex justify-content-center">
                                 <a href="#" class="btn btn-block"
-                                    style="background-color: var(--button_col); color: var(--btnTxt_col);">LoL Page</a>
+                                    style="background-color: var(--button_col); color: var(--btnTxt_col);">Csgo Page</a>
                             </div>
                         </div>
                     </div>
