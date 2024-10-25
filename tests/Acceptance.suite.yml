@@ -1,0 +1,7 @@
+actor: AcceptanceTester
+suite_namespace: Tests\Acceptance
+modules:
+    enabled:
+        - PhpBrowser:
+            url: 'http://localhost/GamerStats'
+    
