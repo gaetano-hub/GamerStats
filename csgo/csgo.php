@@ -4,6 +4,34 @@ session_start();
 // Converti l'array di sessione in formato JSON
 $sessionData = json_encode($_SESSION);
 
+$access_token = "swqwsxqrdbfu9snanpeqm2k2fjewkr";
+$validate_url = "https://id.twitch.tv/oauth2/validate";
+
+// Initialize cURL session
+$ch = curl_init();
+
+// Set the URL and headers
+curl_setopt($ch, CURLOPT_URL, $validate_url);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Authorization: OAuth ' . $access_token
+]);
+
+// Execute cURL request
+$response = curl_exec($ch);
+
+// Check for errors or invalid token
+if (curl_errno($ch)) {
+    echo 'Error: ' . curl_error($ch);
+} else {
+    $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    if ($httpcode == 200) {
+        $response_data = json_decode($response, true);
+    } else {
+        echo "Token is invalid or expired.";
+    }
+}
+
 $access_token = 'swqwsxqrdbfu9snanpeqm2k2fjewkr';
 $client_id = 'kdky4zjc7xuo41zu0v1bqf3y9hp41v';
 $game_id = '21779';
