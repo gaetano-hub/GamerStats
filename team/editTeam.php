@@ -22,6 +22,36 @@ $memberThree = $_POST['memberThree'];
 $memberFour = $_POST['memberFour'];
 $memberFive = $_POST['memberFive'];
 
+$members = array($memberOne, $memberTwo, $memberThree, $memberFour, $memberFive);
+
+$notFoundMembers = [];
+    foreach ($members as $member) {
+        if (!empty($member)) {
+            $stmt = $conn->prepare("SELECT nickname FROM users WHERE nickname = ?");
+            $stmt->bind_param("s", $member);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            if ($result->num_rows == 0) {
+                $notFoundMembers[] = $member;
+            }
+        }
+    }
+
+    if (!empty($notFoundMembers)) {
+        $message = "Gli utenti ";
+        foreach ($notFoundMembers as $index => $member) {
+            $message .= $member;
+            if ($index < count($notFoundMembers) - 1) {
+                $message .= ", ";
+            } else {
+                $message .= " non sono registrati al sito";
+            }
+        }
+        echo '<script>alert("'.$message.'"); window.history.back();</script>';
+        exit;
+    }
+
 // Prepara la query per modificare la riga della tabella teams
 $stmt = $conn->prepare("UPDATE teams SET member_one = ?, member_two = ?, member_three = ?, member_four = ?, member_five = ? WHERE team_name = ?");
 $stmt->bind_param("ssssss", $memberOne, $memberTwo, $memberThree, $memberFour, $memberFive, $teamName);
