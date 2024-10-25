@@ -298,12 +298,8 @@ $conn->close();
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                                 aria-expanded="false" style="color: var(--navbar_textCol);">Games</a>
                             <ul class="dropdown-menu" style="background-color: var(--object_color);">
-                                <!-- TODO: aggiungere href per arrivare alle pagine dei giochi-->
                                 <li><a class="dropdown-item" href="../team_fortess2/team_fortess2.php" style="color: var(--brand_color);">Team Fortess 2</a></li>
                                 <li><a class="dropdown-item" href="../csgo/csgo.php" style="color: var(--brand_color);">Csgo</a></li>
-                                <!-- <li><hr class="dropdown-divider"></li>
-                                 <li><a class="dropdown-item" href="#">Something else here</a></li> 
-                                 Possono sempre servire -->
                             </ul>
                         </li>
                         <li class="nav-item" style="margin-left: 7px; margin-top: 11px;">
@@ -316,8 +312,19 @@ $conn->close();
                                 </svg>
                             </button>
                         </li>
+                        <li class="nav-item" style="margin-left: 7px; margin-top: 11px;">
+                            <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="var(--navbar_textCol)">
+                                    <path d="M424-320q0-81 14.5-116.5T500-514q41-36 62.5-62.5T584-637q0-41-27.5-68T480-732q-51 0-77.5 31T365-638l-103-44q21-64 77-111t141-47q105 0 161.5 58.5T698-641q0 50-21.5 85.5T609-475q-49 47-59.5 71.5T539-320H424Zm56 240q-33 0-56.5-23.5T400-160q0-33 23.5-56.5T480-240q33 0 56.5 23.5T560-160q0 33-23.5 56.5T480-80Z" />
+                                </svg>
+                            </button>
+                        </li>
+                        <div class="collapse" id="collapseExample" style="margin-left: 2px;">
+                            <div class="card card-body">
+                                <a href="mailto:giogio0202.gc@gmail.com">Need help? Contact us here.</a>
+                            </div>
+                        </div>
                     </ul>
-                    <!-- TODO: modificare href e vari dettagli del signup e login-->
                     <ul class="navbar-nav align-items-center mb-2 mb-lg-0">
                         <li class="nav-item align-self-center">
                             <div style="position: relative;">
@@ -325,7 +332,7 @@ $conn->close();
                                     <input class="form-control me-2" name="searchString" id="searchInput" type="search" placeholder="Search" aria-label="Search"
                                         style="background-color:var(--object_color); color: var(--text_color); width: calc(100% - 40px);">
                                     <button class="btn" type="button" id="searchButton">
-                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="var(--navbar_textCol)">
                                             <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z" />
                                         </svg>
                                     </button>
@@ -439,7 +446,7 @@ $conn->close();
 
                             <br>
                             <div class="d-flex justify-content-center">
-                                <a href="#" class="btn btn-block"
+                                <a href="../team_fortess2/team_fortess2.php" class="btn btn-block"
                                     style="background-color: var(--button_col); color: var(--btnTxt_col);">Team Fortress 2 Page</a>
                             </div>
                         </div>
@@ -447,15 +454,13 @@ $conn->close();
                 </div>
                 <div class="col">
                     <div class="card" style="width: 30rem; background-color: var(--object_color);">
-                        <div class="card-body" style="min-width: 504px; min-height: 227px;">
+                        <div class="card-body">
                             <div class="d-flex justify-content-center align-items-center">
-                                <img src="../assets/csgologo.png" class="card-img-top" alt="csgoLogo" style="width: 70px; height: auto; margin-right: 10px;">
+                                <img src="../assets/csgologo.png" class="card-img-top" alt="csgoLogo" style="width: 57px; height: auto; margin-right: 10px;">
                                 <h5 class="card-title text-center" style="color: var(--text_color)">Csgo Top Winners</h5>
                             </div>
-                            <div class="d-flex flex-column align-items-center">
-                                <p class="card-text" style="color: var(--text_color); text-align: center;">
-                                </p>
-                                <ul class="list-group text-center" style="width: 100%; max-width: 400px; color: var(--text_color);" name="rank_csgo">
+                            <div class="text-center mt-3">
+                                <ul class="list-group">
                                     <?php
                                     if (!empty($cs2Classifica)) {
                                         echo '<table class="table table-dark table-striped">';
@@ -463,7 +468,7 @@ $conn->close();
                                         echo '<tr>';
                                         echo '<th>Nickname</th>';
                                         echo '<th>Steam ID</th>';
-                                        echo '<th>Win Percentage (%)</th>';
+                                        echo '<th>Win Percentage</th>';
                                         echo '</tr>';
                                         echo '</thead>';
                                         echo '<tbody>';
@@ -490,12 +495,16 @@ $conn->close();
                                     }
                                     ?>
 
-                                </ul>
+                               </ul>
+                            </div>
+
+                            <div class="d-flex justify-content-center mt-4">
+                                <p class="card-text" style="color: var(--text_color)"></p>
                             </div>
 
                             <br>
                             <div class="d-flex justify-content-center">
-                                <a href="#" class="btn btn-block"
+                                <a href="../csgo/csgo.php" class="btn btn-block"
                                     style="background-color: var(--button_col); color: var(--btnTxt_col);">Csgo Page</a>
                             </div>
                         </div>
