@@ -16,7 +16,9 @@ TODO:
     - add a table column to check if the player won by (player is in radiant team AND radiant_win = true)
 */
 
-//Tested
+/*Tested
+by injecting steamid of a player that played dota2 here
+*/
 //Returns SteamID32
 function getPlayerAccountId($name, $conn){
     $stmt = $conn->prepare("SELECT steamID FROM users WHERE nickname = ?");
@@ -124,7 +126,7 @@ function getPlayerName($conn, $player_id){
     $stmt->execute();
     $result = $stmt->get_result();
     $row = $result->fetch_assoc();
-    return $row ? $row['nickname'] : null; // assuming 'name' is the column for player name
+    return $row ? $row['nickname'] : null;
     $stmt->close();
 }
 
@@ -148,10 +150,8 @@ $account_id = (int) $player_id- 76561197960265728;
 /*
 Tested with:
 */
-//$account_id='221959239'; //Steam32
-$account_id=221959239;
+$account_id='221959239'; //Steam32
 $name = getPlayerName($conn, $account_id+76561197960265728);
-
 
 
 
@@ -234,6 +234,7 @@ foreach ($recent_matches as $match) {
 $i = 0;
 $data = array();
 foreach ($recent_matches as $match) {
+    $match_info = getMatchInfo($match['match_id']);
     $data[] = array(
         "account_id" => $account_id,
         "personaname" => $personaname,

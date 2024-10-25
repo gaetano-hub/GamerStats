@@ -751,11 +751,8 @@ while ($row = $result->fetch_assoc()) {
                         -->
                     </div>
 
-                    <h3>Statistiche Ultima Partita</h3>
-                    <div class="stats-grid">
-                        <div class="stats-item"><strong>Last Match Kills:</strong> <span><?php echo $lastMatchKills; ?></span></div>
-                        <div class="stats-item"><strong>Last Match Deaths:</strong> <span><?php echo $lastMatchDeaths; ?></span></div>
-                        <div class="stats-item"><strong>Last Match Wins:</strong> <span><?php echo $lastMatchWins; ?></span></div>
+                    <h3>Statistiche Ultime Partite</h3>
+                    <div class="stats-grid" id="lastDota2">
                     </div>
 
                     <h3>Rapporti</h3>

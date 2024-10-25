@@ -36,6 +36,17 @@ xhr.onload = function () {
         document.getElementById('totalKillsDota2').innerHTML = totalKillsD;
         document.getElementById('totalDeathsDota2').innerHTML = totalDeathsD;
         document.getElementById('totalWinsDota2').innerHTML = totalWinsD;
+    let lastMatchesStats = data.map(match => `
+        <div>
+            <span><strong>Match ID:</strong> ${match.match_id}</span><br>
+            <span><strong>Kills:</strong> ${match.kills}</span><br>
+            <span><strong>Deaths:</strong> ${match.deaths}</span><br>
+            <span><strong>Assists:</strong> ${match.assists}</span><br>
+            <span><strong>Radiant Score:</strong> ${match.radiant_score}</span><br>
+            <span><strong>Dire Score:</strong> ${match.dire_score}</span><br>
+        </div>
+    `).join('');
+    document.getElementById('lastDota2').innerHTML = lastMatchesStats;
     } else {
         console.error('Request failed with status:', xhr.status);
         if (xhr.responseText == '') { console.error('The OpenDotaAPI response is empty'); }
@@ -74,6 +85,18 @@ xhr.onload = function () {
             document.getElementById('totalDeathsDota2').innerHTML = totalDeathsD;
             document.getElementById('totalWinsDota2').innerHTML = totalWinsD;
             //resultsDiv.insertAdjacentHTML('beforeend', `<pre>${JSON.stringify(computePlayerStatistics(data), null, 2)}</pre>`);
+            let lastMatchesStats = data.map(match => `
+                <div>
+                    <span><strong>Match ID:</strong> ${match.match_id}</span><br>
+                    <span><strong>Kills:</strong> ${match.kills}</span><br>
+                    <span><strong>Deaths:</strong> ${match.deaths}</span><br>
+                    <span><strong>Assists:</strong> ${match.assists}</span><br>
+                    <span><strong>Radiant Score:</strong> ${match.radiant_score}</span><br>
+                    <span><strong>Dire Score:</strong> ${match.dire_score}</span><br>
+                </div>
+            `).join('');
+            document.getElementById('lastDota2').innerHTML = lastMatchesStats;
+            
         };
 
         xhr2.onerror = function () {
