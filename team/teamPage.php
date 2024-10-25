@@ -581,7 +581,8 @@ $averageWinPercentage = $totalUsers > 0 ? round($totalWinPercentage / $totalUser
                         $stmt->bind_param("s", $member);
                         $stmt->execute();
                         $result = $stmt->get_result();
-                        $row[] = [$member, ($result->num_rows > 0) ? $result->fetch_assoc()['image'] : null];
+                        $image = $result->fetch_assoc()['image'];
+                        $row[] = [$member, ($image == null) ? '../assets/profPicture.jpg' : $image];
                         if (count($row) == 3) {
                             foreach ($row as $member) {
                                 echo '<div class="col">
