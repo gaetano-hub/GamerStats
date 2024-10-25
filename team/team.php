@@ -53,6 +53,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $members = array($memberone, $membertwo, $memberthree, $memberfour, $memberfive, $leader);
 
+    $sameLeader = array_filter($members, function($member) use ($leader) {
+        return $member == $leader;
+    });
+
+    if (count($sameLeader) > 1) {
+        echo "<script>alert('The leader cannot also be a member of the team');  window.history.back();</script>";
+        exit;
+    }
+
     $notFoundMembers = [];
     foreach ($members as $member) {
         if (!empty($member)) {

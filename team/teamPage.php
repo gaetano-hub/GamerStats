@@ -524,6 +524,15 @@ $averageWinPercentage = $totalUsers > 0 ? round($totalWinPercentage / $totalUser
                             </form>
                         </div>
                         <div class="col">
+                            <button class="btn" style="background-color: var(--object_color); color: var(--text_color); border-color: var(--text_color);" onclick="
+                                if (confirm(\'Are you sure you want to delete the team?\')) {
+                                    window.location.href = \'deleteTeam.php?teamName=\' + encodeURIComponent(\'' . $visitingTeam . '\');
+                                }
+                            ">Delete team</button>
+                        </div>';
+        }
+        ?>
+                        <div class="col">
                             <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEdit" aria-expanded="false" aria-controls="collapseEdit" style="background-color: var(--object_color); color: var(--text_color); border-color: var(--text_color); margin-bottom:10px;">
                                 Edit team
                             </button>
