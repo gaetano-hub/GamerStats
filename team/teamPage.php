@@ -73,16 +73,8 @@ if ($result->num_rows > 0) {
         // Aggiungi i membri all'array
         $members = array_merge($members, $row);
     }
-
-    // // Stampa i membri della squadra
-    // echo "<h2>Membri della squadra: {$_SESSION['nameTeam']}</h2>";
-    // foreach ($membersList as $team) {
-    //     echo "<p>Gioco: {$team['game']}<br>";
-    //     echo "Leader: {$team['leader']}<br>";
-    //     echo "Membri: " . implode(", ", $team['members']) . "</p>";
-    // }
 } else {
-    echo "<p>Nessuna squadra trovata con il nome: {$visitingTeam}</p>";
+    // echo "<p>Nessuna squadra trovata con il nome: {$visitingTeam}</p>";
 }
 
 // Cerca lo steamID per ciascun membro
@@ -195,7 +187,7 @@ foreach ($steamIDs as $steamID) {
             $aggregateStats['buildingsDestroyed'] += $buildingsDestroyed;
         }
     } else {
-        echo "Nessun utente trovato con lo steamID: $steamID<br>";
+        // echo "Nessun utente trovato con lo steamID: $steamID<br>";
     }
 
     // Chiudi la dichiarazione
@@ -275,12 +267,6 @@ foreach ($steamIDs as $steamID) {
             $totalWins = $stats['totalWins'];
             $totalMatches = $stats['totalMatches'];
             $winPercentage = $totalMatches > 0 ? round(($totalWins / $totalMatches) * 100, 2) : 0;
-
-            // Debugging statements for win percentage
-            // echo "Nickname: $nickname<br>";
-            // echo "Total Wins: $totalWins<br>";
-            // echo "Total Matches: $totalMatches<br>";
-            // echo "Calculated Win Percentage: $winPercentage%<br>";
 
             // Inizializza l'array per l'utente
             $userDetails_csgo[$steamID] = [
