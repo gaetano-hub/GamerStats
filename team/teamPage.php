@@ -48,7 +48,7 @@ if ($row = $result->fetch_assoc()) {
 
 // Prepara e esegui la query per ottenere i membri della squadra
 $stmt = $conn->prepare("SELECT game, leader, member_one, member_two, member_three, member_four, member_five FROM teams WHERE team_name = ?");
-$stmt->bind_param("s", $_SESSION['nameTeam']);
+$stmt->bind_param("s", $visitingTeam);
 $stmt->execute();
 $result = $stmt->get_result();
 
@@ -81,7 +81,7 @@ if ($result->num_rows > 0) {
     //     echo "Membri: " . implode(", ", $team['members']) . "</p>";
     // }
 } else {
-    echo "<p>Nessuna squadra trovata con il nome: {$_SESSION['nameTeam']}</p>";
+    echo "<p>Nessuna squadra trovata con il nome: {$visitingTeam}</p>";
 }
 
 // Cerca lo steamID per ciascun membro
@@ -703,9 +703,9 @@ $averageWinPercentage = $totalUsers > 0 ? round($totalWinPercentage / $totalUser
         <div class="col-md-6">
             <h3>Grafici delle Statistiche</h3>
             <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 20px;">
-                <canvas id="killsChart" width="200" height="200"></canvas>
-                <canvas id="damageChart" width="200" height="200"></canvas>
-                <canvas id="killAssistsChart" width="200" height="200"></canvas>
+                <canvas id="killsChart" max-width="200px" max-height="200px"></canvas>
+                <canvas id="damageChart" max-width="200px" max-height="200px"></canvas>
+                <canvas id="killAssistsChart" max-width="200px" max-height="200px"></canvas>
             </div>
             <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
             <script>
