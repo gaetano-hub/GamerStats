@@ -231,93 +231,11 @@ function generaClassificaCSGO($gameStatsArray, &$userDetails)
     return $classifica;
 }
 
-function getPlayerRecentMatches($account_id)
-{
-    $url = "https://api.opendota.com/api/players/" . $account_id . "/recentMatches";
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    $response = curl_exec($ch);
-    $info = curl_getinfo($ch);
-    if ($info['http_code'] != 200) {
-        error_log("Failed to get player recent matches: HTTP status code " . $info['http_code']);
-    }
-    curl_close($ch);
-    $data = json_decode($response, true);
-    if ($data === null) {
-        error_log("Failed to get player recent matches: JSON decode failed");
-        throw new Exception('Failed to get player recent matches');
-    }
-    return $data;
-}
-function generateDota2Leaderboard() 
-{
-    $leaderboard = [];
-    $dota2users = [];
-    // Connessione al database
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "gamerstats";
-
-    echo "<script>console.log('generaClassificaDota2: connecting to database');</script>";
-    $conn = new mysqli($servername, $username, $password, $dbname);
-
-    // Controlla la connessione
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
-
-    // Query per ottenere tutti i dati degli utenti con SteamID
-    $query = "SELECT nickname, steamID FROM users WHERE steamID IS NOT NULL";
-    $result = $conn->query($query);
-    
-    if ($result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            $nickname = htmlspecialchars($row['nickname']);
-            $steamID = htmlspecialchars($row['steamID']);
-            $dota2users[] = [
-                'nickname' => $nickname,
-                'steamID' => $steamID
-            ];
-        }
-        
-    } else {
-        echo "<script>console.log('generaClassificaDota2: no users found');</script>";
-        echo "Nessun utente trovato nel database.";
-    }
-        
-        // Iterate through the users array and make a call with the dota2api php file
-        foreach ($dota2users as $user) {
-            $nickname = $user['nickname'];
-            $player_id = $user['steamID'];
-            $account_id = (int) $player_id- 76561197960265728;
-            //API CALL
-            $recent_matches = getPlayerRecentMatches($account_id);
-            
-            $kdr = 0;
-            $total_kills = 0;
-            $total_deaths = 0;
-            foreach($recent_matches as $match) {
-                $total_kills += $match['kills'];
-                $total_deaths += $match['deaths'];
-            }
-            $kdr= $total_kills / $total_deaths;
-            $leaderboard[] = [
-                'nickname' => $nickname,
-                'steamID' => $player_id,
-                'kdr' => $kdr
-            ]; 
-        }
-        usort($leaderboard, function ($a, $b) {
-            return $b['kdr'] <=> $a['kdr'];
-        });
-    return $leaderboard;
-}
 
 // Genera le classifiche per TF2 e CS2
 $tf2Classifica = generaClassificaTF2($tf2StatsArray, $userDetails);
 $cs2Classifica = generaClassificaCSGO($cs2StatsArray, $userDetails);
-$dota2Leaderboard = generateDota2Leaderboard();
+
 // Inserisci i dati nella tabella di classifica di Team Fortress 2
 foreach ($tf2Classifica as $steamID => $score) {
     $nickname = htmlspecialchars($userDetails[$steamID]['nickname']);
@@ -596,18 +514,18 @@ $conn->close();
                                 <ul class="list-group text-center" style="width: 100%; max-width: 400px; color: var(--text_color);" name="rank_csgo">
                                     <?php
                                     // Check if cs2Classifica has elements and then iterate
-                                    if (!empty($dota2Leaderboard)) {
+                                    if (!empty($cs2Classifica)) {
                                         // Sort the leaderboard by percentage in descending order
-                                        foreach ($dota2Leaderboard as $user) {
+                                        foreach ($cs2Classifica as $user) {
                                             // Extract nickname and win percentage from user
                                             $nickname = htmlspecialchars($user['nickname']);
-                                            $kdr = htmlspecialchars($user['kdr']);
+                                            $winPercentage = htmlspecialchars($user['win_percentage']);
 
                                             // Print each user in the list
                                             echo "<li class='list-group-item d-flex justify-content-between align-items-center' style='background-color: rgba(255, 255, 255, 0.1);'>
                         <span>Nickname: {$nickname}</span>
                         <span>Steam ID: " . htmlspecialchars($user['steamID']) . "</span>
-                        <span class='badge bg-primary rounded-pill'>{$kdr}</span>
+                        <span class='badge bg-primary rounded-pill'>{$winPercentage}%</span>
                       </li>";
                                         }
                                     } else {
