@@ -377,7 +377,7 @@ $averageWinPercentage = $totalUsers > 0 ? round($totalWinPercentage / $totalUser
     -->
 
     <div class="content">
-        <!-- <nav class="navbar fixed-top navbar-expand-lg" style="background-color: var(--object_color);">
+        <nav class="navbar fixed-top navbar-expand-lg" style="background-color: var(--object_color);"> -->
         <div class="container-fluid" style="background-color: var(--object_color);">
             <a class="navbar-brand fs-3" href="#" style="color: var(--brand_color);">GamerStats</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -472,7 +472,7 @@ $averageWinPercentage = $totalUsers > 0 ? round($totalWinPercentage / $totalUser
                 </ul>
             </div>
         </div>
-        </nav>  -->
+        </nav>
     </div>
     <div style="background-color: var(--transparent_col); height: 5rem; display: flex; justify-content: center; align-items: center; margin-top: 68px;">
 
