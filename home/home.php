@@ -462,6 +462,49 @@ $conn->close();
                         </div>
                     </div>
                 </div>
+                <div class="col">
+                    <div class="card" style="width: 30rem; background-color: var(--object_color);">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-center align-items-center">
+                                <img src="../assets/csgologo.png" class="card-img-top" alt="csgoLogo" style="width: 70px; height: auto; margin-right: 10px;">
+                                <h5 class="card-title text-center" style="color: var(--text_color)">Dota2 Top Winners</h5>
+                            </div>
+                            <div class="d-flex flex-column align-items-center">
+                                <p class="card-text" style="color: var(--text_color); text-align: center;">
+                                </p>
+                                <ul class="list-group text-center" style="width: 100%; max-width: 400px; color: var(--text_color);" name="rank_csgo">
+                                    <?php
+                                    // Check if cs2Classifica has elements and then iterate
+                                    if (!empty($cs2Classifica)) {
+                                        // Sort the leaderboard by percentage in descending order
+                                        foreach ($cs2Classifica as $user) {
+                                            // Extract nickname and win percentage from user
+                                            $nickname = htmlspecialchars($user['nickname']);
+                                            $winPercentage = htmlspecialchars($user['win_percentage']);
+
+                                            // Print each user in the list
+                                            echo "<li class='list-group-item d-flex justify-content-between align-items-center' style='background-color: rgba(255, 255, 255, 0.1);'>
+                        <span>Nickname: {$nickname}</span>
+                        <span>Steam ID: " . htmlspecialchars($user['steamID']) . "</span>
+                        <span class='badge bg-primary rounded-pill'>{$winPercentage}%</span>
+                      </li>";
+                                        }
+                                    } else {
+                                        // If the leaderboard is empty, show a message
+                                        echo "<li class='list-group-item text-center' style='background-color: rgba(255, 255, 255, 0.1);'>Nessun vincitore trovato</li>";
+                                    }
+                                    ?>
+                                </ul>
+                            </div>
+
+                            <br>
+                            <div class="d-flex justify-content-center">
+                                <a href="#" class="btn btn-block"
+                                    style="background-color: var(--button_col); color: var(--btnTxt_col);">Csgo Page</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div style="background-color: var(--transparent_col); height: auto; padding: 1rem;">
