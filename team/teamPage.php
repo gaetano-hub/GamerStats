@@ -155,20 +155,24 @@ foreach ($steamIDs as $steamID) {
             $kills = $damage = $killAssists = $pointsScored = $playTime = $buildingsDestroyed = 0;
 
             foreach ($tf2Stats['playerstats']['stats'] as $stat) {
-                if (strpos($stat['name'], 'iNumberOfKills') !== false) {
-                    $kills += $stat['value'];
-                } elseif (strpos($stat['name'], 'iDamageDealt') !== false) {
-                    $damage += $stat['value'];
-                } elseif (strpos($stat['name'], 'iKillAssists') !== false) {
-                    $killAssists += $stat['value'];
-                } elseif (strpos($stat['name'], 'iPointsScored') !== false) {
-                    $pointsScored += $stat['value'];
-                } elseif (strpos($stat['name'], 'iPlayTime') !== false) {
-                    $playTime += $stat['value'];
-                } elseif (strpos($stat['name'], 'iBuildingsDestroyed') !== false) {
-                    $buildingsDestroyed += $stat['value'];
+                if (isset($stat['name']) && isset($stat['value'])) {
+                    $value = is_numeric($stat['value']) ? $stat['value'] : 0; // Assicurati che sia un numero
+                    if (strpos($stat['name'], 'iNumberOfKills') !== false) {
+                        $kills += $value;
+                    } elseif (strpos($stat['name'], 'iDamageDealt') !== false) {
+                        $damage += $value;
+                    } elseif (strpos($stat['name'], 'iKillAssists') !== false) {
+                        $killAssists += $value;
+                    } elseif (strpos($stat['name'], 'iPointsScored') !== false) {
+                        $pointsScored += $value;
+                    } elseif (strpos($stat['name'], 'iPlayTime') !== false) {
+                        $playTime += $value;
+                    } elseif (strpos($stat['name'], 'iBuildingsDestroyed') !== false) {
+                        $buildingsDestroyed += $value;
+                    }
                 }
             }
+            
 
             // Store accumulated stats
             $userDetails[$steamID]['kills'] = $kills;
@@ -373,7 +377,7 @@ $averageWinPercentage = $totalUsers > 0 ? round($totalWinPercentage / $totalUser
     -->
 
     <div class="content">
-        <nav class="navbar fixed-top navbar-expand-lg" style="background-color: var(--object_color);">
+        <!-- <nav class="navbar fixed-top navbar-expand-lg" style="background-color: var(--object_color);">
         <div class="container-fluid" style="background-color: var(--object_color);">
             <a class="navbar-brand fs-3" href="#" style="color: var(--brand_color);">GamerStats</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -387,12 +391,12 @@ $averageWinPercentage = $totalUsers > 0 ? round($totalWinPercentage / $totalUser
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                             aria-expanded="false" style="color: var(--navbar_textCol);">Games</a>
                         <ul class="dropdown-menu" style="background-color: var(--object_color);">
-                            <!-- TODO: aggiungere href per arrivare alle pagine dei giochi-->
+                            
                             <li><a class="dropdown-item" href="../csgo/csgo.php" style="color: var(--brand_color);">Csgo</a></li>
                             <li><a class="dropdown-item" href="../team_fortress2/team_fortress2.php" style="color: var(--brand_color);">Team Fortress 2</a></li>
-                            <!-- <li><hr class="dropdown-divider"></li>
+                                <li><hr class="dropdown-divider"></li>
                                  <li><a class="dropdown-item" href="#">Something else here</a></li> 
-                                 Possono sempre servire -->
+                                 Possono sempre servire
                         </ul>
                     </li>
                     <li class="nav-item" style="margin-left: 7px; margin-top: 11px;">
@@ -403,7 +407,6 @@ $averageWinPercentage = $totalUsers > 0 ? round($totalWinPercentage / $totalUser
                         </a>
                     </li>
                 </ul>
-                <!-- TODO: modificare href e vari dettagli del signup e login-->
                 <ul class="navbar-nav mb-2 mb-lg-0">
                     <li class="nav-item align-self-center">
                         <div style="position: relative;">
@@ -448,7 +451,7 @@ $averageWinPercentage = $totalUsers > 0 ? round($totalWinPercentage / $totalUser
                     </script>
                     <li class="separator" style="color: var(--separator_color);">|</li>
                     <?php if (isset($_SESSION['nickname'])): ?>
-                        <!-- L'utente è loggato, mostra Logout -->
+                        
                         <li class="nav-item">
                             <a class="nav-link" href="../memberPage/myProfile.php" style="color: var(--brand_color); font-weight: bold;">
                                 <?php echo $_SESSION['nickname']; ?>
@@ -458,7 +461,7 @@ $averageWinPercentage = $totalUsers > 0 ? round($totalWinPercentage / $totalUser
                             <a class="nav-link active" aria-current="page" href="../logout/logout.php" style="color: var(--brand_color);">Logout</a>
                         </li>
                     <?php else: ?>
-                        <!-- L'utente non è loggato, mostra Login e Sign Up -->
+                        
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="../login/login.html" style="color: var(--brand_color);">Login</a>
                         </li>
@@ -469,7 +472,7 @@ $averageWinPercentage = $totalUsers > 0 ? round($totalWinPercentage / $totalUser
                 </ul>
             </div>
         </div>
-        </nav>
+        </nav>  -->
     </div>
     <div style="background-color: var(--transparent_col); height: 5rem; display: flex; justify-content: center; align-items: center; margin-top: 68px;">
 
