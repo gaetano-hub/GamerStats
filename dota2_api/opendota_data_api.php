@@ -132,14 +132,16 @@ if ($conn->connect_error) {
     exit;
 }
 
-$account_id = getPlayerAccountId($name, $conn);
+//$account_id = getPlayerAccountId($name, $conn);
+$player_id = isset($_GET['player_id']) ? $_GET['player_id'] : null;
+$account_id = $player_id;
 //echo getPlayerAccountId($name, $conn);
 
 /*
 Tested with:
 */
 $account_id='221959239'; //Steam32
-$name='Raddan';
+$name='AndreaBz';
 
 
 
@@ -220,7 +222,26 @@ foreach ($recent_matches as $match) {
         exit;
     }
 }
-
+$i = 0;
+$data = array();
+foreach ($recent_matches as $match) {
+    $data[] = array(
+        "account_id" => $account_id,
+        "personaname" => $personaname,
+        "avatar" => $avatar,
+        "rank_tier" => $rank_tier,
+        "win" => $win,
+        "lose" => $lose,
+        "match_id" => $match['match_id'],
+        "kills" => $match['kills'],
+        "deaths" => $match['deaths'],
+        "assists" => $match['assists'],
+        "average_rank" => $match['average_rank'],
+        "radiant_score" => $match_info['radiant_score'],
+        "dire_score" => $match_info['dire_score']
+    );
+}
+echo json_encode($data);
 
 $stmt->close();
 $conn->close();

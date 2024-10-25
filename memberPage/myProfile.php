@@ -738,6 +738,32 @@ while ($row = $result->fetch_assoc()) {
                     <canvas id="winRatioChartD" width="300" height="150"></canvas>
                     <canvas id="kdaChartD" width="300" height="150"></canvas>
                 </div>
+                <div class="stats-details" style="margin-top: 20px;">
+                    <h3>Statistiche Totali</h3>
+                    <div class="stats-grid">
+                        <div class="stats-item"><strong>Total Kills:</strong> <span id="totalKillsDota2"></span></div>
+                        <div class="stats-item"><strong>Total Deaths:</strong> <span id="totalDeathsDota2"></span></div>
+                        <div class="stats-item"><strong>Total Wins:</strong> <span id="totalWinsDota2"></span></div>
+                        <!-- <div class="stats-item"><strong>Total Matches Played:</strong> <span><?php echo $totalMatchesPlayed; ?></span></div>
+                        <div class="stats-item"><strong>Total Rounds Played:</strong> <span><?php echo $totalRoundsPlayed; ?></span></div>
+                        <div class="stats-item"><strong>Kills Per Round:</strong> <span><?php echo number_format($killsPerRound, 2); ?></span></div>
+                        <div class="stats-item"><strong>Deaths Per Round:</strong> <span><?php echo number_format($deathsPerRound, 2); ?></span></div>
+                        -->
+                    </div>
+
+                    <h3>Statistiche Ultima Partita</h3>
+                    <div class="stats-grid">
+                        <div class="stats-item"><strong>Last Match Kills:</strong> <span><?php echo $lastMatchKills; ?></span></div>
+                        <div class="stats-item"><strong>Last Match Deaths:</strong> <span><?php echo $lastMatchDeaths; ?></span></div>
+                        <div class="stats-item"><strong>Last Match Wins:</strong> <span><?php echo $lastMatchWins; ?></span></div>
+                    </div>
+
+                    <h3>Rapporti</h3>
+                    <div class="stats-grid">
+                        <div class="stats-item"><strong>Kill/Death Ratio:</strong> <span><?php echo number_format($killDeathRatio, 2); ?></span></div>
+                        <div class="stats-item"><strong>Win/Loss Ratio:</strong> <span><?php echo number_format($winLossRatio, 2); ?></span></div>
+                    </div>
+                </div>
                     <div id="results">
                     </div>
                 </p>
