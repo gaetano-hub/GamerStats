@@ -469,82 +469,93 @@ $conn->close();
                 <b style="font-size: 2rem;">Game infos</b>
             </p>
             <p style="display: flex; justify-content: center; align-items: center; font-size: 1.5rem; color: var(--text_color);">
-                <b>Valorant</b> <br>
+                <b>Counter-Strike: Global Offensive</b> <br>
             </p>
             <p style="font-size: 1.5rem; margin-left: 10px; margin-right: 10px; color: var(--text_color);">
-                <b>What is Valorant? </b>
-                Valorant is a free-to-play first-person shooter developed by Riot Games, the same creators of League of
-                Legends.
-                It was released on June 2, 2020, for PC.
-                The game is a tactical <b>FPS</b> that combines classic FPS game mechanics with unique skill elements,
-                taking cues from titles like Counter-Strike: Global Offensive and Overwatch.
-                It requires strategy, good team coordination and a good mastery of the agents' abilities to win matches,
-                so stay focused and collaborate with your teammates, even if you're in fill lobbies!
-                Set in a futuristic world, it also has backstories relating to the agents and the maps that can be
-                discovered via the agents' voicelines or objects present in the maps.
+                <b>What is CS-GO? </b>
+                CS-GO is a first-person shooter video game developed by Valve Corporation.
+                It was first released on November 1, 2000, and has since become one of the most popular games in the
+                world, with a huge community and a high-level international esports circuit.
+                The game is a tactical <b>FPS</b> that requires strategy, good team coordination and a good mastery of
+                the maps and weapons to win matches.
+                It is a multiplayer game, where two teams face each other: the Terrorists and the Counter-Terrorists.
+                The Terrorists' goal is to plant a bomb or hold hostages, while the Counter-Terrorists must prevent
+                this from happening or defuse the bomb if it is planted.
+                The match takes place over 30 rounds, and the first team to win 16 rounds wins the match.
                 <br>
                 <b>Game modes: </b>
-                Valorant offers various game modes, but the main one is the competitive <b>5v5 mode</b>, where two teams
-                face each other: an attacking team and a defensive one.
-                The attackers' goal is to plant a "spike" and make it explode, while the defenders must prevent this
-                from happening or defuse the spike if it is planted.
-                The match takes place over 25 rounds, and the first team to win 13 rounds wins the match.
+                CS-GO offers various game modes, but the main one is the competitive <b>5v5 mode</b>, where
+                two teams face each other.
+                The match takes place over 30 rounds, and the first team to win 16 rounds wins the match.
                 <br>
-                <b>Agents: </b>
-                In Valorant, players choose from various agents, each with unique abilities divided into four main
-                categories:<br>
-            <ul style="list-style-type: disc; margin-left: 40px; font-size: 1.5rem; margin-top: -10px; color: var(--text_color);">
-                <li><b>Duelists:</b> focused on direct combat.</li>
-                <li><b>Initiator:</b> set up the ground for the attack.</li>
-                <li><b>Controller:</b> manipulate the space to block the enemy.</li>
-                <li><b>Sentinel:</b> defenders and supports for the team.</li>
-            </ul>
+                <b>Maps: </b>
+                In CS-GO, players compete on various maps, each with its own unique layout, hiding spots
+                and callouts.
+                The most popular maps are <b>Dust II</b>, <b>Inferno</b>, <b>Mirage</b>, <b>Nuke</b>, and <b>Overpass</b>.
             </p>
             <p style="display: flex; justify-content: center; align-items: center; font-size: 1.5rem; color: var(--text_color);">
                 <b>League of Legends</b> <br>
             </p>
             <p style="font-size: 1.5rem; margin-left: 10px; margin-right: 10px; color: var(--text_color);">
-                <b>What is LoL? </b>
-                League of Legends (LoL) is a <b>MOBA</b> (Multiplayer Online Battle Arena) developed and published by
-                <b>Riot Games</b>.
-                Launched in 2009, it is one of the most popular competitive games in the world, with a huge community
-                and a high-level international esports circuit.
-                In LoL, two teams of five players compete in an arena, aiming to destroy the enemy base, the Nexus,
-                through strategies, skills, and teamwork.
+                <b>What is Team Fortress 2? </b>
+                Team Fortress 2 (TF2) is a team-based multiplayer first-person shooter game developed and published by
+                <b>Valve Corporation</b>.
+                Released in 2007, it is known for its unique art style, humor, and engaging gameplay mechanics.
+                In TF2, two teams, RED and BLU, compete to achieve objectives in various game modes through teamwork and
+                strategy.
                 <br>
                 <b>Game modes: </b>
-                The main game mode of League of Legends is <b>Summoner's Rift</b>, a symmetrical map divided into three
-                lanes (top, mid, bot) and a jungle.
-                In each match, teams work to gain resources, such as gold and experience, by killing minions, neutral
-                monsters, and enemy champions. The team that destroys the enemy Nexus wins.
-                In addition to Summoner's Rift, there are other game modes like ARAM (All Random All Mid), which is
-                faster-paced and takes place on a single lane.
+                The game features multiple modes, including <b>Capture the Flag</b>, <b>Control Point</b>, <b>Payload</b>,
+                and <b>King of the Hill</b>, each offering different challenges and requiring different strategies.
+                Players must coordinate their efforts to outsmart the opposing team and complete objectives.
                 <br>
-                <b>Champions: </b>
-                In LoL, players choose from over 160 champions, each with unique abilities, specific roles, and distinct
-                playstyles. Champions are divided into several categories:
+                <b>Classes: </b>
+                TF2 offers nine distinct classes, each with unique weapons and abilities that cater to different playstyles:
             <ul style="list-style-type: disc; margin-left: 40px; font-size: 1.5rem; margin-top: -10px; color: var(--text_color);">
-                <li><b>Assassins:</b> High burst damage, specialized in rapidly eliminating enemies (e.g. Zed,
-                    Katarina).</li>
-                <li><b>Mages:</b> Strong magical power, often focused on dealing damage from a distance and controlling
-                    crowds (e.g. Lux, Syndra).</li>
-                <li><b>Marksmen:</b> Physical damage from a distance, usually the primary target in teamfights (e.g.
-                    Jinx, Caitlyn).</li>
-                <li><b>Tanks:</b> High resistance, capable of protecting the team by absorbing damage (e.g. Malphite,
-                    Sion).</li>
-                <li><b>Supports:</b> Provide healing, shields, and crowd control, supporting their team members (e.g.
-                    Thresh, Lulu).</li>
+                <li><b>Scout:</b> Fast and agile, excels in capturing objectives and flanking enemies.</li>
+                <li><b>Soldier:</b> Versatile and well-rounded, capable of dealing significant damage with rockets.</li>
+                <li><b>Pyro:</b> Wields a flamethrower, effective at ambushing and causing chaos.</li>
+                <li><b>Demoman:</b> Specializes in explosives, ideal for area denial and destroying objectives.</li>
+                <li><b>Heavy:</b> High health and damage output, serves as a frontline tank.</li>
+                <li><b>Engineer:</b> Builds and maintains structures like sentry guns to support the team.</li>
+                <li><b>Medic:</b> Heals teammates and provides critical boosts during battles.</li>
+                <li><b>Sniper:</b> Long-range specialist, excels at picking off key targets from a distance.</li>
+                <li><b>Spy:</b> Masters of deception, can disguise and infiltrate enemy lines to eliminate targets.</li>
             </ul>
+            </p>
             <br>
-
+            <p style="display: flex; justify-content: center; align-items: center; font-size: 1.5rem; color: var(--text_color);">
+                <b>Dota 2</b>
+            </p>
+            <p style="font-size: 1.5rem; margin-left: 10px; margin-right: 10px; color: var(--text_color);">
+                <b>What is DOTA 2? </b>
+                Dota 2 is a multiplayer online battle arena game developed by Valve Corporation, released in 2013.
+                It is the stand-alone sequel to the Warcraft III custom map Defense of the Ancients, and is one of the most popular
+                MOBA games of all time.
+                <br>
+                <b>Gameplay:</b>
+                Two teams, Radiant and Dire, each composed of five players, compete to destroy the opposing team's
+                "Ancient," a powerful structure located in their base. Players can choose from over 100 playable heroes,
+                each with unique abilities and playstyles.
+                <br>
+                <b>Game modes: </b>
+                Dota 2 offers a variety of game modes, including <b>Single Draft</b>, <b>All Pick</b>, <b>Random Draft</b>,
+                and <b>Custom Games</b>, each with different rules and objectives.
+                <br>
+                <b>Items and crafting: </b>
+                Players can collect gold and experience points by killing creeps, destroying enemy structures, and killing
+                enemy heroes. This gold can be used to buy items from a shared pool, which can be combined to create more powerful
+                items.
+            <br>
             <p style="display: flex; justify-content: center; align-items: center; color: var(--text_color);">
                 <b style="font-size: 2rem;">Tutorials</b>
             </p>
 
             <!-- Player per Youtube player API -->
             <div style="display: flex; justify-content: center; align-items: center; padding: 3rem;">
+                <div id="player1" style="margin-right: 5rem;"></div>
                 <div id="player2" style="margin-right: 5rem;"></div>
-                <div id="player1"></div>
+                <div id="player3"></div>
             </div>
             </p>
         </div>
