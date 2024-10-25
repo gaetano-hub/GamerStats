@@ -111,8 +111,8 @@ while ($row = $result->fetch_assoc()) {
                                 aria-expanded="false" style="color: var(--navbar_textCol);">Games</a>
                             <ul class="dropdown-menu" style="background-color: var(--object_color);">
                                 <!-- TODO: aggiungere href per arrivare alle pagine dei giochi-->
-                                <li><a class="dropdown-item" href="../team_fortess2/team_fortess2.php" style="color: var(--brand_color);">Valorant</a></li>
-                                <li><a class="dropdown-item" href="../csgo/csgo.php" style="color: var(--brand_color);">League of Legends</a></li>
+                                <li><a class="dropdown-item" href="../team_fortess2/team_fortess2.php" style="color: var(--brand_color);">Team Fortress 2</a></li>
+                                <li><a class="dropdown-item" href="../csgo/csgo.php" style="color: var(--brand_color);">Csgo</a></li>
                                 <!-- <li><hr class="dropdown-divider"></li>
                                  <li><a class="dropdown-item" href="#">Something else here</a></li> 
                                  Possono sempre servire -->
@@ -324,8 +324,8 @@ while ($row = $result->fetch_assoc()) {
                                 </div>
                                 <select class="form-select" aria-label="Default select example" name="game" style="margin-bottom: 5px; height: 3.5rem; background-color: var(--object_color); color: var(--text_color);">
                                     <option selected>Game</option>
-                                    <option value="Valorant">Valorant</option>
-                                    <option value="LoL">LoL</option>
+                                    <option value="Csgo">Csgo</option>
+                                    <option value="Team Fortress 2">Team Fortress 2</option>
                                 </select>
                                 <div class="row">
                                     <div class="col">
@@ -399,7 +399,7 @@ while ($row = $result->fetch_assoc()) {
                                         <p><?php echo $row['member_three']; ?></p>
                                         <p><?php echo $row['member_four']; ?></p>
                                         <p><?php echo $row['member_five']; ?></p>
-                                        <a href="setSession.php?team=<?php echo urlencode($teamName); ?>" class="btn" style="background-color: var(--object_color); color: var(--text_color); border-color: var(--text_color);">Goto Team</a>
+                                        <a href="../team/teamPage.php?team=<?php echo urlencode($teamName); ?>" class="btn" style="background-color: var(--object_color); color: var(--text_color); border-color: var(--text_color);">Goto Team</a>
                                     </div>
                                 </div>
                             </div>

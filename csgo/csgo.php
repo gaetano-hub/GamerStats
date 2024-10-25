@@ -4,9 +4,37 @@ session_start();
 // Converti l'array di sessione in formato JSON
 $sessionData = json_encode($_SESSION);
 
+$access_token = "swqwsxqrdbfu9snanpeqm2k2fjewkr";
+$validate_url = "https://id.twitch.tv/oauth2/validate";
+
+// Initialize cURL session
+$ch = curl_init();
+
+// Set the URL and headers
+curl_setopt($ch, CURLOPT_URL, $validate_url);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Authorization: OAuth ' . $access_token
+]);
+
+// Execute cURL request
+$response = curl_exec($ch);
+
+// Check for errors or invalid token
+if (curl_errno($ch)) {
+    echo 'Error: ' . curl_error($ch);
+} else {
+    $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    if ($httpcode == 200) {
+        $response_data = json_decode($response, true);
+    } else {
+        echo "Token is invalid or expired.";
+    }
+}
+
 $access_token = 'swqwsxqrdbfu9snanpeqm2k2fjewkr';
 $client_id = 'kdky4zjc7xuo41zu0v1bqf3y9hp41v';
-$game_id = '21779';
+$game_id = '32399';
 
 // Fetch the top 10 live streams for the specified game
 $api_url = 'https://api.twitch.tv/helix/streams?game_id=' . $game_id . '&first=10';
@@ -286,7 +314,7 @@ $conn->close();
     <script src="../home/scriptHome.js" defer></script>
     <link href="../assets/css/bootstrap.min.css" rel="stylesheet" />
     <script src="../assets/js/bootstrap.bundle.min.js"></script>
-    <title>League of Legends</title>
+    <title>Csgo</title>
 </head>
 
 <body>
@@ -305,7 +333,7 @@ $conn->close();
                             </a>
                             <ul class="dropdown-menu" style="background-color: var(--object_color);">
                                 <li><a class="dropdown-item" href="../team_fortess2/team_fortess2.php" style="color: var(--brand_color);">Team Fortress 2</a></li>
-                                <li><a class="dropdown-item" href="#" style="color: var(--brand_color);">League of Legends</a></li>
+                                <li><a class="dropdown-item" href="../csgo/csgo.php" style="color: var(--brand_color);">Csgo</a></li>
                             </ul>
                         </li>
                         <li class="nav-item">
@@ -350,10 +378,10 @@ $conn->close();
         </nav>
 
         <div style="background-color: var(--transparent_col); height: 5rem; display: flex; justify-content: center; align-items: center; margin-top: 68px;">
-            <p style="font-size: 2rem; font-weight: bold; color: var(--text_color);">LoL Page</p>
+            <p style="font-size: 2rem; font-weight: bold; color: var(--text_color);">Csgo Page</p>
         </div>
 
-        <h1 class="text-center" style="color: white">Live LoL Streams</h1>
+        <h1 class="text-center" style="color: white">Live Csgo Streams</h1>
         <div id="streams-carousel" class="carousel slide streams mx-auto" style="max-width: 50%;" data-bs-ride="false">
             <div class="carousel-inner">
                 <?php if (!empty($streams)) : ?>
@@ -392,8 +420,8 @@ $conn->close();
                     <div class="card" style="width: 30rem; background-color: var(--object_color);">
                         <div class="card-body">
                             <div class="d-flex justify-content-center align-items-center">
-                                <img src="../assets/lollogo.webp" class="card-img-top" alt="lolLogo" style="width: 50px; height: auto; margin-right: 10px;">
-                                <h5 class="card-title text-center" style="color: var(--text_color)">Lol Top boh</h5>
+                                <img src="../assets/csgologo.png" class="card-img-top" alt="csgoLogo" style="width: 70px; height: auto; margin-right: 10px;">
+                                <h5 class="card-title text-center" style="color: var(--text_color)">Csgo Top Kill</h5>
                             </div>
                             <div class="d-flex justify-content-center">
                                 <?php
@@ -438,8 +466,8 @@ $conn->close();
                     <div class="card" style="width: 30rem; background-color: var(--object_color);">
                         <div class="card-body">
                             <div class="d-flex justify-content-center align-items-center">
-                                <img src="../assets/lollogo.webp" class="card-img-top" alt="lollLogo" style="width: 50px; height: auto; margin-right: 10px;">
-                                <h5 class="card-title text-center" style="color: var(--text_color)">LoL Top Winners</h5>
+                                <img src="../assets/csgologo.png" class="card-img-top" alt="csgoLogo" style="width: 70px; height: auto; margin-right: 10px;">
+                                <h5 class="card-title text-center" style="color: var(--text_color)">Csgo Top Winners</h5>
                             </div>
                             <div class="d-flex justify-content-center">
                                 <?php

@@ -1,14 +1,6 @@
 <?php
 session_start();
 
-// Access the session variable
-if (isset($_SESSION['nameMember'])) {
-    $memberName = $_SESSION['nameMember'];
-    // Use $memberName as needed in your page
-    echo "<h1>Nome Membro: " . htmlspecialchars($memberName) . "</h1>";
-} else {
-    echo "<h1>Nessun membro selezionato.</h1>";
-}
 
 
 if (isset($_GET['user']) && !empty($_GET['user'])) {
@@ -22,7 +14,7 @@ if (!isset($_SESSION['discord_user']) && !isset($_SESSION['nickname'])) {
     header("Location: ../login/login.html");
 }
 
-$visitingUser = $_SESSION['nameMember'];
+
 
 // Connessione al database
 $servername = "localhost";
@@ -51,14 +43,10 @@ $teamNames = array();
 while ($row = $result->fetch_assoc()) {
     $teamNames[] = $row['team_name'];
 }
-$steamID = "";
-// Check if 'nameMember' is set in the session
-if (isset($_SESSION['nameMember'])) {
-    $nameMember = $_SESSION['nameMember'];
 
     // Prepare and bind statement to prevent SQL injection
     $stmt = $conn->prepare("SELECT steamID FROM users WHERE nickname = ?");
-    $stmt->bind_param("s", $nameMember); // 's' specifies the variable type => 'string'
+    $stmt->bind_param("s", $visitingUser); // 's' specifies the variable type => 'string'
 
     // Execute the statement
     $stmt->execute();
@@ -71,17 +59,13 @@ if (isset($_SESSION['nameMember'])) {
         // Fetch the steamID
         $row = $result->fetch_assoc();
         $steamID = $row['steamID'];
-        echo "Steam ID for $nameMember is: " . htmlspecialchars($steamID);
+        echo "Steam ID for $visitingUser is: " . htmlspecialchars($steamID);
     } else {
         echo "Nessun utente trovato con il nickname: " . htmlspecialchars($nameMember);
     }
 
     // Close the statement
     $stmt->close();
-} else {
-    echo "Nessun membro selezionato.";
-}
-
 ?>
 
 
@@ -119,8 +103,8 @@ if (isset($_SESSION['nameMember'])) {
                                 aria-expanded="false" style="color: var(--navbar_textCol);">Games</a>
                             <ul class="dropdown-menu" style="background-color: var(--object_color);">
                                 <!-- TODO: aggiungere href per arrivare alle pagine dei giochi-->
-                                <li><a class="dropdown-item" href="#" style="color: var(--brand_color);">Valorant</a></li>
-                                <li><a class="dropdown-item" href="../Lol/lol.php" style="color: var(--brand_color);">League of Legends</a></li>
+                                <li><a class="dropdown-item" href="../csgo/csgo.php" style="color: var(--brand_color);">Csgo</a></li>
+                                <li><a class="dropdown-item" href="../team_fortress2/team_fortress2.php" style="color: var(--brand_color);">Team Fortress 2</a></li>
                                 <!-- <li><hr class="dropdown-divider"></li>
                                  <li><a class="dropdown-item" href="#">Something else here</a></li> 
                                  Possono sempre servire -->
