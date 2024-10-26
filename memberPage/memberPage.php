@@ -566,10 +566,103 @@ while ($row = $result->fetch_assoc()) {
             } else {
                 echo "<p>Statistiche non disponibili per Team Fortress 2.</p>";
             }
+        ?>
+
+<div class="container text-center" style="margin-top: 10px; background-color: var(--transparent_col); padding: 15px;">
+                    <p style="font-size: 2rem; font-weight: bold; color: var(--text_color);">
+                        Statistiche di Dota 2
+                    <div class="charts-grid">
+                        <canvas id="winRatioChartD" width="300" height="150"></canvas>
+                        <canvas id="kdaChartD" width="300" height="150"></canvas>
+                    </div>
+                    <div class="stats-details" style="margin-top: 20px;">
+                        <h3>Statistiche Totali</h3>
+                        <div class="stats-grid">
+                            <div class="stats-item"><strong>Total Kills:</strong> <span id="totalKillsDota2"></span></div>
+                            <div class="stats-item"><strong>Total Deaths:</strong> <span id="totalDeathsDota2"></span></div>
+                            <div class="stats-item"><strong>Total Wins:</strong> <span id="totalWinsDota2"></span></div>
+                            <div class="stats-item"><strong>Total Losses:</strong> <span id="totalLossesDota2"></span></div>
+                            <!-- <div class="stats-item"><strong>Total Matches Played:</strong> <span><?php echo $totalMatchesPlayed; ?></span></div>
+                        <div class="stats-item"><strong>Total Rounds Played:</strong> <span><?php echo $totalRoundsPlayed; ?></span></div>
+                        <div class="stats-item"><strong>Kills Per Round:</strong> <span><?php echo number_format($killsPerRound, 2); ?></span></div>
+                        <div class="stats-item"><strong>Deaths Per Round:</strong> <span><?php echo number_format($deathsPerRound, 2); ?></span></div>
+                        -->
+                        </div>
+
+                        <h3>Statistiche Ultime Partite</h3>
+                        <div class="stats-grid" id="lastDota2">
+                        </div>
+
+                        <h3>Rapporti</h3>
+                        <div class="stats-grid">
+                            <div class="stats-item"><strong>Kill/Death Ratio:</strong> <span id="killDeathRatioDota2"></span></div>
+                            <div class="stats-item"><strong>Win/Loss Ratio:</strong> <span id="winLossRatioDota2"></span></div>
+                        </div>
+                    </div>
+                    <div id="results">
+                    </div>
+                    </p>
+                </div>
+                <style>
+                    .charts-grid {
+                        display: flex;
+                        justify-content: space-around;
+                        padding: 20px;
+                    }
+
+                    canvas {
+                        max-width: 300px;
+                        /* Riduci la larghezza del canvas */
+                        max-height: 150px;
+                        /* Riduci l'altezza del canvas */
+                    }
+
+                    .stats-details {
+                        text-align: left;
+                        margin-top: 20px;
+                    }
+
+                    .stats-details h3 {
+                        margin-bottom: 10px;
+                        font-size: 1.5rem;
+                        color: var(--text_color);
+                        border-bottom: 2px solid var(--text_color);
+                        padding-bottom: 5px;
+                    }
+
+                    .stats-grid {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                        gap: 15px;
+                        margin-top: 10px;
+                    }
+
+                    .stats-item {
+                        background-color: rgba(0, 0, 0, 0.1);
+                        padding: 10px;
+                        border-radius: 5px;
+                    }
+
+                    .stats-item strong {
+                        color: var(--text_color);
+                    }
+                </style>
+                <script>
+                    var player_id = <?php echo json_encode($steamID); ?>;
+                </script>
+                <script src="https://cdn.jsdelivr.net/npm/chart.js">
+                    var steamID = "<?php echo $steamID; ?>";
+                </script>
+                <script src="../dota2/statcalculatorD.js"></script>
+
+
+            <?php
         } else {
             echo "<p>Steam ID non trovato. Accedi per visualizzare le statistiche.</p>";
         }
-        ?>
+            ?>
+
+
         </div>
     </div>
 </body>
