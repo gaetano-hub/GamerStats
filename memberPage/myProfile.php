@@ -326,6 +326,7 @@ while ($row = $result->fetch_assoc()) {
                                     <option selected>Game</option>
                                     <option value="Csgo">Csgo</option>
                                     <option value="Team Fortress 2">Team Fortress 2</option>
+                                    <option value="Dota2">Dota2</option>
                                 </select>
                                 <div class="row">
                                     <div class="col">

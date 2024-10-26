@@ -524,7 +524,7 @@ function updateDatabase($name, $account_id)
                             <div class="d-flex justify-content-center align-items-center">
                                 <img src="../assets/csgologo.png" class="card-img-top" alt="csgoLogo"
                                     style="width: 70px; height: auto; margin-right: 10px;">
-                                <h5 class="card-title text-center" style="color: var(--text_color)">Csgo Top Kill</h5>
+                                <h5 class="card-title text-center" style="color: var(--text_color)">Dota2 Top Kill</h5>
                             </div>
                             <div class="d-flex justify-content-center">
                                 <?php
@@ -545,7 +545,7 @@ function updateDatabase($name, $account_id)
                                         $kills = htmlspecialchars($data['totalKills']);
                                         $deaths = htmlspecialchars($data['totalDeaths']);
                                         $kdr = htmlspecialchars($data['kdr']); // Change to totalDamageDone
-                                
+
                                         echo '<tr>';
                                         echo "<td>{$nickname}</td>";
                                         echo "<td>{$kills}</td>";
@@ -571,7 +571,7 @@ function updateDatabase($name, $account_id)
                             <div class="d-flex justify-content-center align-items-center">
                                 <img src="../assets/csgologo.png" class="card-img-top" alt="csgoLogo"
                                     style="width: 70px; height: auto; margin-right: 10px;">
-                                <h5 class="card-title text-center" style="color: var(--text_color)">Csgo Top Winners
+                                <h5 class="card-title text-center" style="color: var(--text_color)">Dota 2 Top Winners
                                 </h5>
                             </div>
                             <div class="d-flex justify-content-center">

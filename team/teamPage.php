@@ -71,11 +71,24 @@ if ($result->num_rows > 0) {
             ]
         ];
         // Aggiungi i membri all'array
-        $members = array_merge($members, $row);
+        $members = array_merge($membersList, $row);
     }
 } else {
     // echo "<p>Nessuna squadra trovata con il nome: {$visitingTeam}</p>";
 }
+
+$stmt = $conn->prepare("SELECT leader, member_one, member_two, member_three, member_four, member_five FROM teams WHERE team_name = ?");
+$stmt->bind_param("s", $visitingTeam);
+$stmt->execute();
+$result = $stmt->get_result();
+$membersD = [];
+while ($row = $result->fetch_assoc()) {
+    $membersD = array_merge($membersD, array_filter([$row['leader'], $row['member_one'], $row['member_two'], $row['member_three'], $row['member_four'], $row['member_five']]));
+}
+
+echo "<pre>";
+print_r($membersD);
+echo "</pre>";
 
 // Cerca lo steamID per ciascun membro
 $steamIDs = [];
@@ -111,6 +124,7 @@ function getGameStats($steamID, $apiKey, $gameId)
     $response = @file_get_contents($url);
     return $response !== false ? json_decode($response, true) : null;
 }
+
 
 // Initialize arrays for statistics
 $userDetails = [];
@@ -161,6 +175,10 @@ foreach ($steamIDs as $steamID) {
                     }
                 }
             }
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 
             // Store accumulated stats
             $userDetails[$steamID]['kills'] = $kills;
@@ -331,6 +349,215 @@ $averageWinPercentage = $totalUsers > 0 ? round($totalWinPercentage / $totalUser
 
 
 ?>
+<!-- ================================ PARTE DI DOTA 2================================ -->
+
+<?php
+function getPlayerAccountId($name, $conn)
+{
+    $stmt = $conn->prepare("SELECT steamID FROM users WHERE nickname = ?");
+    $stmt->bind_param("s", $name); // $steamid should be defined or passed into the function
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        return $row['steamID'] - 76561197960265728; //conversion to SteamID32
+    } else {
+        echo "The searched user does not have a Steam account associated.";
+    }
+
+    $stmt->close();
+}
+
+function getAccountInfo($account_id)
+{
+    $url = "https://api.opendota.com/api/players/" . $account_id;
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $response = curl_exec($ch);
+    curl_close($ch);
+    $data = json_decode($response, true);
+    if ($data === null) {
+        throw new Exception('Failed to get account info');
+    }
+    return $data;
+}
+
+function getPlayerWL($account_id)
+{
+    $url = "https://api.opendota.com/api/players/" . $account_id . "/wl";
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $response = curl_exec($ch);
+    curl_close($ch);
+    $data = json_decode($response, true);
+    if ($data === null) {
+        throw new Exception('Failed to get player win/lose');
+    }
+    return $data;
+}
+
+function getPlayerMatches($account_id)
+{
+    $url = "https://api.opendota.com/api/players/" . $account_id . "/matches";
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $response = curl_exec($ch);
+    curl_close($ch);
+    $data = json_decode($response, true);
+    if ($data === null) {
+        throw new Exception('Failed to get player recent matches');
+    }
+    return $data;
+}
+
+function getPlayerRecentMatches($account_id)
+{
+    $url = "https://api.opendota.com/api/players/" . $account_id . "/recentMatches";
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $response = curl_exec($ch);
+    curl_close($ch);
+    $data = json_decode($response, true);
+    if ($data === null) {
+        throw new Exception('Failed to get player recent matches');
+    }
+    return $data;
+}
+
+function getMatchInfo($match_id)
+{
+    $url = "https://api.opendota.com/api/matches/" . $match_id;
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $response = curl_exec($ch);
+    curl_close($ch);
+    $data = json_decode($response, true);
+    if ($data === null) {
+        throw new Exception('Failed to get match info');
+    }
+    return $data;
+}
+
+function getPlayerTotals($account_id)
+{
+    $url = "https://api.opendota.com/api/players/" . $account_id . "/totals";
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $response = curl_exec($ch);
+    curl_close($ch);
+    $data = json_decode($response, true);
+    if ($data === null) {
+        throw new Exception('Failed to get player totals');
+    }
+    return $data;
+}
+
+function getPlayerName($conn, $player_id)
+{
+    $stmt = $conn->prepare("SELECT * FROM users WHERE steamID = ?");
+    $stmt->bind_param("s", $player_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    return $row ? $row['nickname'] : null;
+    $stmt->close();
+}
+
+function generateDota2LeaderboardWlr($members)
+{
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "gamerstats";
+
+    echo "<script>console.log('generaClassificaDota2: connecting to database');</script>";
+    $conn = new mysqli($servername, $username, $password, $dbname);
+
+    $leaderboardWlr = [];
+
+    // Iterate through the users array and make a call with the dota2api php file
+    foreach ($members as $user) {
+        echo "<script>console.log('generaClassificaDota2: processing user: " . $user . "');</script>";
+        $nickname = $user;
+        $account_id = getPlayerAccountId($nickname, $conn);
+        echo "<script>console.log('generaClassificaDota2: retrieved player id: " . $account_id . "');</script>";
+        //updateDatabase($nickname, $account_id);
+        //API CALL
+        $wl = getPlayerWL($account_id);
+        echo "<script>console.log('generaClassificaDota2: retrieved wins and losses".$wl['win']."');</script>";
+        //echo "<script>console.log(" . json_encode($wl) . ");</script>";
+        //echo "<script>console.log(" . json_encode($nickname) . ");</script>";
+        $wlr = $wl['win'] / ($wl['lose'] + 1);
+        echo "<script>console.log('generaClassificaDota2: calculated wlr".$wl['win']."');</script>";
+        $leaderboardWlr[] = [
+            'nickname' => $nickname,
+            'steamID' => $account_id,
+            'totalWins' => $wl['win'],
+            'totalLosses' => $wl['lose'],
+            'wlr' => $wlr
+        ];
+    }
+    usort($leaderboardWlr, function ($a, $b) {
+        return $b['wlr'] <=> $a['wlr'];
+    });
+    return $leaderboardWlr;
+}
+
+function generateDota2LeaderboardKdr($members)
+{
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "gamerstats";
+
+    echo "<script>console.log('generaClassificaDota2: connecting to database');</script>";
+    $conn = new mysqli($servername, $username, $password, $dbname);
+
+    $leaderboardkdr = [];
+
+    // Iterate through the users array and make a call with the dota2api php file
+    foreach ($members as $user) {
+        echo "<script>console.log('generaClassificaDota2: processing user: " . $user . "');</script>";
+        $nickname = $user;
+        $account_id = getPlayerAccountId($nickname, $conn);;
+        echo "<script>console.log('generaClassificaDota2: retrieved player id: " . $account_id . "');</script>";
+        //updateDatabase($nickname, $account_id);
+
+        //API CALL
+        $recent_matches = getPlayerRecentMatches($account_id);
+        if (!empty($recent_matches)) {
+            echo "<script>console.log('generaClassificaDota2: retrieved recent matches');</script>";
+            $kdr = 0;
+            $total_kills = 0;
+            $total_deaths = 0;
+
+            foreach ($recent_matches as $match) {
+                $total_kills += $match['kills'];
+                $total_deaths += $match['deaths'];
+            }
+            echo "<script>console.log('generaClassificaDota2: calculated total kills and deaths:".$total_kills."');</script>";
+            $kdr = $total_kills / ($total_deaths + 1);
+            $leaderboardkdr[] = [
+                'nickname' => $nickname,
+                'steamID' => $account_id,
+                'totalDeaths' => $total_deaths,
+                'totalKills' => $total_kills,
+                'kdr' => $kdr
+            ];
+        } else {
+            echo "<script>console.log('generaClassificaDota2: no recent matches found');</script>";
+        }
+    }
+    usort($leaderboardkdr, function ($a, $b) {
+        return $b['kdr'] <=> $a['kdr'];
+    });
+    return $leaderboardkdr;
+}
+$dota2kdr = generateDota2LeaderboardKdr($membersD);
+$dota2wlr = generateDota2LeaderboardWlr($membersD);
+
+?>
 
 
 
@@ -383,8 +610,15 @@ $averageWinPercentage = $totalUsers > 0 ? round($totalWinPercentage / $totalUser
                                 aria-expanded="false" style="color: var(--navbar_textCol);">Games</a>
                             <ul class="dropdown-menu" style="background-color: var(--object_color);">
 
+<<<<<<< Updated upstream
                                 <li><a class="dropdown-item" href="../csgo/csgo.php" style="color: var(--brand_color);">Csgo</a></li>
                                 <li><a class="dropdown-item" href="../team_fortress2/team_fortress2.php" style="color: var(--brand_color);">Team Fortress 2</a></li>
+=======
+                                <li><a class="dropdown-item" href="../csgo/csgo.php"
+                                        style="color: var(--brand_color);">Csgo</a></li>
+                                <li><a class="dropdown-item" href="../team_fortress2/team_fortress2.php"
+                                        style="color: var(--brand_color);">Team Fortress 2</a></li>
+>>>>>>> Stashed changes
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
@@ -393,9 +627,18 @@ $averageWinPercentage = $totalUsers > 0 ? round($totalWinPercentage / $totalUser
                             </ul>
                         </li>
                         <li class="nav-item" style="margin-left: 7px; margin-top: 11px;">
+<<<<<<< Updated upstream
                             <a class="btn btn-outline-success" id="homeref" type="button" style=" background-color:var(--object_color);" href="../home/home.php">
                                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
                                     <path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z" />
+=======
+                            <a class="btn btn-outline-success" id="homeref" type="button"
+                                style=" background-color:var(--object_color);" href="../home/home.php">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
+                                    width="24px" fill="#e8eaed">
+                                    <path
+                                        d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z" />
+>>>>>>> Stashed changes
                                 </svg>
                             </a>
                         </li>
@@ -403,22 +646,45 @@ $averageWinPercentage = $totalUsers > 0 ? round($totalWinPercentage / $totalUser
                     <ul class="navbar-nav mb-2 mb-lg-0">
                         <li class="nav-item align-self-center">
                             <div style="position: relative;">
+<<<<<<< Updated upstream
                                 <form class="d-flex" role="search" id="searchForm" action="search.php" method="post" style="margin-top: 10px;">
                                     <input class="form-control me-2" name="searchString" id="searchInput" type="search" placeholder="Search" aria-label="Search"
                                         style="background-color:var(--object_color); color: var(--text_color); width: calc(100% - 40px);">
                                     <button class="btn" type="button" id="searchButton">
                                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
                                             <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z" />
+=======
+                                <form class="d-flex" role="search" id="searchForm" action="search.php" method="post"
+                                    style="margin-top: 10px;">
+                                    <input class="form-control me-2" name="searchString" id="searchInput" type="search"
+                                        placeholder="Search" aria-label="Search"
+                                        style="background-color:var(--object_color); color: var(--text_color); width: calc(100% - 40px);">
+                                    <button class="btn" type="button" id="searchButton">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
+                                            width="24px" fill="#e8eaed">
+                                            <path
+                                                d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z" />
+>>>>>>> Stashed changes
                                         </svg>
                                     </button>
                                 </form>
 
+<<<<<<< Updated upstream
                                 <ul class="dropdown-menu" id="resultDropdown" style="background-color: var(--object_color); position: absolute; top: 100%; left: 0; width: 13.5rem; z-index: 1000; display: none;"></ul>
+=======
+                                <ul class="dropdown-menu" id="resultDropdown"
+                                    style="background-color: var(--object_color); position: absolute; top: 100%; left: 0; width: 13.5rem; z-index: 1000; display: none;">
+                                </ul>
+>>>>>>> Stashed changes
                             </div>
                         </li>
 
                         <script>
+<<<<<<< Updated upstream
                             document.getElementById('searchButton').addEventListener('click', function() {
+=======
+                            document.getElementById('searchButton').addEventListener('click', function () {
+>>>>>>> Stashed changes
                                 const searchString = document.getElementById('searchInput').value;
 
                                 if (searchString.trim() === '') {
@@ -427,12 +693,21 @@ $averageWinPercentage = $totalUsers > 0 ? round($totalWinPercentage / $totalUser
                                 }
 
                                 fetch('search.php', {
+<<<<<<< Updated upstream
                                         method: 'POST',
                                         headers: {
                                             'Content-Type': 'application/x-www-form-urlencoded'
                                         },
                                         body: 'searchString=' + encodeURIComponent(searchString)
                                     })
+=======
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/x-www-form-urlencoded'
+                                    },
+                                    body: 'searchString=' + encodeURIComponent(searchString)
+                                })
+>>>>>>> Stashed changes
                                     .then(response => response.text())
                                     .then(data => {
                                         const resultDropdown = document.getElementById('resultDropdown');
@@ -446,20 +721,39 @@ $averageWinPercentage = $totalUsers > 0 ? round($totalWinPercentage / $totalUser
                         <?php if (isset($_SESSION['nickname'])): ?>
 
                             <li class="nav-item">
+<<<<<<< Updated upstream
                                 <a class="nav-link" href="../memberPage/myProfile.php" style="color: var(--brand_color); font-weight: bold;">
+=======
+                                <a class="nav-link" href="../memberPage/myProfile.php"
+                                    style="color: var(--brand_color); font-weight: bold;">
+>>>>>>> Stashed changes
                                     <?php echo $_SESSION['nickname']; ?>
                                 </a>
                             </li>
                             <li class="nav-item">
+<<<<<<< Updated upstream
                                 <a class="nav-link active" aria-current="page" href="../logout/logout.php" style="color: var(--brand_color);">Logout</a>
+=======
+                                <a class="nav-link active" aria-current="page" href="../logout/logout.php"
+                                    style="color: var(--brand_color);">Logout</a>
+>>>>>>> Stashed changes
                             </li>
                         <?php else: ?>
 
                             <li class="nav-item">
+<<<<<<< Updated upstream
                                 <a class="nav-link active" aria-current="page" href="../login/login.html" style="color: var(--brand_color);">Login</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link active" aria-current="page" href="../signUp/signUp.html" style="color: var(--brand_color);">Sign Up</a>
+=======
+                                <a class="nav-link active" aria-current="page" href="../login/login.html"
+                                    style="color: var(--brand_color);">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="../signUp/signUp.html"
+                                    style="color: var(--brand_color);">Sign Up</a>
+>>>>>>> Stashed changes
                             </li>
                         <?php endif; ?>
                     </ul>
@@ -467,12 +761,15 @@ $averageWinPercentage = $totalUsers > 0 ? round($totalWinPercentage / $totalUser
             </div>
         </nav>
     </div>
-    <div style="background-color: var(--transparent_col); height: 5rem; display: flex; justify-content: center; align-items: center; margin-top: 68px;">
+    <div
+        style="background-color: var(--transparent_col); height: 5rem; display: flex; justify-content: center; align-items: center; margin-top: 68px;">
 
-        <img src="<?php echo ($game == "Csgo") ? "../assets/csgologo.png" : "../assets/tf2.png" ?>" class="card-img-top" alt="Logo" style="width: 50px; height: auto; margin-right: 10px;">
+        <img src="<?php echo ($game == "Csgo") ? "../assets/csgologo.png" : "../assets/tf2.png" ?>" class="card-img-top"
+            alt="Logo" style="width: 50px; height: auto; margin-right: 10px;">
         <p style="font-size: 2rem; font-weight: bold; color: var(--text_color);"><?php echo $visitingTeam ?></p>
     </div>
-    <div class="container text-center" style="margin-top: 10px; background-color: var(--transparent_col); padding: 15px;">
+    <div class="container text-center"
+        style="margin-top: 10px; background-color: var(--transparent_col); padding: 15px;">
         <p style="color: var(--text_color); margin-left: 2rem;">
             <b style="font-size: 2rem;">Team members</b>
         </p>
@@ -598,7 +895,8 @@ $averageWinPercentage = $totalUsers > 0 ? round($totalWinPercentage / $totalUser
         </div>
 
     </div>
-    <div class="container text-center" style="margin-top: 10px; background-color: var(--transparent_col); padding: 15px;">
+    <div class="container text-center"
+        style="margin-top: 10px; background-color: var(--transparent_col); padding: 15px;">
         <div class="row">
             <div class="col-md-6">
                 <?php
@@ -688,7 +986,7 @@ $averageWinPercentage = $totalUsers > 0 ? round($totalWinPercentage / $totalUser
 
 
                     // Assuming $labels, $killsData, $damageData, and $killAssistsData are defined earlier in your PHP code
-
+                
                     // Start outputting HTML with echo
                     echo '<div class="col-md-6">';
                     echo '    <h3>Grafici delle Statistiche</h3>';
@@ -753,13 +1051,14 @@ $averageWinPercentage = $totalUsers > 0 ? round($totalWinPercentage / $totalUser
                 ?>
             </div>
 
-            <?php
-            // Stampa la classifica
-            if (!empty($cs2Classifica) && $game === "Csgo") {
-                echo "<h2>Statistiche di CSGO 2</h2>";
-                echo '<div style="overflow-x:auto;">';
-                echo '<table class="table table-dark table-striped">';
-                echo "<thead>
+            <div class="col-md-7">
+                <?php
+                // Stampa la classifica
+                if (!empty($cs2Classifica) && $game === "Csgo") {
+                    echo "<h2>Statistiche di CSGO 2</h2>";
+                    echo '<div style="overflow-x:auto;">';
+                    echo '<table class="table table-dark table-striped">';
+                    echo "<thead>
         <tr>
             <th>Nickname</th>
             <th>Steam ID</th>
@@ -772,10 +1071,10 @@ $averageWinPercentage = $totalUsers > 0 ? round($totalWinPercentage / $totalUser
             <th>Last Match MVPs</th>
         </tr>
     </thead>";
-                echo "<tbody>"; // Add tbody for better structure
-
-                foreach ($cs2Classifica as $user) {
-                    echo "<tr>
+                    echo "<tbody>"; // Add tbody for better structure
+                
+                    foreach ($cs2Classifica as $user) {
+                        echo "<tr>
             <td>{$user['nickname']}</td>
             <td>{$user['steamID']}</td>
             <td>{$user['cs2WinPercentage']}</td>
@@ -786,13 +1085,25 @@ $averageWinPercentage = $totalUsers > 0 ? round($totalWinPercentage / $totalUser
             <td>{$user['last_match']['last_match_deaths']}</td>
             <td>{$user['last_match']['last_match_mvps']}</td>
         </tr>";
+                    }
+
+                    echo "</tbody>"; // Close tbody
+                    echo "</table>";
+                    echo "</div>"; // Close the leaderboard div
+                } else {
+                    echo "<div class='leaderboard'>";
+                    // echo "<p>Nessun utente trovato con statistiche valide.</p>";
+                    echo "</div>"; // Close the leaderboard div
                 }
 
+<<<<<<< Updated upstream
                 echo "</tbody>"; // Close tbody
                 echo "</table>";
                 echo "</div>"; // Close the leaderboard div
 
 
+=======
+>>>>>>> Stashed changes
                 // Stampa le medie
                 if ((isset($averageKills) || isset($averageDeaths) || isset($averageDamageDone) || isset($averageWinPercentage)) && $game === "Csgo") {
                     echo "<h2>Statistiche Medie</h2>";
@@ -816,6 +1127,7 @@ $averageWinPercentage = $totalUsers > 0 ? round($totalWinPercentage / $totalUser
                     echo "</tbody>"; // Close tbody
                     echo "</table>";
                     echo "</div>"; // Close the averages div
+<<<<<<< Updated upstream
 
                     // Pie chart
                     echo "<canvas id='statisticsPieChart' width='400' height='400'></canvas>";
@@ -824,6 +1136,16 @@ $averageWinPercentage = $totalUsers > 0 ? round($totalWinPercentage / $totalUser
                     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
                     <script>
                         const ctx = document.getElementById('statisticsPieChart').getContext('2d');
+=======
+                
+                    // Pie chart
+                    echo "<canvas id='statisticsPieChart' width='400' height='400'></canvas>";
+                    ?>
+                </div>
+                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                <script>
+                    const ctx = document.getElementById('statisticsPieChart').getContext('2d');
+>>>>>>> Stashed changes
 
                         // Data for the pie chart
                         const labels = ['Total Kills', 'Total Deaths', 'Total Damage Done', 'Average Win Percentage'];
@@ -868,6 +1190,7 @@ $averageWinPercentage = $totalUsers > 0 ? round($totalWinPercentage / $totalUser
                                     }
                                 }
                             }
+<<<<<<< Updated upstream
                         });
                     </script>
             <?php
@@ -880,6 +1203,88 @@ $averageWinPercentage = $totalUsers > 0 ? round($totalWinPercentage / $totalUser
                 echo "</div>"; // Close the leaderboard div
             }
             ?>
+=======
+                        }
+                    });
+                </script>
+                <?php
+                } else {
+                    // echo "<tr><td colspan='4'>Nessun dato disponibile per le statistiche medie.</td></tr>";
+                }
+                ?>
+                                <div class="col-md-8">
+                    <h1>Statistiche di Dota 2</h1>
+                    
+                    <?php
+                    // Print user statistics
+                    if ($game === "Dota2") {
+                        if (!empty($dota2wlr)) {
+                            echo '<table class="table table-dark table-striped">';
+                            echo '<thead>';
+                            echo '<tr>';
+                            echo '<th>Nickname</th>';
+                            echo '<th>wins</th>';
+                            echo '<th>losses</th>';
+                            echo '<th>Win/Loss Ratio</th>'; // Change to Danni Totali
+                            echo '</tr>';
+                            echo '</thead>';
+                            echo '<tbody>';
+                            foreach ($dota2wlr as $data) {
+                               
+                                $nickname = htmlspecialchars($data['nickname']);
+                                $wlr = htmlspecialchars($data['wlr']); // Change to totalDamageDone
+                                $wins = htmlspecialchars($data['totalWins']);
+                                $losses = htmlspecialchars($data['totalLosses']);
+                                echo '<tr>';
+                                echo "<td>{$nickname}</td>";
+                                echo "<td>{$wins}</td>";
+                                echo "<td>{$losses}</td>";
+                                echo "<td>{$wlr}</td>"; // Change to totalDamageDone
+                                echo '</tr>';
+                            }
+
+                            echo '</tbody>';
+                            echo '</table>';
+                        } else {
+                            echo "<li class='list-group-item text-center' style='background-color: rgba(255, 255, 255, 0.1);'>No stats available.</li>";
+                        }
+                        if (!empty($dota2kdr)) {
+                            echo '<table class="table table-dark table-striped">';
+                            echo '<thead>';
+                            echo '<tr>';
+                            echo '<th>Nickname</th>';
+                            echo '<th>Kills</th>';
+                            echo '<th>Deaths</th>';
+                            echo '<th>K/D</th>'; // Change to Danni Totali
+                            echo '</tr>';
+                            echo '</thead>';
+                            echo '<tbody>';
+
+                            foreach ($dota2kdr as $data) {
+                                $nickname = htmlspecialchars($data['nickname']);
+                                $kills = htmlspecialchars($data['totalKills']);
+                                $deaths = htmlspecialchars($data['totalDeaths']);
+                                $kdr = htmlspecialchars($data['kdr']); // Change to totalDamageDone
+
+                                echo '<tr>';
+                                echo "<td>{$nickname}</td>";
+                                echo "<td>{$kills}</td>";
+                                echo "<td>{$deaths}</td>";
+                                echo "<td>{$kdr}</td>"; // Change to totalDamageDone
+                                echo '</tr>';
+                            }
+
+                            echo '</tbody>';
+                            echo '</table>';
+                        } else {
+                            echo "<li class='list-group-item text-center' style='background-color: rgba(255, 255, 255, 0.1);'>No stats available.</li>";
+                        }
+                    } else {
+                        // echo "No stats available.<br>";
+                    }
+                    ?>
+                </div>
+>>>>>>> Stashed changes
         </div>
 
     </div>
