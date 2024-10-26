@@ -27,28 +27,6 @@ if ($conn->connect_error) {
     die("Connessione al database fallita: " . $conn->connect_error);
 }
 
-// Crea tabella per la classifica CS2 se non esiste
-$createCs2Table = "CREATE TABLE IF NOT EXISTS cs2_classifica (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nickname VARCHAR(255) NOT NULL,
-    steamID VARCHAR(255) NOT NULL UNIQUE,
-    punteggio FLOAT NOT NULL
-)";
-if ($conn->query($createCs2Table) !== TRUE) {
-    echo "Errore nella creazione della tabella cs2_classifica: " . $conn->error;
-}
-
-// Crea tabella per la classifica TF2 se non esiste
-$createTf2Table = "CREATE TABLE IF NOT EXISTS tf2_classifica (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nickname VARCHAR(255) NOT NULL,
-    steamID VARCHAR(255) NOT NULL UNIQUE,
-    punteggio FLOAT NOT NULL
-)";
-if ($conn->query($createTf2Table) !== TRUE) {
-    echo "Errore nella creazione della tabella tf2_classifica: " . $conn->error;
-}
-
 // Crea la tabella se non esiste già
 $sql = "CREATE TABLE IF NOT EXISTS users (
     id INT(11) AUTO_INCREMENT PRIMARY KEY,
@@ -153,11 +131,6 @@ function generaClassificaTF2($tf2Stats, &$userDetails)
     $importantStats = ['iPointsScored'];
     $validClasses = ['Scout', 'Soldier', 'Pyro', 'Demoman', 'Heavy', 'Engineer', 'Medic', 'Sniper', 'Spy'];
 
-    // Initialize user scores for all users
-    foreach ($userDetails as $steamID => $details) {
-        $userScores[$steamID] = 0; // Default score to 0
-    }
-
     // Populate scores based on TF2 stats
     foreach ($tf2Stats as $steamID => $stats) {
         foreach ($stats as $stat) {
@@ -193,16 +166,7 @@ function generaClassificaCSGO($gameStatsArray, &$userDetails)
 {
     $classifica = [];
 
-    // Initialize user scores for all users
-    foreach ($userDetails as $steamID => $details) {
-        $classifica[$steamID] = [
-            'nickname' => $details['nickname'],
-            'steamID' => $steamID,
-            'win_percentage' => 0 // Default win percentage
-        ];
-    }
-
-    // Populate win percentages based on game stats
+    // Popola la classifica con le percentuali di vittorie, numero di vittorie e sconfitte
     foreach ($gameStatsArray as $steamID => $stats) {
         $totalWins = 0;
         $totalMatches = 0;
@@ -216,20 +180,39 @@ function generaClassificaCSGO($gameStatsArray, &$userDetails)
             }
         }
 
-        // Calculate win percentage if there are matches played
+        // Calcola la percentuale di vittorie, il numero di sconfitte e aggiungi ai dati
         if ($totalMatches > 0) {
-            $winPercentage = round(($totalWins / $totalMatches) * 100, 2);
-            $classifica[$steamID]['win_percentage'] = $winPercentage; // Update only if matches are played
+            $losses = $totalMatches - $totalWins;
+            $winPercentage = round(($totalWins / ($losses + 1)), 2); // Calcolo percentuale vittorie
+
+            // Verifica se il nickname esiste in $userDetails
+            $nickname = isset($userDetails[$steamID]) ? $userDetails[$steamID]['nickname'] : 'Sconosciuto';
+
+            $classifica[$steamID] = [
+                'steamID' => $steamID,
+                'nickname' => $nickname,
+                'win_percentage' => $winPercentage,
+                'total_wins' => $totalWins,
+                'total_losses' => $losses
+            ];
         }
     }
 
+    // Restituisce una lista vuota se non ci sono Steam ID trovati
+    if (empty($classifica)) {
+        return [];
+    }
+
     // Ordina la classifica in base alla percentuale di vittorie
-    usort($classifica, function ($a, $b) {
+    uasort($classifica, function ($a, $b) {
         return $b['win_percentage'] <=> $a['win_percentage'];
     });
 
     return $classifica;
 }
+
+
+
 
 function getPlayerRecentMatches($account_id)
 {
@@ -250,7 +233,7 @@ function getPlayerRecentMatches($account_id)
     return $data;
 }
 
-function generateDota2Leaderboard() 
+function generateDota2Leaderboard()
 {
     $leaderboard = [];
     $dota2users = [];
@@ -271,7 +254,7 @@ function generateDota2Leaderboard()
     // Query per ottenere tutti i dati degli utenti con SteamID
     $query = "SELECT nickname, steamID FROM users WHERE steamID IS NOT NULL";
     $result = $conn->query($query);
-    
+
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
             $nickname = htmlspecialchars($row['nickname']);
@@ -281,39 +264,38 @@ function generateDota2Leaderboard()
                 'steamID' => $steamID
             ];
         }
-        
     } else {
         echo "<script>console.log('generaClassificaDota2: no users found');</script>";
         echo "Nessun utente trovato nel database.";
     }
-        
-        // Iterate through the users array and make a call with the dota2api php file
-        foreach ($dota2users as $user) {
-            $nickname = $user['nickname'];
-            $player_id = $user['steamID'];
-            $account_id = (int) $player_id- 76561197960265728;
-            //API CALL
-            $recent_matches = getPlayerRecentMatches($account_id);
-                    if(!empty($recent_matches)) {
-                    $kdr = 0;
-                    $total_kills = 0;
-                    $total_deaths = 0;
-                    
-                    foreach($recent_matches as $match) {
-                        $total_kills += $match['kills'];
-                        $total_deaths += $match['deaths'];
-                    }
-                    $kdr= $total_kills / $total_deaths;
-                    $leaderboard[] = [
-                        'nickname' => $nickname,
-                        'steamID' => $player_id,
-                        'kdr' => $kdr
-                    ]; 
-                }
+
+    // Iterate through the users array and make a call with the dota2api php file
+    foreach ($dota2users as $user) {
+        $nickname = $user['nickname'];
+        $player_id = $user['steamID'];
+        $account_id = (int) $player_id - 76561197960265728;
+        //API CALL
+        $recent_matches = getPlayerRecentMatches($account_id);
+        if (!empty($recent_matches)) {
+            $kdr = 0;
+            $total_kills = 0;
+            $total_deaths = 0;
+
+            foreach ($recent_matches as $match) {
+                $total_kills += $match['kills'];
+                $total_deaths += $match['deaths'];
+            }
+            $kdr = $total_kills / $total_deaths;
+            $leaderboard[] = [
+                'nickname' => $nickname,
+                'steamID' => $player_id,
+                'kdr' => $kdr
+            ];
         }
-        usort($leaderboard, function ($a, $b) {
-            return $b['kdr'] <=> $a['kdr'];
-        });
+    }
+    usort($leaderboard, function ($a, $b) {
+        return $b['kdr'] <=> $a['kdr'];
+    });
     return $leaderboard;
 }
 
@@ -493,32 +475,38 @@ $conn->close();
                             <div class="text-center mt-3">
                                 <ul class="list-group">
                                     <?php
-                                    echo '<table class="table table-dark table-striped">';
-                                    echo '<thead>';
-                                    echo '<tr>';
-                                    echo '<th>Nickname</th>';
-                                    echo '<th>Steam ID</th>';
-                                    echo '<th>Total Score</th>'; // Change this if "total score" should represent something else
-                                    echo '</tr>';
-                                    echo '</thead>';
-                                    echo '<tbody>';
-
-                                    // Iterate through the leaderboard data
-                                    foreach ($tf2Classifica as $steamID => $totalScore) { // Assuming $tf2Classifica is the correct variable name
-                                        // Get the nickname from userDetails using the steamID
-                                        $nickname = isset($userDetails[$steamID]) ? htmlspecialchars($userDetails[$steamID]['nickname']) : 'Sconosciuto';
-
-                                        // Print each user's data in the table
+                                    // Controlla se $tf2Classifica non è vuoto
+                                    if (!empty($tf2Classifica)) {
+                                        echo '<table class="table table-dark table-striped">';
+                                        echo '<thead>';
                                         echo '<tr>';
-                                        echo '<td>' . $nickname . '</td>'; // Nickname
-                                        echo '<td>' . $steamID . '</td>'; // Steam ID
-                                        echo '<td><span class="badge bg-primary">' . htmlspecialchars($totalScore) . ' punti</span></td>'; // Total Score highlighted in blue
-                                        echo '</tr>'; // Close the table row
-                                    }
+                                        echo '<th>Nickname</th>';
+                                        echo '<th>Steam ID</th>';
+                                        echo '<th>Total Score</th>'; // Modifica questo se "total score" rappresenta qualcos'altro
+                                        echo '</tr>';
+                                        echo '</thead>';
+                                        echo '<tbody>';
 
-                                    echo '</tbody>';
-                                    echo '</table>';
+                                        // Itera attraverso i dati della classifica
+                                        foreach ($tf2Classifica as $steamID => $totalScore) { // Presupponendo che $tf2Classifica sia la variabile corretta
+                                            // Ottieni il nickname da userDetails usando lo steamID
+                                            $nickname = isset($userDetails[$steamID]) ? htmlspecialchars($userDetails[$steamID]['nickname']) : 'Sconosciuto';
+
+                                            // Stampa i dati di ogni utente nella tabella
+                                            echo '<tr>';
+                                            echo '<td>' . $nickname . '</td>'; // Nickname
+                                            echo '<td>' . $steamID . '</td>'; // Steam ID
+                                            echo '<td><span class="badge bg-primary">' . htmlspecialchars($totalScore) . ' punti</span></td>'; // Total Score evidenziato in blu
+                                            echo '</tr>'; // Chiudi la riga della tabella
+                                        }
+
+                                        echo '</tbody>';
+                                        echo '</table>';
+                                    } else {
+                                        echo "<li class='list-group-item text-center' style='background-color: rgba(255, 255, 255, 0.1);'>Nessun vincitore trovato</li>";
+                                    }
                                     ?>
+
 
 
 
@@ -554,33 +542,40 @@ $conn->close();
                                         echo '<th>Nickname</th>';
                                         echo '<th>Steam ID</th>';
                                         echo '<th>Win Percentage</th>';
+                                        echo '<th>Vittorie</th>';
+                                        echo '<th>Sconfitte</th>';
                                         echo '</tr>';
                                         echo '</thead>';
                                         echo '<tbody>';
 
-                                        // Iterate through the leaderboard
+                                        // Itera attraverso la classifica
                                         foreach ($cs2Classifica as $user) {
-                                            // Extract nickname, win percentage, and Steam ID from user data
+                                            // Estrae nickname, percentuale di vittorie, Steam ID, vittorie e sconfitte
                                             $nickname = htmlspecialchars($user['nickname']);
                                             $winPercentage = htmlspecialchars($user['win_percentage']);
                                             $steamID = htmlspecialchars($user['steamID']);
+                                            $totalWins = htmlspecialchars($user['total_wins']);
+                                            $totalLosses = htmlspecialchars($user['total_losses']);
 
-                                            // Print each user's data in the table
+                                            // Stampa i dati di ciascun utente nella tabella
                                             echo '<tr>';
                                             echo '<td>' . $nickname . '</td>'; // Nickname
                                             echo '<td>' . $steamID . '</td>'; // Steam ID
-                                            echo '<td><span class="badge bg-primary">' . $winPercentage . '%</span></td>'; // Win Percentage highlighted in blue
-                                            echo '</tr>'; // Close the table row
+                                            echo '<td><span class="badge bg-primary">' . $winPercentage . '%</span></td>'; // Percentuale di vittorie
+                                            echo '<td>' . $totalWins . '</td>'; // Numero di vittorie
+                                            echo '<td>' . $totalLosses . '</td>'; // Numero di sconfitte
+                                            echo '</tr>'; // Chiudi la riga della tabella
                                         }
 
                                         echo '</tbody>';
                                         echo '</table>';
                                     } else {
-                                        echo "<div class='alert alert-warning text-center' style='background-color: rgba(255, 255, 255, 0.1);'>No stats available.</div>";
+                                        echo "<li class='list-group-item text-center' style='background-color: rgba(255, 255, 255, 0.1);'>Nessun vincitore trovato</li>";
                                     }
                                     ?>
 
-                               </ul>
+
+                                </ul>
                             </div>
 
                             <div class="d-flex justify-content-center mt-4">

@@ -25,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST['searchString'])) {
 
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
-            echo "<li><a class='dropdown-item' style='color: var(--text_color);' href='../memberPage/setSession.php?team=" . htmlspecialchars(urlencode($row['team_name'])) . "'>" . htmlspecialchars($row['team_name']) . "</a></li>";
+            echo "<li><a class='dropdown-item' style='color: var(--text_color);' href='../team/teamPage.php?team=" . htmlspecialchars(urlencode($row['team_name'])) . "'>" . htmlspecialchars($row['team_name']) . "</a></li>";
         }
     } else {
         echo "<li><a class='dropdown-item' style='color: var(--text_color);'>No results found</a></li>";

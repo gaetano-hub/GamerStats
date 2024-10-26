@@ -1,4 +1,6 @@
 <?php
+
+
 $servername = "localhost";
 $username = "root"; // Il nome utente predefinito di XAMPP è "root"
 $password = ""; // Di solito la password è vuota

@@ -456,8 +456,6 @@ while ($row = $result->fetch_assoc()) {
             // Ottieni statistiche per Team Fortress 2
             $tf2Stats = getGameStats($steamID, $apiKey, $tf2GameId);
 
-
-
             if (isset($tf2Stats['playerstats']['stats'])) {
                 echo '<div class="container text-center" style="margin-top: 10px; background-color: var(--transparent_col); padding: 15px;">';
                 echo '<p style="font-size: 2rem; font-weight: bold; color: var(--text_color);">Statistiche di Team Fortress 2</p>';

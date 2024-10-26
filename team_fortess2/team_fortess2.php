@@ -97,26 +97,7 @@ function getGameStats($steamID, $apiKey, $gameId)
     return json_decode($response, true);
 }
 
-// Funzione per inserire i dati nelle tabelle di classifica
-function insertIntoClassifica($conn, $tableName, $nickname, $steamID, $score)
-{
-    // Prepara la query per evitare SQL injection
-    $stmt = $conn->prepare("INSERT INTO $tableName (nickname, steamID, punteggio) VALUES (?, ?, ?)
-                             ON DUPLICATE KEY UPDATE punteggio = ?");
 
-    // Bind dei parametri
-    $stmt->bind_param("ssdd", $nickname, $steamID, $score, $score); // 'ssdd' significa: string, string, double, double
-
-    // Esegui la query
-    if ($stmt->execute()) {
-        // echo "Dati inseriti con successo nella tabella $tableName per $nickname.<br>";
-    } else {
-        // echo "Errore durante l'inserimento dei dati: " . $stmt->error . "<br>";
-    }
-
-    // Chiudi la dichiarazione
-    $stmt->close();
-}
 
 // Inizializza array per le statistiche
 $tf2StatsArray = [];
@@ -160,10 +141,10 @@ function generaClassificaTF2($tf2Stats, &$userDetails)
     $importantStats = ['iPointsScored'];
     $validClasses = ['Scout', 'Soldier', 'Pyro', 'Demoman', 'Heavy', 'Engineer', 'Medic', 'Sniper', 'Spy'];
 
-    // Initialize scores for all users in userDetails
-    foreach ($userDetails as $steamID => $details) {
-        $userScores[$steamID] = 0; // Default score to 0
-    }
+    // // Initialize scores for all users in userDetails
+    // foreach ($userDetails as $steamID => $details) {
+    //     $userScores[$steamID] = 0; // Default score to 0
+    // }
 
     foreach ($tf2Stats as $steamID => $stats) {
         foreach ($stats as $stat) {
@@ -198,11 +179,11 @@ function generaClassificaTF2($tf2Stats, &$userDetails)
 // Genera le classifiche per TF2 e CS2
 $tf2Classifica = generaClassificaTF2($tf2StatsArray, $userDetails);
 
-// Inserisci i dati nella tabella di classifica di Team Fortress 2
-foreach ($tf2Classifica as $steamID => $score) {
-    $nickname = htmlspecialchars($userDetails[$steamID]['nickname']);
-    insertIntoClassifica($conn, 'tf2_classifica', $nickname, $steamID, $score);
-}
+// // Inserisci i dati nella tabella di classifica di Team Fortress 2
+// foreach ($tf2Classifica as $steamID => $score) {
+//     $nickname = htmlspecialchars($userDetails[$steamID]['nickname']);
+//     insertIntoClassifica($conn, 'tf2_classifica', $nickname, $steamID, $score);
+// }
 
 
 
@@ -229,19 +210,17 @@ if ($result->num_rows > 0) {
         $steamID = $row['steamID'];
         $nickname = htmlspecialchars($row['nickname']);
 
-        // Store user details
-        $userDetails[$steamID] = [
-            'nickname' => $nickname,
-            'kills' => 0,
-            'damage' => 0,
-            'killAssists' => 0
-        ];
+        // // Store user details
+        // $userDetails[$steamID] = [
+        //     'nickname' => $nickname,
+        //     'kills' => 0,
+        //     'damage' => 0,
+        //     'killAssists' => 0
+        // ];
 
         // Fetch TF2 stats
         $tf2Stats = getGameStats($steamID, $apiKey, $tf2GameId);
-        if ($tf2Stats === null) {
-            // echo "Error fetching stats for Steam ID: $steamID<br>"; // Debugging output
-        } else {
+        if ($tf2Stats !== null) {
             // Initialize temporary variables for aggregating stats
             $kills = $damage = $killAssists = 0;
 
@@ -264,19 +243,26 @@ if ($result->num_rows > 0) {
     // echo "No users found in the database.<br>";
 }
 
+
+
 // Create a ranking score for each user
 $rankingScores = [];
-foreach ($userDetails as $steamID => $stats) {
-    // Adjust the scoring system as needed
-    $score = $stats['kills'] * 2 + $stats['damage'] * 0.01 + $stats['killAssists']; // Example scoring system
-    $rankingScores[$steamID] = [
-        'nickname' => $stats['nickname'],
-        'score' => $score,
-        'kills' => $stats['kills'],
-        'damage' => $stats['damage'],
-        'killAssists' => $stats['killAssists']
-    ];
+if (empty($userDetails)) {
+    echo "Nessun utente trovato.";
+} else {
+    foreach ($userDetails as $steamID => $stats) {
+        // Adjust the scoring system as needed
+        $score = $stats['kills'] * 2 + $stats['damage'] * 0.01 + $stats['killAssists']; // Example scoring system
+        $rankingScores[$steamID] = [
+            'nickname' => $stats['nickname'],
+            'score' => $score,
+            'kills' => $stats['kills'],
+            'damage' => $stats['damage'],
+            'killAssists' => $stats['killAssists']
+        ];
+    }
 }
+
 
 // Sort the ranking scores in descending order based on score
 usort($rankingScores, function ($a, $b) {

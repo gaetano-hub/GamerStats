@@ -161,17 +161,24 @@ function generaClassificaCSGO($gameStatsArray, &$userDetails, $apiKey, $gameId)
 {
     $classifica = [];
 
-    // Initialize classifica for all users in userDetails
+    // Initialize classifica for all users in userDetails who have a Steam ID
     foreach ($userDetails as $steamID => $details) {
-        $classifica[$steamID] = [
-            'nickname' => $details['nickname'],
-            'steamID' => $steamID,
-            'win_percentage' => 0, // Default win percentage to 0
-            'last_match' => null // Default last match stats to null
-        ];
+        if (!empty($steamID)) { // Only proceed if Steam ID is present
+            $classifica[$steamID] = [
+                'nickname' => $details['nickname'],
+                'steamID' => $steamID,
+                'win_percentage' => 0, // Default win percentage to 0
+                'last_match' => null // Default last match stats to null
+            ];
+        }
     }
 
     foreach ($gameStatsArray as $steamID => $stats) {
+        // Skip if Steam ID is empty or not in the initialized classifica
+        if (empty($steamID) || !isset($classifica[$steamID])) {
+            continue;
+        }
+
         $totalWins = 0;
         $totalMatches = 0;
 
@@ -194,13 +201,19 @@ function generaClassificaCSGO($gameStatsArray, &$userDetails, $apiKey, $gameId)
         }
     }
 
+    // Filter out any entries without a valid Steam ID or necessary data
+    $classifica = array_filter($classifica, function ($entry) {
+        return !empty($entry['steamID']);
+    });
+
     // Sort the classifica by win percentage in descending order
-    usort($classifica, function ($a, $b) {
+    uasort($classifica, function ($a, $b) {
         return $b['win_percentage'] <=> $a['win_percentage'];
     });
 
-    return $classifica;
+    return array_values($classifica); // Return a zero-indexed list
 }
+
 
 
 $cs2Classifica = generaClassificaCSGO($cs2StatsArray, $userDetails, $apiKey, $cs2GameId);
@@ -282,26 +295,35 @@ if ($result->num_rows > 0) {
 // Funzione per generare la classifica in base ai totali dei kills
 function generaClassificaCSGO_kill($userDetails)
 {
-    // Inizializza un array per la classifica
+    // Check if there are any user details
+    if (empty($userDetails)) {
+        return []; // Return an empty array if there are no Steam IDs
+    }
+
+    // Initialize an array for the leaderboard
     $leaderboard = [];
 
     foreach ($userDetails as $steamID => $details) {
-        $leaderboard[] = [
-            'nickname' => $details['nickname'],
-            'steamID' => $steamID,
-            'totalKills' => $details['totalKills'],
-            'totalDeaths' => $details['totalDeaths'],
-            'totalDamageDone' => $details['totalDamageDone'], // Change to totalDamageDone
-        ];
+        // Check if the steamID is valid and not empty
+        if (!empty($steamID)) {
+            $leaderboard[] = [
+                'nickname' => $details['nickname'],
+                'steamID' => $steamID,
+                'totalKills' => $details['totalKills'],
+                'totalDeaths' => $details['totalDeaths'],
+                'totalDamageDone' => $details['totalDamageDone'], // Change to totalDamageDone
+            ];
+        }
     }
 
-    // Ordina la classifica per total kills (decrescente)
+    // Sort the leaderboard by total kills (descending)
     usort($leaderboard, function ($a, $b) {
         return $b['totalKills'] <=> $a['totalKills'];
     });
 
-    return $leaderboard;
+    return $leaderboard; // Return the sorted leaderboard
 }
+
 
 // Chiama la funzione per generare la classifica
 $cs2Classifica_kill = generaClassificaCSGO_kill($userDetails);

@@ -125,28 +125,17 @@ $aggregateStats = [
 
 // Fetch user details and stats only for steamIDs
 foreach ($steamIDs as $steamID) {
-    // Prepara la query per ottenere i dettagli dell'utente
+    // Prepare the query to get user details
     $userStmt = $conn->prepare("SELECT nickname FROM users WHERE steamID = ?");
     $userStmt->bind_param("s", $steamID);
     $userStmt->execute();
 
-    // Ottieni il risultato
+    // Get the result
     $result = $userStmt->get_result();
 
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
         $nickname = htmlspecialchars($row['nickname']);
-
-        // Store user details
-        $userDetails[$steamID] = [
-            'nickname' => $nickname,
-            'kills' => 0,
-            'damage' => 0,
-            'killAssists' => 0,
-            'pointsScored' => 0,
-            'playTime' => 0,
-            'buildingsDestroyed' => 0
-        ];
 
         // Fetch TF2 stats
         $tf2Stats = getGameStats($steamID, $apiKey, $tf2GameId);
@@ -156,7 +145,7 @@ foreach ($steamIDs as $steamID) {
 
             foreach ($tf2Stats['playerstats']['stats'] as $stat) {
                 if (isset($stat['name']) && isset($stat['value'])) {
-                    $value = is_numeric($stat['value']) ? $stat['value'] : 0; // Assicurati che sia un numero
+                    $value = is_numeric($stat['value']) ? $stat['value'] : 0; // Ensure it's a number
                     if (strpos($stat['name'], 'iNumberOfKills') !== false) {
                         $kills += $value;
                     } elseif (strpos($stat['name'], 'iDamageDealt') !== false) {
@@ -172,7 +161,6 @@ foreach ($steamIDs as $steamID) {
                     }
                 }
             }
-            
 
             // Store accumulated stats
             $userDetails[$steamID]['kills'] = $kills;
@@ -182,7 +170,7 @@ foreach ($steamIDs as $steamID) {
             $userDetails[$steamID]['playTime'] = $playTime;
             $userDetails[$steamID]['buildingsDestroyed'] = $buildingsDestroyed;
 
-            // Aggregate statistics
+            // Aggregate statistics (if needed in another part of your code)
             $aggregateStats['kills'] += $kills;
             $aggregateStats['damage'] += $damage;
             $aggregateStats['killAssists'] += $killAssists;
@@ -190,13 +178,16 @@ foreach ($steamIDs as $steamID) {
             $aggregateStats['playTime'] += $playTime;
             $aggregateStats['buildingsDestroyed'] += $buildingsDestroyed;
         }
-    } else {
-        // echo "Nessun utente trovato con lo steamID: $steamID<br>";
     }
+    // Optionally handle the case when no user is found
+    // else {
+    //     echo "Nessun utente trovato con lo steamID: $steamID<br>";
+    // }
 
-    // Chiudi la dichiarazione
+    // Close the statement
     $userStmt->close();
 }
+
 
 
 ?>
@@ -270,7 +261,7 @@ foreach ($steamIDs as $steamID) {
             $stats = extractStats($cs2Stats['playerstats']['stats']);
             $totalWins = $stats['totalWins'];
             $totalMatches = $stats['totalMatches'];
-            $winPercentage = $totalMatches > 0 ? round(($totalWins / $totalMatches) * 100, 2) : 0;
+            $winPercentage = $totalMatches > 0 ? round(($totalWins / (($totalMatches - $totalWins) + 1)), 2) : 0;
 
             // Inizializza l'array per l'utente
             $userDetails_csgo[$steamID] = [
@@ -335,7 +326,7 @@ foreach ($userDetails_csgo as $user) {
 
 $averageKills = $totalUsers > 0 ? round($totalKills / $totalUsers, 2) : 0;
 $averageDeaths = $totalUsers > 0 ? round($totalDeaths / $totalUsers, 2) : 0;
-$averageDamageDone = $totalUsers > 0 ? round($totalDamageDone / $totalUsers, 2) : 0;
+$averageDamageDone = $totalUsers > 0 ? round($totalDamageDone  / $totalUsers, 2) : 0;
 $averageWinPercentage = $totalUsers > 0 ? round($totalWinPercentage / $totalUsers, 2) : 0;
 
 
@@ -378,100 +369,102 @@ $averageWinPercentage = $totalUsers > 0 ? round($totalWinPercentage / $totalUser
 
     <div class="content">
         <nav class="navbar fixed-top navbar-expand-lg" style="background-color: var(--object_color);"> -->
-        <div class="container-fluid" style="background-color: var(--object_color);">
-            <a class="navbar-brand fs-3" href="#" style="color: var(--brand_color);">GamerStats</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item dropdown" style="margin-top: 6px;">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                            aria-expanded="false" style="color: var(--navbar_textCol);">Games</a>
-                        <ul class="dropdown-menu" style="background-color: var(--object_color);">
-                            
-                            <li><a class="dropdown-item" href="../csgo/csgo.php" style="color: var(--brand_color);">Csgo</a></li>
-                            <li><a class="dropdown-item" href="../team_fortress2/team_fortress2.php" style="color: var(--brand_color);">Team Fortress 2</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                 <li><a class="dropdown-item" href="#">Something else here</a></li> 
-                                 Possono sempre servire
-                        </ul>
-                    </li>
-                    <li class="nav-item" style="margin-left: 7px; margin-top: 11px;">
-                        <a class="btn btn-outline-success" id="homeref" type="button" style=" background-color:var(--object_color);" href="../home/home.php">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
-                                <path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z" />
-                            </svg>
-                        </a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav mb-2 mb-lg-0">
-                    <li class="nav-item align-self-center">
-                        <div style="position: relative;">
-                            <form class="d-flex" role="search" id="searchForm" action="search.php" method="post" style="margin-top: 10px;">
-                                <input class="form-control me-2" name="searchString" id="searchInput" type="search" placeholder="Search" aria-label="Search"
-                                    style="background-color:var(--object_color); color: var(--text_color); width: calc(100% - 40px);">
-                                <button class="btn" type="button" id="searchButton">
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
-                                        <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z" />
-                                    </svg>
-                                </button>
-                            </form>
+            <div class="container-fluid" style="background-color: var(--object_color);">
+                <a class="navbar-brand fs-3" href="#" style="color: var(--brand_color);">GamerStats</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item dropdown" style="margin-top: 6px;">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                aria-expanded="false" style="color: var(--navbar_textCol);">Games</a>
+                            <ul class="dropdown-menu" style="background-color: var(--object_color);">
 
-                            <ul class="dropdown-menu" id="resultDropdown" style="background-color: var(--object_color); position: absolute; top: 100%; left: 0; width: 13.5rem; z-index: 1000; display: none;"></ul>
-                        </div>
-                    </li>
-
-                    <script>
-                        document.getElementById('searchButton').addEventListener('click', function() {
-                            const searchString = document.getElementById('searchInput').value;
-
-                            if (searchString.trim() === '') {
-                                document.getElementById('resultDropdown').style.display = 'none';
-                                return;
-                            }
-
-                            fetch('search.php', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/x-www-form-urlencoded'
-                                    },
-                                    body: 'searchString=' + encodeURIComponent(searchString)
-                                })
-                                .then(response => response.text())
-                                .then(data => {
-                                    const resultDropdown = document.getElementById('resultDropdown');
-                                    resultDropdown.innerHTML = data;
-                                    resultDropdown.style.display = 'block';
-                                })
-                                .catch(error => console.error('Error:', error));
-                        });
-                    </script>
-                    <li class="separator" style="color: var(--separator_color);">|</li>
-                    <?php if (isset($_SESSION['nickname'])): ?>
-                        
-                        <li class="nav-item">
-                            <a class="nav-link" href="../memberPage/myProfile.php" style="color: var(--brand_color); font-weight: bold;">
-                                <?php echo $_SESSION['nickname']; ?>
+                                <li><a class="dropdown-item" href="../csgo/csgo.php" style="color: var(--brand_color);">Csgo</a></li>
+                                <li><a class="dropdown-item" href="../team_fortress2/team_fortress2.php" style="color: var(--brand_color);">Team Fortress 2</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                Possono sempre servire
+                            </ul>
+                        </li>
+                        <li class="nav-item" style="margin-left: 7px; margin-top: 11px;">
+                            <a class="btn btn-outline-success" id="homeref" type="button" style=" background-color:var(--object_color);" href="../home/home.php">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+                                    <path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z" />
+                                </svg>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="../logout/logout.php" style="color: var(--brand_color);">Logout</a>
+                    </ul>
+                    <ul class="navbar-nav mb-2 mb-lg-0">
+                        <li class="nav-item align-self-center">
+                            <div style="position: relative;">
+                                <form class="d-flex" role="search" id="searchForm" action="search.php" method="post" style="margin-top: 10px;">
+                                    <input class="form-control me-2" name="searchString" id="searchInput" type="search" placeholder="Search" aria-label="Search"
+                                        style="background-color:var(--object_color); color: var(--text_color); width: calc(100% - 40px);">
+                                    <button class="btn" type="button" id="searchButton">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+                                            <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z" />
+                                        </svg>
+                                    </button>
+                                </form>
+
+                                <ul class="dropdown-menu" id="resultDropdown" style="background-color: var(--object_color); position: absolute; top: 100%; left: 0; width: 13.5rem; z-index: 1000; display: none;"></ul>
+                            </div>
                         </li>
-                    <?php else: ?>
-                        
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="../login/login.html" style="color: var(--brand_color);">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="../signUp/signUp.html" style="color: var(--brand_color);">Sign Up</a>
-                        </li>
-                    <?php endif; ?>
-                </ul>
+
+                        <script>
+                            document.getElementById('searchButton').addEventListener('click', function() {
+                                const searchString = document.getElementById('searchInput').value;
+
+                                if (searchString.trim() === '') {
+                                    document.getElementById('resultDropdown').style.display = 'none';
+                                    return;
+                                }
+
+                                fetch('search.php', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/x-www-form-urlencoded'
+                                        },
+                                        body: 'searchString=' + encodeURIComponent(searchString)
+                                    })
+                                    .then(response => response.text())
+                                    .then(data => {
+                                        const resultDropdown = document.getElementById('resultDropdown');
+                                        resultDropdown.innerHTML = data;
+                                        resultDropdown.style.display = 'block';
+                                    })
+                                    .catch(error => console.error('Error:', error));
+                            });
+                        </script>
+                        <li class="separator" style="color: var(--separator_color);">|</li>
+                        <?php if (isset($_SESSION['nickname'])): ?>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="../memberPage/myProfile.php" style="color: var(--brand_color); font-weight: bold;">
+                                    <?php echo $_SESSION['nickname']; ?>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="../logout/logout.php" style="color: var(--brand_color);">Logout</a>
+                            </li>
+                        <?php else: ?>
+
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="../login/login.html" style="color: var(--brand_color);">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="../signUp/signUp.html" style="color: var(--brand_color);">Sign Up</a>
+                            </li>
+                        <?php endif; ?>
+                    </ul>
+                </div>
             </div>
-        </div>
         </nav>
     </div>
     <div style="background-color: var(--transparent_col); height: 5rem; display: flex; justify-content: center; align-items: center; margin-top: 68px;">
@@ -798,18 +791,14 @@ $averageWinPercentage = $totalUsers > 0 ? round($totalWinPercentage / $totalUser
                 echo "</tbody>"; // Close tbody
                 echo "</table>";
                 echo "</div>"; // Close the leaderboard div
-            } else {
-                echo "<div class='leaderboard'>";
-                // echo "<p>Nessun utente trovato con statistiche valide.</p>";
-                echo "</div>"; // Close the leaderboard div
-            }
 
-            // Stampa le medie
-            if ((isset($averageKills) || isset($averageDeaths) || isset($averageDamageDone) || isset($averageWinPercentage)) && $game === "Csgo") {
-                echo "<h2>Statistiche Medie</h2>";
-                echo '<div style="overflow-x:auto;">';
-                echo '<table class="table table-dark table-striped">';
-                echo "<thead>
+
+                // Stampa le medie
+                if ((isset($averageKills) || isset($averageDeaths) || isset($averageDamageDone) || isset($averageWinPercentage)) && $game === "Csgo") {
+                    echo "<h2>Statistiche Medie</h2>";
+                    echo '<div style="overflow-x:auto;">';
+                    echo '<table class="table table-dark table-striped">';
+                    echo "<thead>
         <tr>
             <th>Media Kills</th>
             <th>Media Deaths</th>
@@ -817,73 +806,78 @@ $averageWinPercentage = $totalUsers > 0 ? round($totalWinPercentage / $totalUser
             <th>Media Win Percentage (%)</th>
         </tr>
     </thead>";
-                echo "<tbody>";
-                echo "<tr>";
-                echo "<td>" . (isset($averageKills) ? $averageKills : '-') . "</td>";
-                echo "<td>" . (isset($averageDeaths) ? $averageDeaths : '-') . "</td>";
-                echo "<td>" . (isset($averageDamageDone) ? $averageDamageDone : '-') . "</td>";
-                echo "<td>" . (isset($averageWinPercentage) ? $averageWinPercentage : '-') . "%</td>";
-                echo "</tr>";
-                echo "</tbody>"; // Close tbody
-                echo "</table>";
-                echo "</div>"; // Close the averages div
+                    echo "<tbody>";
+                    echo "<tr>";
+                    echo "<td>" . (isset($averageKills) ? $averageKills : '-') . "</td>";
+                    echo "<td>" . (isset($averageDeaths) ? $averageDeaths : '-') . "</td>";
+                    echo "<td>" . (isset($averageDamageDone) ? $averageDamageDone : '-') . "</td>";
+                    echo "<td>" . (isset($averageWinPercentage) ? $averageWinPercentage : '-') . "%</td>";
+                    echo "</tr>";
+                    echo "</tbody>"; // Close tbody
+                    echo "</table>";
+                    echo "</div>"; // Close the averages div
 
-                // Pie chart
-                echo "<canvas id='statisticsPieChart' width='400' height='400'></canvas>";
+                    // Pie chart
+                    echo "<canvas id='statisticsPieChart' width='400' height='400'></canvas>";
             ?>
 
-                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-                <script>
-                    const ctx = document.getElementById('statisticsPieChart').getContext('2d');
+                    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                    <script>
+                        const ctx = document.getElementById('statisticsPieChart').getContext('2d');
 
-                    // Data for the pie chart
-                    const labels = ['Total Kills', 'Total Deaths', 'Total Damage Done', 'Average Win Percentage'];
-                    const data = [
-                        <?php echo isset($averageKills) ? $averageKills : 0; ?>,
-                        <?php echo isset($averageDeaths) ? $averageDeaths : 0; ?>,
-                        <?php echo isset($averageDamageDone) ? $averageDamageDone : 0; ?>,
-                        <?php echo isset($averageWinPercentage) ? $averageWinPercentage : 0; ?>
-                    ];
+                        // Data for the pie chart
+                        const labels = ['Total Kills', 'Total Deaths', 'Total Damage Done', 'Average Win Percentage'];
+                        const data = [
+                            <?php echo isset($averageKills) ? $averageKills : 0; ?>,
+                            <?php echo isset($averageDeaths) ? $averageDeaths : 0; ?>,
+                            <?php echo isset($averageDamageDone) ? $averageDamageDone : 0; ?>,
+                            <?php echo isset($averageWinPercentage) ? $averageWinPercentage : 0; ?>
+                        ];
 
-                    const statisticsPieChart = new Chart(ctx, {
-                        type: 'pie',
-                        data: {
-                            labels: labels,
-                            datasets: [{
-                                label: 'Average Statistics',
-                                data: data,
-                                backgroundColor: [
-                                    'rgba(255, 99, 132, 0.2)',
-                                    'rgba(54, 162, 235, 0.2)',
-                                    'rgba(255, 206, 86, 0.2)',
-                                    'rgba(75, 192, 192, 0.2)'
-                                ],
-                                borderColor: [
-                                    'rgba(255, 99, 132, 1)',
-                                    'rgba(54, 162, 235, 1)',
-                                    'rgba(255, 206, 86, 1)',
-                                    'rgba(75, 192, 192, 1)'
-                                ],
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            plugins: {
-                                legend: {
-                                    position: 'top',
-                                },
-                                title: {
-                                    display: true,
-                                    text: 'Average Statistics Overview'
+                        const statisticsPieChart = new Chart(ctx, {
+                            type: 'pie',
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    label: 'Average Statistics',
+                                    data: data,
+                                    backgroundColor: [
+                                        'rgba(255, 99, 132, 0.2)',
+                                        'rgba(54, 162, 235, 0.2)',
+                                        'rgba(255, 206, 86, 0.2)',
+                                        'rgba(75, 192, 192, 0.2)'
+                                    ],
+                                    borderColor: [
+                                        'rgba(255, 99, 132, 1)',
+                                        'rgba(54, 162, 235, 1)',
+                                        'rgba(255, 206, 86, 1)',
+                                        'rgba(75, 192, 192, 1)'
+                                    ],
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                plugins: {
+                                    legend: {
+                                        position: 'top',
+                                    },
+                                    title: {
+                                        display: true,
+                                        text: 'Average Statistics Overview'
+                                    }
                                 }
                             }
-                        }
-                    });
-                </script>
+                        });
+                    </script>
             <?php
+                } else {
+                    // echo "<tr><td colspan='4'>Nessun dato disponibile per le statistiche medie.</td></tr>";
+                }
             } else {
-                // echo "<tr><td colspan='4'>Nessun dato disponibile per le statistiche medie.</td></tr>";
+                echo "<div class='leaderboard'>";
+                // echo "<p>Nessun utente trovato con statistiche valide.</p>";
+                echo "</div>"; // Close the leaderboard div
             }
             ?>
         </div>
