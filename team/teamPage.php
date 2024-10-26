@@ -175,10 +175,7 @@ foreach ($steamIDs as $steamID) {
                     }
                 }
             }
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
 
             // Store accumulated stats
             $userDetails[$steamID]['kills'] = $kills;
@@ -610,15 +607,10 @@ $dota2wlr = generateDota2LeaderboardWlr($membersD);
                                 aria-expanded="false" style="color: var(--navbar_textCol);">Games</a>
                             <ul class="dropdown-menu" style="background-color: var(--object_color);">
 
-<<<<<<< Updated upstream
-                                <li><a class="dropdown-item" href="../csgo/csgo.php" style="color: var(--brand_color);">Csgo</a></li>
-                                <li><a class="dropdown-item" href="../team_fortress2/team_fortress2.php" style="color: var(--brand_color);">Team Fortress 2</a></li>
-=======
                                 <li><a class="dropdown-item" href="../csgo/csgo.php"
                                         style="color: var(--brand_color);">Csgo</a></li>
                                 <li><a class="dropdown-item" href="../team_fortress2/team_fortress2.php"
                                         style="color: var(--brand_color);">Team Fortress 2</a></li>
->>>>>>> Stashed changes
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
@@ -627,18 +619,9 @@ $dota2wlr = generateDota2LeaderboardWlr($membersD);
                             </ul>
                         </li>
                         <li class="nav-item" style="margin-left: 7px; margin-top: 11px;">
-<<<<<<< Updated upstream
                             <a class="btn btn-outline-success" id="homeref" type="button" style=" background-color:var(--object_color);" href="../home/home.php">
                                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
                                     <path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z" />
-=======
-                            <a class="btn btn-outline-success" id="homeref" type="button"
-                                style=" background-color:var(--object_color);" href="../home/home.php">
-                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
-                                    width="24px" fill="#e8eaed">
-                                    <path
-                                        d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z" />
->>>>>>> Stashed changes
                                 </svg>
                             </a>
                         </li>
@@ -646,45 +629,20 @@ $dota2wlr = generateDota2LeaderboardWlr($membersD);
                     <ul class="navbar-nav mb-2 mb-lg-0">
                         <li class="nav-item align-self-center">
                             <div style="position: relative;">
-<<<<<<< Updated upstream
                                 <form class="d-flex" role="search" id="searchForm" action="search.php" method="post" style="margin-top: 10px;">
                                     <input class="form-control me-2" name="searchString" id="searchInput" type="search" placeholder="Search" aria-label="Search"
                                         style="background-color:var(--object_color); color: var(--text_color); width: calc(100% - 40px);">
                                     <button class="btn" type="button" id="searchButton">
                                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
                                             <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z" />
-=======
-                                <form class="d-flex" role="search" id="searchForm" action="search.php" method="post"
-                                    style="margin-top: 10px;">
-                                    <input class="form-control me-2" name="searchString" id="searchInput" type="search"
-                                        placeholder="Search" aria-label="Search"
-                                        style="background-color:var(--object_color); color: var(--text_color); width: calc(100% - 40px);">
-                                    <button class="btn" type="button" id="searchButton">
-                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
-                                            width="24px" fill="#e8eaed">
-                                            <path
-                                                d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z" />
->>>>>>> Stashed changes
                                         </svg>
                                     </button>
                                 </form>
-
-<<<<<<< Updated upstream
                                 <ul class="dropdown-menu" id="resultDropdown" style="background-color: var(--object_color); position: absolute; top: 100%; left: 0; width: 13.5rem; z-index: 1000; display: none;"></ul>
-=======
-                                <ul class="dropdown-menu" id="resultDropdown"
-                                    style="background-color: var(--object_color); position: absolute; top: 100%; left: 0; width: 13.5rem; z-index: 1000; display: none;">
-                                </ul>
->>>>>>> Stashed changes
                             </div>
                         </li>
-
                         <script>
-<<<<<<< Updated upstream
                             document.getElementById('searchButton').addEventListener('click', function() {
-=======
-                            document.getElementById('searchButton').addEventListener('click', function () {
->>>>>>> Stashed changes
                                 const searchString = document.getElementById('searchInput').value;
 
                                 if (searchString.trim() === '') {
@@ -693,21 +651,12 @@ $dota2wlr = generateDota2LeaderboardWlr($membersD);
                                 }
 
                                 fetch('search.php', {
-<<<<<<< Updated upstream
                                         method: 'POST',
                                         headers: {
                                             'Content-Type': 'application/x-www-form-urlencoded'
                                         },
                                         body: 'searchString=' + encodeURIComponent(searchString)
                                     })
-=======
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/x-www-form-urlencoded'
-                                    },
-                                    body: 'searchString=' + encodeURIComponent(searchString)
-                                })
->>>>>>> Stashed changes
                                     .then(response => response.text())
                                     .then(data => {
                                         const resultDropdown = document.getElementById('resultDropdown');
@@ -721,39 +670,20 @@ $dota2wlr = generateDota2LeaderboardWlr($membersD);
                         <?php if (isset($_SESSION['nickname'])): ?>
 
                             <li class="nav-item">
-<<<<<<< Updated upstream
                                 <a class="nav-link" href="../memberPage/myProfile.php" style="color: var(--brand_color); font-weight: bold;">
-=======
-                                <a class="nav-link" href="../memberPage/myProfile.php"
-                                    style="color: var(--brand_color); font-weight: bold;">
->>>>>>> Stashed changes
                                     <?php echo $_SESSION['nickname']; ?>
                                 </a>
                             </li>
                             <li class="nav-item">
-<<<<<<< Updated upstream
                                 <a class="nav-link active" aria-current="page" href="../logout/logout.php" style="color: var(--brand_color);">Logout</a>
-=======
-                                <a class="nav-link active" aria-current="page" href="../logout/logout.php"
-                                    style="color: var(--brand_color);">Logout</a>
->>>>>>> Stashed changes
                             </li>
                         <?php else: ?>
 
                             <li class="nav-item">
-<<<<<<< Updated upstream
                                 <a class="nav-link active" aria-current="page" href="../login/login.html" style="color: var(--brand_color);">Login</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link active" aria-current="page" href="../signUp/signUp.html" style="color: var(--brand_color);">Sign Up</a>
-=======
-                                <a class="nav-link active" aria-current="page" href="../login/login.html"
-                                    style="color: var(--brand_color);">Login</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="../signUp/signUp.html"
-                                    style="color: var(--brand_color);">Sign Up</a>
->>>>>>> Stashed changes
                             </li>
                         <?php endif; ?>
                     </ul>
@@ -1096,14 +1026,11 @@ $dota2wlr = generateDota2LeaderboardWlr($membersD);
                     echo "</div>"; // Close the leaderboard div
                 }
 
-<<<<<<< Updated upstream
                 echo "</tbody>"; // Close tbody
                 echo "</table>";
                 echo "</div>"; // Close the leaderboard div
 
 
-=======
->>>>>>> Stashed changes
                 // Stampa le medie
                 if ((isset($averageKills) || isset($averageDeaths) || isset($averageDamageDone) || isset($averageWinPercentage)) && $game === "Csgo") {
                     echo "<h2>Statistiche Medie</h2>";
@@ -1127,7 +1054,6 @@ $dota2wlr = generateDota2LeaderboardWlr($membersD);
                     echo "</tbody>"; // Close tbody
                     echo "</table>";
                     echo "</div>"; // Close the averages div
-<<<<<<< Updated upstream
 
                     // Pie chart
                     echo "<canvas id='statisticsPieChart' width='400' height='400'></canvas>";
@@ -1136,16 +1062,6 @@ $dota2wlr = generateDota2LeaderboardWlr($membersD);
                     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
                     <script>
                         const ctx = document.getElementById('statisticsPieChart').getContext('2d');
-=======
-                
-                    // Pie chart
-                    echo "<canvas id='statisticsPieChart' width='400' height='400'></canvas>";
-                    ?>
-                </div>
-                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-                <script>
-                    const ctx = document.getElementById('statisticsPieChart').getContext('2d');
->>>>>>> Stashed changes
 
                         // Data for the pie chart
                         const labels = ['Total Kills', 'Total Deaths', 'Total Damage Done', 'Average Win Percentage'];
@@ -1190,22 +1106,8 @@ $dota2wlr = generateDota2LeaderboardWlr($membersD);
                                     }
                                 }
                             }
-<<<<<<< Updated upstream
-                        });
-                    </script>
-            <?php
-                } else {
-                    // echo "<tr><td colspan='4'>Nessun dato disponibile per le statistiche medie.</td></tr>";
-                }
-            } else {
-                echo "<div class='leaderboard'>";
-                // echo "<p>Nessun utente trovato con statistiche valide.</p>";
-                echo "</div>"; // Close the leaderboard div
-            }
-            ?>
-=======
                         }
-                    });
+                    );
                 </script>
                 <?php
                 } else {
@@ -1284,7 +1186,6 @@ $dota2wlr = generateDota2LeaderboardWlr($membersD);
                     }
                     ?>
                 </div>
->>>>>>> Stashed changes
         </div>
 
     </div>
