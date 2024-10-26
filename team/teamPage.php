@@ -551,8 +551,74 @@ function generateDota2LeaderboardKdr($members)
     });
     return $leaderboardkdr;
 }
+
+function generateDota2LeaderboardAvg($members)
+{
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "gamerstats";
+
+    echo "<script>console.log('generaClassificaDota2: connecting to database');</script>";
+    $conn = new mysqli($servername, $username, $password, $dbname);
+
+    $leaderboardAvg = [];
+    $kdrL=[];
+    $wrL=[];
+    $totaltotalkills=0;
+    // Iterate through the users array and make a call with the dota2api php file
+    foreach ($members as $user) {
+        $s++;
+        echo "<script>console.log('generaClassificaDota2: processing user: " . $user . "');</script>";
+        $nickname = $user;
+        $account_id = getPlayerAccountId($nickname, $conn);;
+        echo "<script>console.log('generaClassificaDota2: retrieved player id: " . $account_id . "');</script>";
+        //updateDatabase($nickname, $account_id);
+        $wl = getPlayerWL($account_id);
+        //API CALL
+        $total_kills = 0;
+        $total_deaths = 0;
+        $total_wins=0;
+        $total_losses=0;
+        $recent_matches = getPlayerRecentMatches($account_id);
+        if (!empty($recent_matches)) {
+            echo "<script>console.log('generaClassificaDota2: retrieved recent matches');</script>";
+            $kdr = 0;
+
+            foreach ($recent_matches as $match) {
+                $total_kills += $match['kills'];
+                $totaltotalkills += $match['kills'];
+                $total_deaths += $match['deaths'];
+            }
+            $total_wins += $wl['win'];
+            $total_losses += $wl['lose'];
+            echo "<script>console.log('generaClassificaDota2: calculated total kills and deaths:".$total_kills."');</script>";
+            $kdr = $total_kills / ($total_deaths + 1);
+            $wr = $total_wins / ($total_losses + 1);
+        } else {
+            echo "<script>console.log('generaClassificaDota2: no recent matches found');</script>";
+        }
+        $kdrL[$s] = $kdr;
+        $wrL[$s] = $wr;
+        
+    }
+    foreach($kdrL as $k){
+        $avg_kdr += $k;
+    }
+    foreach($wrL as $w){
+        $avg_wr += $w;
+    }
+    $leaderboardAvg[] = [
+        'avg_kills' => $totaltotalkills/$s,
+        'avg_kdr' => $avg_kdr/$s,
+        'avg_wr' => $avg_wr/$s
+    ];
+    return $leaderboardAvg;
+}
+
 $dota2kdr = generateDota2LeaderboardKdr($membersD);
 $dota2wlr = generateDota2LeaderboardWlr($membersD);
+$dota2avg = generateDota2LeaderboardAvg($membersD);
 
 ?>
 
@@ -1173,6 +1239,35 @@ $dota2wlr = generateDota2LeaderboardWlr($membersD);
                                 echo "<td>{$kills}</td>";
                                 echo "<td>{$deaths}</td>";
                                 echo "<td>{$kdr}</td>"; // Change to totalDamageDone
+                                echo '</tr>';
+                            }
+
+                            echo '</tbody>';
+                            echo '</table>';
+                        } else {
+                            echo "<li class='list-group-item text-center' style='background-color: rgba(255, 255, 255, 0.1);'>No stats available.</li>";
+                        }
+                        
+                        if (!empty($dota2avg)) {
+                            echo '<table class="table table-dark table-striped">';
+                            echo '<thead>';
+                            echo '<tr>';
+                            echo '<th>Average kills</th>';
+                            echo '<th>Average kdr</th>';
+                            echo '<th>Average wr</th>';
+                            echo '</tr>';
+                            echo '</thead>';
+                            echo '<tbody>';
+
+                            foreach ($dota2avg as $data) {
+                                $avg_kills = htmlspecialchars($data['avg_kills']);
+                                $avg_kdr = htmlspecialchars($data['avg_kdr']);
+                                $avg_wr = htmlspecialchars($data['avg_wr']);
+
+                                echo '<tr>';
+                                echo "<td>{$avg_kills}</td>";
+                                echo "<td>{$avg_kdr}</td>";
+                                echo "<td>{$avg_wr}</td>";
                                 echo '</tr>';
                             }
 
