@@ -106,7 +106,7 @@ function generateDota2LeaderboardKdr()
     $password = "";
     $dbname = "gamerstats";
 
-    echo "<script>console.log('generaClassificaDota2: connecting to database');</script>";
+    //echo "<script>console.log('generaClassificaDota2: connecting to database');</script>";
     $conn = new mysqli($servername, $username, $password, $dbname);
 
     // Controlla la connessione
@@ -129,7 +129,7 @@ function generateDota2LeaderboardKdr()
         }
 
     } else {
-        echo "<script>console.log('generaClassificaDota2: no users found');</script>";
+        //echo "<script>console.log('generaClassificaDota2: no users found');</script>";
         echo "Nessun utente trovato nel database.";
     }
 
@@ -138,6 +138,8 @@ function generateDota2LeaderboardKdr()
         $nickname = $user['nickname'];
         $player_id = $user['steamID'];
         $account_id = (int) $player_id - 76561197960265728;
+        //updateDatabase($nickname, $account_id);
+
         //API CALL
         $recent_matches = getPlayerRecentMatches($account_id);
         if (!empty($recent_matches)) {
@@ -174,7 +176,7 @@ function generateDota2LeaderboardWlr()
     $password = "";
     $dbname = "gamerstats";
 
-    echo "<script>console.log('generaClassificaDota2: connecting to database');</script>";
+    //echo "<script>console.log('generaClassificaDota2: connecting to database');</script>";
     $conn = new mysqli($servername, $username, $password, $dbname);
 
     // Controlla la connessione
@@ -190,8 +192,8 @@ function generateDota2LeaderboardWlr()
         while ($row = $result->fetch_assoc()) {
             $nickname = htmlspecialchars($row['nickname']);
             $steamID = htmlspecialchars($row['steamID']);
-            echo "<script>console.log(" . json_encode($nickname) . ");</script>";
-            echo "<script>console.log(" . json_encode($steamID) . ");</script>";
+            //echo "<script>console.log(" . json_encode($nickname) . ");</script>";
+            //echo "<script>console.log(" . json_encode($steamID) . ");</script>";
             $dota2users[] = [
                 'nickname' => $nickname,
                 'steamID' => $steamID
@@ -199,7 +201,7 @@ function generateDota2LeaderboardWlr()
         }
 
     } else {
-        echo "<script>console.log('generaClassificaDota2: no users found');</script>";
+        //echo "<script>console.log('generaClassificaDota2: no users found');</script>";
         echo "Nessun utente trovato nel database.";
     }
 
@@ -208,10 +210,11 @@ function generateDota2LeaderboardWlr()
         $nickname = $user['nickname'];
         $player_id = $user['steamID'];
         $account_id = (int) $player_id - 76561197960265728;
+        //updateDatabase($nickname, $account_id);
         //API CALL
         $wl = getPlayerWL($account_id);
-        echo "<script>console.log(" . json_encode($wl) . ");</script>";
-        echo "<script>console.log(" . json_encode($nickname) . ");</script>";
+        //echo "<script>console.log(" . json_encode($wl) . ");</script>";
+        //echo "<script>console.log(" . json_encode($nickname) . ");</script>";
         $wlr = $wl['win'] / ($wl['lose'] + 1);
         $leaderboardWlr[] = [
             'nickname' => $nickname,
@@ -230,6 +233,134 @@ function generateDota2LeaderboardWlr()
 $dota2kdr = generateDota2LeaderboardKdr();
 $dota2wlr = generateDota2LeaderboardWlr();
 
+function getAccountInfo($account_id)
+{
+    $url = "https://api.opendota.com/api/players/" . $account_id;
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $response = curl_exec($ch);
+    curl_close($ch);
+    $data = json_decode($response, true);
+    if ($data === null) {
+        throw new Exception('Failed to get account info');
+    }
+    return $data;
+}
+
+function getMatchInfo($match_id)
+{
+    $url = "https://api.opendota.com/api/matches/" . $match_id;
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $response = curl_exec($ch);
+    curl_close($ch);
+    $data = json_decode($response, true);
+    if ($data === null) {
+        throw new Exception('Failed to get match info');
+    }
+    return $data;
+}
+
+function updateDatabase($name, $account_id)
+    {
+            
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "gamerstats";
+    $conn = new mysqli($servername, $username, $password, $dbname);
+
+    if ($conn->connect_error) {
+        echo json_encode(['error' => 'Connection failed: ' . $conn->connect_error]);
+        exit;
+    }
+
+    //echo getPlayerAccountId($name, $conn);
+
+    /*
+    Tested with:
+    */
+
+    $account_info = getAccountInfo($account_id);
+    $wl = getPlayerWL($account_id);
+    //$matches = getPlayerMatches($account_id);
+    //$totals = getPlayerTotals($account_id);
+    $recent_matchesD = getPlayerRecentMatches($account_id);
+    //echo json_encode($recent_matches);
+
+    /*
+    echo json_encode($account_info);
+    echo json_encode($wl);
+    echo json_encode($recent_matches);
+    echo json_encode($totals);
+    */
+
+    $sql = "DROP TABLE IF EXISTS `$name`";
+    if ($conn->query($sql) !== TRUE) {
+        echo json_encode(['error' => 'Error dropping table: ' . $conn->error]);
+        $conn->close();
+        exit;
+    }
+
+    $sql = "CREATE TABLE IF NOT EXISTS `$name` (
+        account_id BIGINT,
+        personaname VARCHAR(255),
+        avatar VARCHAR(255),
+        rank_tier INTEGER,
+        win INTEGER,
+        lose INTEGER,
+        match_id BIGINT,
+        kills INTEGER,
+        deaths INTEGER,
+        assists INTEGER,
+        average_rank INTEGER,
+        radiant_score VARCHAR(255),
+        dire_score VARCHAR(255)
+    )";
+
+    if ($conn->query($sql) !== TRUE) {
+        echo json_encode(['error' => 'Error creating table: ' . $conn->error]);
+        exit;
+    }
+
+    $stmt = $conn->prepare("INSERT INTO `$name`
+        (account_id, personaname, avatar, rank_tier, win, lose, match_id, kills, deaths, assists, average_rank, radiant_score, dire_score) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    if ($stmt === false) {
+        echo json_encode(['error' => 'Error preparing statement: ' . $conn->error]);
+        exit;
+    }
+    $account_id = $account_info['profile']['account_id'];
+    $personaname = $account_info['profile']['personaname'];
+    $avatar = $account_info['profile']['avatar'];
+    $rank_tier = $account_info['rank_tier'];
+    $win = $wl['win'];
+    $lose = $wl['lose'];
+    foreach ($recent_matchesD as $match) {
+        $matchId = $match['match_id'];
+        $kills = $match['kills'];
+        $deaths = $match['deaths'];
+        $assists = $match['assists'];
+        $average_rank = $match['average_rank'];
+
+        $match_info = getMatchInfo($match['match_id']);
+        $radiant_score = $match_info['radiant_score'];
+        $dire_score = $match_info['dire_score'];
+
+        $stmt->bind_param("sssssssssssss", $account_id, $personaname, $avatar, $rank_tier, $win, $lose, $matchId, $kills, $deaths, $assists, $average_rank, $radiant_score, $dire_score);
+
+        if (!$stmt->execute()) {
+            echo json_encode(['error' => 'Error inserting data for participant: '. $account_id]);
+            //call code to take data from database
+            exit;
+        }
+    }
+    //echo json_encode($data);
+
+    $stmt->close();
+    $conn->close();
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -242,9 +373,31 @@ $dota2wlr = generateDota2LeaderboardWlr();
     <link href="../assets/css/bootstrap.min.css" rel="stylesheet" />
     <script src="../assets/js/bootstrap.bundle.min.js"></script>
     <title>DOTA 2</title>
+    <script>
+        function sendData() {
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', 'dota2_ajax_handler.php', true);
+            xhr.setRequestHeader('Content-Type', 'application/xml'); // Specify content type
+            
+            xhr.onload = function () {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                // Process the response
+                    console.log('Response received:', xhr.responseText);
+                } else {
+                    console.error('Request failed with status: ' + xhr.status);
+                }
+                    // Handle network errors
+                xhr.onerror = function() {
+                    console.error('Network error');
+                };
+            };
+
+            xhr.send(); // Send the XML data
+        }
+    </script>
 </head>
 
-<body>
+<body onload="sendData()">
     <div class="content">
         <nav class="navbar fixed-top navbar-expand-lg" style="background-color: var(--object_color);">
             <div class="container-fluid">
