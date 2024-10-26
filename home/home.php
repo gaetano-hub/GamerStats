@@ -439,7 +439,7 @@ $conn->close();
                         <?php if (isset($_SESSION['nickname'])): ?>
                             <!-- L'utente è loggato, mostra Logout -->
                             <li class="nav-item">
-                                <a class="nav-link" href="../memberPage/myProfile.php" style="color: var(--brand_color); font-weight: bold;">
+                                <a class="nav-link" href="../memberPage/myProfile.php" id="myProfileLink" style="color: var(--brand_color); font-weight: bold;">
                                     <?php echo $_SESSION['nickname']; ?>
                                 </a>
                             </li>

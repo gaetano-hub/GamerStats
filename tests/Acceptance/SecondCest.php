@@ -16,7 +16,10 @@ class SecondCest
         $I->fillField('Password', 'password');
         $I->click('Confirm');
         $I->seeInCurrentUrl('/home/home.php');
-        $I->see('gaetest');
+        $I->click(['id' => 'myProfileLink']);
+        $I->seeInCurrentUrl('/memberPage/myProfile.php');
+        $I->seeElement('input[name="email"][value="gaetest@example.com"]');
+        
     }
 
     // tests

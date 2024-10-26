@@ -1,0 +1,10 @@
+Acceptance test:
+    FirstCest.php: il primo acceptance test esegue il signup al sito GamerStats e verifica che dopo il signup venga reindirizzato alla pagina di login;
+    SecondCest.php: il secondo acceptance test esegue il login al sito GamerStats e controlla che avvenga una corretta visualizzazione della pagina profilo dell'utente che ha fatto il login.
+
+Functional test:
+    TeamTest.php: esegue la creazione di un team, sia effettuando una simulazione con le classi Team e Leader, sia inviando effetivamente dei dati attravereso il metodo POST al database di GamerStats,
+                  e verificandone il corretto inserimento del team nella tabella.
+
+Unit test:
+    LinkTest.php: esegue la copia del link url di un utente e verifica che sia copiata negli appunti.

@@ -271,7 +271,7 @@ while ($row = $result->fetch_assoc()) {
                         </div>
                     </div>
                     <input type="text" class="form-control-plaintext text-center" value="<?php echo isset($_SESSION['nickname']) ? $_SESSION['nickname'] : ''; ?>" readonly style="color: var(--text_color); margin-top: 10px; font-size: 2rem; font-weight: bold;">
-                    <input type="text" class="form-control-plaintext text-center" value="<?php echo isset($_SESSION['email']) ? $_SESSION['email'] : ''; ?>" readonly style="color: var(--text_color); margin-top: -10px; font-size: 1rem;">
+                    <input type="text" name="email" class="form-control-plaintext text-center" value="<?php echo isset($_SESSION['email']) ? $_SESSION['email'] : ''; ?>" readonly style="color: var(--text_color); margin-top: -10px; font-size: 1rem;">
                     <div class="row">
                         <!-- Il link personalizzato -->
                         <span id="memberLink" style="visibility: hidden;"><?php echo $link; ?></span>

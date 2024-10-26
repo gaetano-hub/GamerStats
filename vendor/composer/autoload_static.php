@@ -54,11 +54,19 @@ class ComposerStaticInit3aa8807de7f4f7e79d809f17e0f890b4
         array (
             'Masterminds\\' => 12,
         ),
+        'J' => 
+        array (
+            'JsonSchema\\' => 11,
+        ),
         'G' => 
         array (
             'GuzzleHttp\\Psr7\\' => 16,
             'GuzzleHttp\\Promise\\' => 19,
             'GuzzleHttp\\' => 11,
+        ),
+        'F' => 
+        array (
+            'Flow\\JSONPath\\' => 14,
         ),
         'D' => 
         array (
@@ -138,8 +146,8 @@ class ComposerStaticInit3aa8807de7f4f7e79d809f17e0f890b4
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-message/src',
-            1 => __DIR__ . '/..' . '/psr/http-factory/src',
+            0 => __DIR__ . '/..' . '/psr/http-factory/src',
+            1 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
         'Psr\\Http\\Client\\' => 
         array (
@@ -161,6 +169,10 @@ class ComposerStaticInit3aa8807de7f4f7e79d809f17e0f890b4
         array (
             0 => __DIR__ . '/..' . '/masterminds/html5/src',
         ),
+        'JsonSchema\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/justinrainbow/json-schema/src/JsonSchema',
+        ),
         'GuzzleHttp\\Psr7\\' => 
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/psr7/src',
@@ -172,6 +184,10 @@ class ComposerStaticInit3aa8807de7f4f7e79d809f17e0f890b4
         'GuzzleHttp\\' => 
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
+        ),
+        'Flow\\JSONPath\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/softcreatr/jsonpath/src',
         ),
         'DeepCopy\\' => 
         array (
@@ -206,8 +222,16 @@ class ComposerStaticInit3aa8807de7f4f7e79d809f17e0f890b4
         'Codeception\\Exception\\ExternalUrlException' => __DIR__ . '/..' . '/codeception/lib-innerbrowser/src/Codeception/Exception/ExternalUrlException.php',
         'Codeception\\Exception\\MalformedLocatorException' => __DIR__ . '/..' . '/codeception/lib-web/src/Exception/MalformedLocatorException.php',
         'Codeception\\Lib\\Connector\\Guzzle' => __DIR__ . '/..' . '/codeception/module-phpbrowser/src/Codeception/Lib/Connector/Guzzle.php',
+        'Codeception\\Lib\\DbPopulator' => __DIR__ . '/..' . '/codeception/module-db/src/Codeception/Lib/DbPopulator.php',
+        'Codeception\\Lib\\Driver\\Db' => __DIR__ . '/..' . '/codeception/module-db/src/Codeception/Lib/Driver/Db.php',
+        'Codeception\\Lib\\Driver\\MySql' => __DIR__ . '/..' . '/codeception/module-db/src/Codeception/Lib/Driver/MySql.php',
+        'Codeception\\Lib\\Driver\\Oci' => __DIR__ . '/..' . '/codeception/module-db/src/Codeception/Lib/Driver/Oci.php',
+        'Codeception\\Lib\\Driver\\PostgreSql' => __DIR__ . '/..' . '/codeception/module-db/src/Codeception/Lib/Driver/PostgreSql.php',
+        'Codeception\\Lib\\Driver\\SqlSrv' => __DIR__ . '/..' . '/codeception/module-db/src/Codeception/Lib/Driver/SqlSrv.php',
+        'Codeception\\Lib\\Driver\\Sqlite' => __DIR__ . '/..' . '/codeception/module-db/src/Codeception/Lib/Driver/Sqlite.php',
         'Codeception\\Lib\\Framework' => __DIR__ . '/..' . '/codeception/lib-innerbrowser/src/Codeception/Lib/Framework.php',
         'Codeception\\Lib\\InnerBrowser' => __DIR__ . '/..' . '/codeception/lib-innerbrowser/src/Codeception/Lib/InnerBrowser.php',
+        'Codeception\\Lib\\Interfaces\\Db' => __DIR__ . '/..' . '/codeception/module-db/src/Codeception/Lib/Interfaces/Db.php',
         'Codeception\\Lib\\Interfaces\\ElementLocator' => __DIR__ . '/..' . '/codeception/lib-web/src/Lib/Interfaces/ElementLocator.php',
         'Codeception\\Lib\\Interfaces\\MultiSession' => __DIR__ . '/..' . '/codeception/lib-web/src/Lib/Interfaces/MultiSession.php',
         'Codeception\\Lib\\Interfaces\\PageSourceSaver' => __DIR__ . '/..' . '/codeception/lib-web/src/Lib/Interfaces/PageSourceSaver.php',
@@ -217,13 +241,25 @@ class ComposerStaticInit3aa8807de7f4f7e79d809f17e0f890b4
         'Codeception\\Lib\\Interfaces\\Web' => __DIR__ . '/..' . '/codeception/lib-web/src/Lib/Interfaces/Web.php',
         'Codeception\\Module\\AbstractAsserts' => __DIR__ . '/..' . '/codeception/module-asserts/src/Codeception/Module/AbstractAsserts.php',
         'Codeception\\Module\\Asserts' => __DIR__ . '/..' . '/codeception/module-asserts/src/Codeception/Module/Asserts.php',
+        'Codeception\\Module\\Db' => __DIR__ . '/..' . '/codeception/module-db/src/Codeception/Module/Db.php',
         'Codeception\\Module\\PhpBrowser' => __DIR__ . '/..' . '/codeception/module-phpbrowser/src/Codeception/Module/PhpBrowser.php',
+        'Codeception\\Module\\REST' => __DIR__ . '/..' . '/codeception/module-rest/src/Codeception/Module/REST.php',
+        'Codeception\\PHPUnit\\Constraint\\JsonContains' => __DIR__ . '/..' . '/codeception/module-rest/src/Codeception/Constraint/JsonContains.php',
+        'Codeception\\PHPUnit\\Constraint\\JsonType' => __DIR__ . '/..' . '/codeception/module-rest/src/Codeception/Constraint/JsonType.php',
         'Codeception\\PHPUnit\\TestCase' => __DIR__ . '/..' . '/codeception/codeception/src/PHPUnit/TestCase.php',
+        'Codeception\\Step\\AsJson' => __DIR__ . '/..' . '/codeception/module-rest/src/Codeception/Step/AsJson.php',
+        'Codeception\\Util\\ArrayContainsComparator' => __DIR__ . '/..' . '/codeception/module-rest/src/Codeception/Util/ArrayContainsComparator.php',
         'Codeception\\Util\\HttpCode' => __DIR__ . '/..' . '/codeception/lib-innerbrowser/src/Codeception/Util/HttpCode.php',
+        'Codeception\\Util\\JsonArray' => __DIR__ . '/..' . '/codeception/module-rest/src/Codeception/Util/JsonArray.php',
+        'Codeception\\Util\\JsonType' => __DIR__ . '/..' . '/codeception/module-rest/src/Codeception/Util/JsonType.php',
         'Codeception\\Util\\Locator' => __DIR__ . '/..' . '/codeception/lib-web/src/Util/Locator.php',
         'Codeception\\Util\\Shared\\Asserts' => __DIR__ . '/..' . '/codeception/lib-asserts/src/Codeception/Util/Shared/Asserts.php',
         'Codeception\\Util\\Shared\\InheritedAsserts' => __DIR__ . '/..' . '/codeception/lib-asserts/src/Codeception/Util/Shared/InheritedAsserts.php',
+        'Codeception\\Util\\Soap' => __DIR__ . '/..' . '/codeception/lib-xml/src/Util/Soap.php',
         'Codeception\\Util\\Uri' => __DIR__ . '/..' . '/codeception/lib-web/src/Util/Uri.php',
+        'Codeception\\Util\\Xml' => __DIR__ . '/..' . '/codeception/lib-xml/src/Util/Xml.php',
+        'Codeception\\Util\\XmlBuilder' => __DIR__ . '/..' . '/codeception/lib-xml/src/Util/XmlBuilder.php',
+        'Codeception\\Util\\XmlStructure' => __DIR__ . '/..' . '/codeception/lib-xml/src/Util/XmlStructure.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Normalizer' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/Resources/stubs/Normalizer.php',
         'PHPUnit\\Event\\Application\\Finished' => __DIR__ . '/..' . '/phpunit/phpunit/src/Event/Events/Application/Finished.php',

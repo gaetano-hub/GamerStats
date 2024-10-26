@@ -3,5 +3,12 @@ suite_namespace: Tests\Functional
 modules:
     # enable helpers as array
     enabled:
-        - PhpBrowser:
+        - Asserts
+        - Db:
+            dsn: 'mysql:host=localhost;dbname=gamerstats'
+            user: 'root'
+            password: ''
+        - REST:
+            depends: PhpBrowser
             url: 'http://localhost/GamerStats'
+            
