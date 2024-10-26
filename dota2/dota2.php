@@ -534,8 +534,8 @@ function updateDatabase($name, $account_id)
                                     echo '<tr>';
                                     echo '<th>Nickname</th>';
                                     echo '<th>Kills</th>';
-                                    echo '<th>Morti</th>';
-                                    echo '<th>Danni Totali</th>'; // Change to Danni Totali
+                                    echo '<th>Deaths</th>';
+                                    echo '<th>K/D</th>'; // Change to Danni Totali
                                     echo '</tr>';
                                     echo '</thead>';
                                     echo '<tbody>';
