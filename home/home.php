@@ -542,8 +542,8 @@ $conn->close();
                                         echo '<th>Nickname</th>';
                                         echo '<th>Steam ID</th>';
                                         echo '<th>Win Percentage</th>';
-                                        echo '<th>Vittorie</th>';
-                                        echo '<th>Sconfitte</th>';
+                                        // echo '<th>Vittorie</th>';
+                                        // echo '<th>Sconfitte</th>';
                                         echo '</tr>';
                                         echo '</thead>';
                                         echo '<tbody>';
@@ -562,8 +562,8 @@ $conn->close();
                                             echo '<td>' . $nickname . '</td>'; // Nickname
                                             echo '<td>' . $steamID . '</td>'; // Steam ID
                                             echo '<td><span class="badge bg-primary">' . $winPercentage . '%</span></td>'; // Percentuale di vittorie
-                                            echo '<td>' . $totalWins . '</td>'; // Numero di vittorie
-                                            echo '<td>' . $totalLosses . '</td>'; // Numero di sconfitte
+                                            // echo '<td>' . $totalWins . '</td>'; // Numero di vittorie
+                                            // echo '<td>' . $totalLosses . '</td>'; // Numero di sconfitte
                                             echo '</tr>'; // Chiudi la riga della tabella
                                         }
 

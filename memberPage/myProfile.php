@@ -282,8 +282,13 @@ while ($row = $result->fetch_assoc()) {
                         </div>
                         <div class="col">
                             <button type="button" class="btn btn-success" id="liveAlertBtn" style="color: var(--text_color);">Share</button>
+                            <div id="liveAlertPlaceholder"></div>
+                            <div id="memberLink" style="display:none;">https://example.com/sharelink</div> <!-- Example link -->
+
                             <script>
                                 const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
+                                const linkUser = document.getElementById('memberLink').textContent
+
                                 const appendAlert = (message1, message2, type) => {
                                     const wrapper = document.createElement('div')
                                     wrapper.innerHTML = [
@@ -294,15 +299,26 @@ while ($row = $result->fetch_assoc()) {
                                     ].join('')
 
                                     alertPlaceholder.append(wrapper)
+
+                                    // Automatically dismiss the alert after 3 seconds
+                                    setTimeout(() => {
+                                        wrapper.remove();
+                                    }, 3000);
                                 }
-                                const linkUser = document.getElementById('memberLink').textContent
+
                                 const alertTrigger = document.getElementById('liveAlertBtn')
                                 if (alertTrigger) {
-                                    alertTrigger.addEventListener('click', () => {
-                                        appendAlert('Copy this link:', linkUser, 'success')
+                                    alertTrigger.addEventListener('click', async () => {
+                                        try {
+                                            await navigator.clipboard.writeText(linkUser);
+                                            appendAlert('Link copied to clipboard!', linkUser, 'success');
+                                        } catch (err) {
+                                            appendAlert('Failed to copy link.', err.message, 'danger');
+                                        }
                                     })
                                 }
                             </script>
+
                         </div>
                     </div>
                 </div>
