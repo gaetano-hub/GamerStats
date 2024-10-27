@@ -566,6 +566,10 @@ function generateDota2LeaderboardAvg($members)
     $kdrL=[];
     $wrL=[];
     $totaltotalkills=0;
+    $s=0;
+    $avg_kdr=0;
+    $avg_wr=0;
+
     // Iterate through the users array and make a call with the dota2api php file
     foreach ($members as $user) {
         $s++;
