@@ -250,7 +250,6 @@ while ($row = $result->fetch_assoc()) {
         </div>
         <div class="container text-center" style="margin-top: 10px; background-color: var(--transparent_col); padding: 15px;">
             <p style="font-size: 2rem; font-weight: bold; color: var(--text_color);">Stats</p>
-            <p style="font-weight: bold; color: var(--text_color);">Qui ci vanno le statistiche SIUUUUUUUUUU</p>
             <?php
         $apiKey = '8A345C81E607D2E02274B11D4834675A'; // Inserisci la tua chiave API di Steam se necessario
 

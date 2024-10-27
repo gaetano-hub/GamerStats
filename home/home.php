@@ -627,8 +627,8 @@ $conn->close();
 
                             <br>
                             <div class="d-flex justify-content-center">
-                                <a href="#" class="btn btn-block"
-                                    style="background-color: var(--button_col); color: var(--btnTxt_col);">Csgo Page</a>
+                                <a href="../dota2/dota2.php" class="btn btn-block"
+                                    style="background-color: var(--button_col); color: var(--btnTxt_col);">Dota2 Page</a>
                             </div>
                         </div>
                     </div>
