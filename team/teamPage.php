@@ -150,7 +150,6 @@ foreach ($steamIDs as $steamID) {
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
         $nickname = htmlspecialchars($row['nickname']);
-
         // Fetch TF2 stats
         $tf2Stats = getGameStats($steamID, $apiKey, $tf2GameId);
         if(empty($tf2Stats)){
@@ -159,22 +158,26 @@ foreach ($steamIDs as $steamID) {
         if ($tf2Stats !== null) {
             // Initialize temporary variables for aggregating stats
             $kills = $damage = $killAssists = $pointsScored = $playTime = $buildingsDestroyed = 0;
-
-            foreach ($tf2Stats['playerstats']['stats'] as $stat) {
-                if (isset($stat['name']) && isset($stat['value'])) {
-                    $value = is_numeric($stat['value']) ? $stat['value'] : 0; // Ensure it's a number
-                    if (strpos($stat['name'], 'iNumberOfKills') !== false) {
-                        $kills += $value;
-                    } elseif (strpos($stat['name'], 'iDamageDealt') !== false) {
-                        $damage += $value;
-                    } elseif (strpos($stat['name'], 'iKillAssists') !== false) {
-                        $killAssists += $value;
-                    } elseif (strpos($stat['name'], 'iPointsScored') !== false) {
-                        $pointsScored += $value;
-                    } elseif (strpos($stat['name'], 'iPlayTime') !== false) {
-                        $playTime += $value;
-                    } elseif (strpos($stat['name'], 'iBuildingsDestroyed') !== false) {
-                        $buildingsDestroyed += $value;
+            
+            foreach ($tf2Stats['playerstats'] as $item) {
+                if ($item  == 'stats') {
+                    foreach ($tf2Stats['playerstats']['stats'] as $stat) {
+                        if (isset($stat['name']) && isset($stat['value'])) {
+                            $value = is_numeric($stat['value']) ? $stat['value'] : 0; // Ensure it's a number
+                            if (strpos($stat['name'], 'iNumberOfKills') !== false) {
+                                $kills += $value;
+                            } elseif (strpos($stat['name'], 'iDamageDealt') !== false) {
+                                $damage += $value;
+                            } elseif (strpos($stat['name'], 'iKillAssists') !== false) {
+                                $killAssists += $value;
+                            } elseif (strpos($stat['name'], 'iPointsScored') !== false) {
+                                $pointsScored += $value;
+                            } elseif (strpos($stat['name'], 'iPlayTime') !== false) {
+                                $playTime += $value;
+                            } elseif (strpos($stat['name'], 'iBuildingsDestroyed') !== false) {
+                                $buildingsDestroyed += $value;
+                            }
+                        }
                     }
                 }
             }
