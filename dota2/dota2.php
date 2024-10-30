@@ -522,8 +522,7 @@ function updateDatabase($name, $account_id)
                     <div class="card" style="width: 30rem; background-color: var(--object_color);">
                         <div class="card-body">
                             <div class="d-flex justify-content-center align-items-center">
-                                <img src="../assets/csgologo.png" class="card-img-top" alt="csgoLogo"
-                                    style="width: 70px; height: auto; margin-right: 10px;">
+                                <img src="../assets/dotalogo.png" class="card-img-top" alt="dotaLogo" style="width: 50px; height: auto; margin-right: 10px;">
                                 <h5 class="card-title text-center" style="color: var(--text_color)">Dota2 Top Kill</h5>
                             </div>
                             <div class="d-flex justify-content-center">
@@ -569,8 +568,7 @@ function updateDatabase($name, $account_id)
                     <div class="card" style="width: 30rem; background-color: var(--object_color);">
                         <div class="card-body">
                             <div class="d-flex justify-content-center align-items-center">
-                                <img src="../assets/csgologo.png" class="card-img-top" alt="csgoLogo"
-                                    style="width: 70px; height: auto; margin-right: 10px;">
+                                <img src="../assets/dotalogo.png" class="card-img-top" alt="dotaLogo" style="width: 50px; height: auto; margin-right: 10px;">
                                 <h5 class="card-title text-center" style="color: var(--text_color)">Dota 2 Top Winners
                                 </h5>
                             </div>

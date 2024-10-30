@@ -105,6 +105,7 @@ while ($row = $result->fetch_assoc()) {
                                 <!-- TODO: aggiungere href per arrivare alle pagine dei giochi-->
                                 <li><a class="dropdown-item" href="../csgo/csgo.php" style="color: var(--brand_color);">Csgo</a></li>
                                 <li><a class="dropdown-item" href="../team_fortress2/team_fortress2.php" style="color: var(--brand_color);">Team Fortress 2</a></li>
+                                <li><a class="dropdown-item" href="../dota2/dota2.php" style="color: var(--brand_color);">Dota 2</a></li>
                                 <!-- <li><hr class="dropdown-divider"></li>
                                  <li><a class="dropdown-item" href="#">Something else here</a></li> 
                                  Possono sempre servire -->

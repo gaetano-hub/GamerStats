@@ -394,6 +394,7 @@ $conn->close();
                             <ul class="dropdown-menu" style="background-color: var(--object_color);">
                                 <li><a class="dropdown-item" href="../team_fortess2/team_fortess2.php" style="color: var(--brand_color);">Team Fortress 2</a></li>
                                 <li><a class="dropdown-item" href="../csgo/csgo.php" style="color: var(--brand_color);">Csgo</a></li>
+                                <li><a class="dropdown-item" href="../dota2/dota2.php" style="color: var(--brand_color);">Dota 2</a></li>
                             </ul>
                         </li>
                         <li class="nav-item">

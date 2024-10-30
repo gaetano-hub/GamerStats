@@ -41,6 +41,22 @@ if ($conn->query($sql) !== TRUE) {
     echo "Errore nella creazione della tabella: " . $conn->error;
 }
 
+$createTeamsTable = "CREATE TABLE IF NOT EXISTS teams (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    team_name VARCHAR(255) NOT NULL,
+    game VARCHAR(255) NOT NULL,
+    member_one VARCHAR(255),
+    member_two VARCHAR(255),
+    member_three VARCHAR(255),
+    member_four VARCHAR(255),
+    member_five VARCHAR(255),
+    leader VARCHAR(255) NOT NULL
+)";
+
+if ($conn->query($createTeamsTable) !== TRUE) {
+    echo "Errore nella creazione della tabella: " . $conn->error;
+}
+
 // Query per ottenere tutti i dati degli utenti
 $query = "SELECT id, nickname, email, password, steamID, image FROM users WHERE steamID IS NOT NULL";
 $result = $conn->query($query);
@@ -385,6 +401,7 @@ $conn->close();
                             <ul class="dropdown-menu" style="background-color: var(--object_color);">
                                 <li><a class="dropdown-item" href="../team_fortess2/team_fortess2.php" style="color: var(--brand_color);">Team Fortess 2</a></li>
                                 <li><a class="dropdown-item" href="../csgo/csgo.php" style="color: var(--brand_color);">Csgo</a></li>
+                                <li><a class="dropdown-item" href="../dota2/dota2.php" style="color: var(--brand_color);">Dota 2</a></li>
                             </ul>
                         </li>
                         <li class="nav-item" style="margin-left: 7px; margin-top: 11px;">
@@ -612,7 +629,7 @@ $conn->close();
                     <div class="card" style="width: 30rem; background-color: var(--object_color);">
                         <div class="card-body">
                             <div class="d-flex justify-content-center align-items-center">
-                                <img src="../assets/csgologo.png" class="card-img-top" alt="csgoLogo" style="width: 70px; height: auto; margin-right: 10px;">
+                                <img src="../assets/dotalogo.png" class="card-img-top" alt="dotaLogo" style="width: 50px; height: auto; margin-right: 10px;">
                                 <h5 class="card-title text-center" style="color: var(--text_color)">Dota2 Top Winners</h5>
                             </div>
                             <div class="d-flex flex-column align-items-center">
