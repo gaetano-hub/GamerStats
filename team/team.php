@@ -105,6 +105,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     }
 
+    if (empty($teamName)) {
+        echo '<script>alert("Please enter a valid team name"); window.history.back();</script>';
+        exit;
+    }
+    
+
     // Inserisci i dati del team nella tabella team
     $sql = "INSERT INTO teams (team_name, game, member_one, member_two, member_three, member_four, member_five, leader) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);

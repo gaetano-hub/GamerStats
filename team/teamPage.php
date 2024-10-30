@@ -71,7 +71,7 @@ if ($result->num_rows > 0) {
             ]
         ];
         // Aggiungi i membri all'array
-        $members = array_merge($membersList, $row);
+        $members = array_merge($members, $row);
     }
 } else {
     // echo "<p>Nessuna squadra trovata con il nome: {$visitingTeam}</p>";
@@ -85,17 +85,18 @@ $membersD = [];
 while ($row = $result->fetch_assoc()) {
     $membersD = array_merge($membersD, array_filter([$row['leader'], $row['member_one'], $row['member_two'], $row['member_three'], $row['member_four'], $row['member_five']]));
 }
-
+/*
 echo "<pre>";
 print_r($membersD);
 echo "</pre>";
-
+*/
 // Cerca lo steamID per ciascun membro
 $steamIDs = [];
 foreach ($members as $member) {
     // Prepara la query per ottenere lo steamID
     $memberStmt = $conn->prepare("SELECT steamID FROM users WHERE nickname = ?");
     $memberStmt->bind_param("s", $member);
+    
     $memberStmt->execute();
 
     // Ottieni il risultato
@@ -582,7 +583,9 @@ function generateDota2LeaderboardAvg($members)
     $s=0;
     $avg_kdr=0;
     $avg_wr=0;
-
+    if(empty($members)){
+        return;
+    }
     // Iterate through the users array and make a call with the dota2api php file
     foreach ($members as $user) {
         $s++;
@@ -598,10 +601,12 @@ function generateDota2LeaderboardAvg($members)
         $total_wins=0;
         $total_losses=0;
         $recent_matches = getPlayerRecentMatches($account_id);
+        $kdr = 0;
+        $wr=0;
         if (!empty($recent_matches)) {
             echo "<script>console.log('generaClassificaDota2: retrieved recent matches');</script>";
             $kdr = 0;
-
+            $wr=0;
             foreach ($recent_matches as $match) {
                 $total_kills += $match['kills'];
                 $totaltotalkills += $match['kills'];
@@ -1194,7 +1199,6 @@ $dota2avg = generateDota2LeaderboardAvg($membersD);
                 }
                 ?>
                                 <div class="col-md-8">
-                    <h1>Statistiche di Dota 2</h1>
                     
                     <?php
                     // Print user statistics
