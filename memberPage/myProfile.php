@@ -32,41 +32,6 @@ if ($conn->connect_error) {
 // Preleva il nickname dalla sessione
 $nickname = $_SESSION['nickname'];
 
-// Crea la tabella 'teams' se non esiste
-$createTeamsTable = "CREATE TABLE IF NOT EXISTS teams (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    team_name VARCHAR(255) NOT NULL,
-    game VARCHAR(255) NOT NULL,
-    member_one VARCHAR(255),
-    member_two VARCHAR(255),
-    member_three VARCHAR(255),
-    member_four VARCHAR(255),
-    member_five VARCHAR(255),
-    leader VARCHAR(255) NOT NULL
-)";
-
-if ($conn->query($createTeamsTable) === TRUE) {
-    echo "Tabella teams creata o già esistente.";
-} else {
-    echo "Errore nella creazione della tabella teams: " . $conn->error;
-}
-
-// Crea la tabella se non esiste
-$sql = "CREATE TABLE IF NOT EXISTS `users` (
-    `id` INT AUTO_INCREMENT PRIMARY KEY,
-    `nickname` VARCHAR(50) NOT NULL,
-    `email` VARCHAR(100) NOT NULL UNIQUE,
-    `password` VARCHAR(255) NOT NULL,
-    `steamID` VARCHAR(20) NOT NULL UNIQUE,
-    `image` VARCHAR(255) DEFAULT NULL
-)";
-
-if ($conn->query($sql) === TRUE) {
-    echo "Tabella 'users' creata con successo o già esistente.";
-} else {
-    echo "Errore nella creazione della tabella: " . $conn->error;
-}
-
 // Prepara la query per ottenere i nomi dei team
 $stmt = $conn->prepare("SELECT team_name FROM teams WHERE member_one = ? OR member_two = ? OR member_three = ? OR member_four = ? OR member_five = ? OR leader = ?");
 $stmt->bind_param("ssssss", $nickname, $nickname, $nickname, $nickname, $nickname, $nickname);
@@ -113,6 +78,7 @@ while ($row = $result->fetch_assoc()) {
                                 <!-- TODO: aggiungere href per arrivare alle pagine dei giochi-->
                                 <li><a class="dropdown-item" href="../team_fortess2/team_fortess2.php" style="color: var(--brand_color);">Team Fortress 2</a></li>
                                 <li><a class="dropdown-item" href="../csgo/csgo.php" style="color: var(--brand_color);">Csgo</a></li>
+                                <li><a class="dropdown-item" href="../dota2/dota2.php" style="color: var(--brand_color);">Dota 2</a></li>
                                 <!-- <li><hr class="dropdown-divider"></li>
                                  <li><a class="dropdown-item" href="#">Something else here</a></li> 
                                  Possono sempre servire -->
@@ -339,10 +305,10 @@ while ($row = $result->fetch_assoc()) {
                                     <label for="teamName">Team Name</label>
                                 </div>
                                 <select class="form-select" aria-label="Default select example" name="game" style="margin-bottom: 5px; height: 3.5rem; background-color: var(--object_color); color: var(--text_color);">
-                                    <option selected>Game</option>
+                                    <option selected disabled hidden>Game</option>
                                     <option value="Csgo">Csgo</option>
                                     <option value="Team Fortress 2">Team Fortress 2</option>
-                                    <option value="Dota2">Dota2</option>
+                                    <option value="Dota2">Dota 2</option>
                                 </select>
                                 <div class="row">
                                     <div class="col">

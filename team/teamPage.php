@@ -691,11 +691,7 @@ $dota2avg = generateDota2LeaderboardAvg($membersD);
                                         style="color: var(--brand_color);">Csgo</a></li>
                                 <li><a class="dropdown-item" href="../team_fortress2/team_fortress2.php"
                                         style="color: var(--brand_color);">Team Fortress 2</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="#">Something else here</a></li>
-                                Possono sempre servire
+                                <li><a class="dropdown-item" href="../dota2/dota2.php" style="color: var(--brand_color);">Dota 2</a></li>
                             </ul>
                         </li>
                         <li class="nav-item" style="margin-left: 7px; margin-top: 11px;">
@@ -774,7 +770,7 @@ $dota2avg = generateDota2LeaderboardAvg($membersD);
     <div
         style="background-color: var(--transparent_col); height: 5rem; display: flex; justify-content: center; align-items: center; margin-top: 68px;">
 
-        <img src="<?php echo ($game == "Csgo") ? "../assets/csgologo.png" : "../assets/tf2.png" ?>" class="card-img-top"
+        <img src="<?php echo ($game == "Csgo") ? "../assets/csgologo.png" : (($game == "Dota2") ? "../assets/dotalogo.png" : "../assets/tf2.png") ?>" class="card-img-top"
             alt="Logo" style="width: 50px; height: auto; margin-right: 10px;">
         <p style="font-size: 2rem; font-weight: bold; color: var(--text_color);"><?php echo $visitingTeam ?></p>
     </div>
@@ -795,22 +791,22 @@ $dota2avg = generateDota2LeaderboardAvg($membersD);
                                     Change leader
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" style="background-color: var(--object_color);">';
-            if (!is_null($teamData['member_one'])) {
-                echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_one'] . '" style="color: var(--text_color);">' . $teamData['member_one'] . '</button></li>';
-            }
-            if (!is_null($teamData['member_two'])) {
-                echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_two'] . '" style="color: var(--text_color);">' . $teamData['member_two'] . '</button></li>';
-            }
-            if (!is_null($teamData['member_three'])) {
-                echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_three'] . '" style="color: var(--text_color);">' . $teamData['member_three'] . '</button></li>';
-            }
-            if (!is_null($teamData['member_four'])) {
-                echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_four'] . '" style="color: var(--text_color);">' . $teamData['member_four'] . '</button></li>';
-            }
-            if (!is_null($teamData['member_five'])) {
-                echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_five'] . '" style="color: var(--text_color);">' . $teamData['member_five'] . '</button></li>';
-            }
-            echo '</ul>
+                                if (!is_null($teamData['member_one'])) {
+                                    echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_one'] . '" style="color: var(--text_color);">' . $teamData['member_one'] . '</button></li>';
+                                }
+                                if (!is_null($teamData['member_two'])) {
+                                    echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_two'] . '" style="color: var(--text_color);">' . $teamData['member_two'] . '</button></li>';
+                                }
+                                if (!is_null($teamData['member_three'])) {
+                                    echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_three'] . '" style="color: var(--text_color);">' . $teamData['member_three'] . '</button></li>';
+                                }
+                                if (!is_null($teamData['member_four'])) {
+                                    echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_four'] . '" style="color: var(--text_color);">' . $teamData['member_four'] . '</button></li>';
+                                }
+                                if (!is_null($teamData['member_five'])) {
+                                    echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_five'] . '" style="color: var(--text_color);">' . $teamData['member_five'] . '</button></li>';
+                                }
+                                echo '</ul>
                             </form>
                         </div>
                         <div class="col">
