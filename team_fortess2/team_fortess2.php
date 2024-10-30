@@ -141,11 +141,10 @@ function generaClassificaTF2($tf2Stats, &$userDetails)
     $importantStats = ['iPointsScored'];
     $validClasses = ['Scout', 'Soldier', 'Pyro', 'Demoman', 'Heavy', 'Engineer', 'Medic', 'Sniper', 'Spy'];
 
-    // // Initialize scores for all users in userDetails
-    // foreach ($userDetails as $steamID => $details) {
-    //     $userScores[$steamID] = 0; // Default score to 0
-    // }
 
+
+    // Controlla se gli array necessari non sono vuoti
+if (!empty($tf2Stats) && !empty($importantStats) && !empty($validClasses)) {
     foreach ($tf2Stats as $steamID => $stats) {
         foreach ($stats as $stat) {
             foreach ($importantStats as $importantStat) {
@@ -154,6 +153,10 @@ function generaClassificaTF2($tf2Stats, &$userDetails)
                     if (count($parts) === 3) {
                         $className = $parts[0];
                         if (in_array($className, $validClasses)) {
+                            // Inizializza il punteggio a 0 se non è stato già impostato
+                            if (!isset($userScores[$steamID])) {
+                                $userScores[$steamID] = 0;
+                            }
                             $userScores[$steamID] += $stat['value'];
                         }
                     }
@@ -162,12 +165,18 @@ function generaClassificaTF2($tf2Stats, &$userDetails)
         }
     }
 
-    // Aggiorna i punteggi degli utenti
-    foreach ($userScores as $steamID => $score) {
-        if (isset($userDetails[$steamID])) {
-            $userDetails[$steamID]['tf2Score'] = $score;
+    // Aggiorna i punteggi degli utenti se $userScores non è vuoto
+    if (!empty($userScores)) {
+        foreach ($userScores as $steamID => $score) {
+            if (isset($userDetails[$steamID])) {
+                $userDetails[$steamID]['tf2Score'] = $score;
+            }
         }
     }
+} else {
+    // Gestisci il caso in cui uno degli array sia vuoto, se necessario
+    //echo "Uno o più degli array necessari sono vuoti.";
+}
 
     arsort($userScores); // Ordina i punteggi degli utenti in modo decrescente
     return $userScores;
@@ -210,17 +219,16 @@ if ($result->num_rows > 0) {
         $steamID = $row['steamID'];
         $nickname = htmlspecialchars($row['nickname']);
 
-        // // Store user details
-        // $userDetails[$steamID] = [
-        //     'nickname' => $nickname,
-        //     'kills' => 0,
-        //     'damage' => 0,
-        //     'killAssists' => 0
-        // ];
-
-        // Fetch TF2 stats
         $tf2Stats = getGameStats($steamID, $apiKey, $tf2GameId);
         if ($tf2Stats !== null) {
+
+        if (!empty($steamID)) {
+            $userDetails[$steamID] = [
+                'nickname' => $nickname
+            ];
+
+        // Fetch TF2 stats
+        
             // Initialize temporary variables for aggregating stats
             $kills = $damage = $killAssists = 0;
 
@@ -238,6 +246,7 @@ if ($result->num_rows > 0) {
                 }
             }
         }
+    }
     }
 } else {
     // echo "No users found in the database.<br>";
@@ -296,7 +305,7 @@ $conn->close();
 
 <body>
     <div class="content">
-        <nav class="navbar fixed-top navbar-expand-lg" style="background-color: var(--object_color);">
+    <nav class="navbar fixed-top navbar-expand-lg" style="background-color: var(--object_color);">
             <div class="container-fluid" style="background-color: var(--object_color);">
                 <a class="navbar-brand fs-3" href="#" style="color: var(--brand_color);">GamerStats</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"

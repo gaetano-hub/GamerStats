@@ -439,8 +439,8 @@ while ($row = $result->fetch_assoc()) {
             function getGameStats($steamID, $apiKey, $gameId)
             {
                 $url = "https://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid={$gameId}&steamid={$steamID}&key={$apiKey}";
-                $response = file_get_contents($url);
-                return json_decode($response, true);
+                $response = @file_get_contents($url);       
+                return null; //json_decode($response, true);
             }
 
             // Verifica se lo Steam ID è impostato
@@ -455,7 +455,7 @@ while ($row = $result->fetch_assoc()) {
                         $statsArray[$stat['name']] = $stat['value'];
                     }
                 } else {
-                    echo "<p>Statistiche non disponibili per Counter-Strike 2.</p>";
+                    //echo "<p>Statistiche non disponibili per Counter-Strike 2.</p>";
                     exit; // Esci per evitare ulteriori elaborazioni
                 }
 
@@ -482,7 +482,7 @@ while ($row = $result->fetch_assoc()) {
                 // Display statistics
             ?>
                 <div class="container text-center" style="margin-top: 10px; background-color: var(--transparent_col); padding: 15px;">
-                    <p style="font-size: 2rem; font-weight: bold; color: var(--text_color);">Statistiche di Counter-Strike 2</p>
+                    <p style="font-size: 2rem; font-weight: bold; color: var(--text_color);">Stats di Counter-Strike 2</p>
 
                     <!-- Grafici -->
                     <div class="charts-grid">
@@ -494,26 +494,26 @@ while ($row = $result->fetch_assoc()) {
                     <div class="stats-details" style="margin-top: 20px;">
                         <h3>Statistiche Totali</h3>
                         <div class="stats-grid">
-                            <div class="stats-item"><strong>Total Kills:</strong> <span><?php echo $totalKills; ?></span></div>
-                            <div class="stats-item"><strong>Total Deaths:</strong> <span><?php echo $totalDeaths; ?></span></div>
-                            <div class="stats-item"><strong>Total Wins:</strong> <span><?php echo $totalWins; ?></span></div>
-                            <div class="stats-item"><strong>Total Matches Played:</strong> <span><?php echo $totalMatchesPlayed; ?></span></div>
-                            <div class="stats-item"><strong>Total Rounds Played:</strong> <span><?php echo $totalRoundsPlayed; ?></span></div>
-                            <div class="stats-item"><strong>Kills Per Round:</strong> <span><?php echo number_format($killsPerRound, 2); ?></span></div>
-                            <div class="stats-item"><strong>Deaths Per Round:</strong> <span><?php echo number_format($deathsPerRound, 2); ?></span></div>
+                            <div class="stats-item"><strong>Total Kills:</strong> <span style="color: white;"><?php echo $totalKills; ?></span></div>
+                            <div class="stats-item"><strong>Total Deaths:</strong> <span style="color: white;"><?php echo $totalDeaths; ?></span></div>
+                            <div class="stats-item"><strong>Total Wins:</strong> <span style="color: white;"><?php echo $totalWins; ?></span></div>
+                            <div class="stats-item"><strong>Total Matches Played:</strong> <span style="color: white;"><?php echo $totalMatchesPlayed; ?></span></div>
+                            <div class="stats-item"><strong>Total Rounds Played:</strong> <span style="color: white;"><?php echo $totalRoundsPlayed; ?></span></div>
+                            <div class="stats-item"><strong>Kills Per Round:</strong> <span style="color: white;"><?php echo number_format($killsPerRound, 2); ?></span></div>
+                            <div class="stats-item"><strong>Deaths Per Round:</strong> <span style="color: white;"><?php echo number_format($deathsPerRound, 2); ?></span></div>
                         </div>
 
                         <h3>Statistiche Ultima Partita</h3>
                         <div class="stats-grid">
-                            <div class="stats-item"><strong>Last Match Kills:</strong> <span><?php echo $lastMatchKills; ?></span></div>
-                            <div class="stats-item"><strong>Last Match Deaths:</strong> <span><?php echo $lastMatchDeaths; ?></span></div>
-                            <div class="stats-item"><strong>Last Match Wins:</strong> <span><?php echo $lastMatchWins; ?></span></div>
+                            <div class="stats-item"><strong>Last Match Kills:</strong> <span style="color: white;"><?php echo $lastMatchKills; ?></span></div>
+                            <div class="stats-item"><strong>Last Match Deaths:</strong> <span style="color: white;"><?php echo $lastMatchDeaths; ?></span></div>
+                            <div class="stats-item"><strong>Last Match Wins:</strong> <span style="color: white;"><?php echo $lastMatchWins; ?></span></div>
                         </div>
 
                         <h3>Rapporti</h3>
                         <div class="stats-grid">
-                            <div class="stats-item"><strong>Kill/Death Ratio:</strong> <span><?php echo number_format($killDeathRatio, 2); ?></span></div>
-                            <div class="stats-item"><strong>Win/Loss Ratio:</strong> <span><?php echo number_format($winLossRatio, 2); ?></span></div>
+                            <div class="stats-item"><strong>Kill/Death Ratio:</strong> <span style="color: white;"><?php echo number_format($killDeathRatio, 2); ?></span></div>
+                            <div class="stats-item"><strong>Win/Loss Ratio:</strong> <span style="color: white;"><?php echo number_format($winLossRatio, 2); ?></span></div>
                         </div>
                     </div>
                 </div>
@@ -840,7 +840,7 @@ while ($row = $result->fetch_assoc()) {
 
             <?php
             } else {
-                echo "<li class='list-group-item text-center' style='background-color: rgba(255, 255, 255, 0.1);'>Fare accesso Steam</li>";
+                echo "<li class='list-group-item text-center' style='color: white;'>Log in to Steam</li>";
             }
             ?>
 

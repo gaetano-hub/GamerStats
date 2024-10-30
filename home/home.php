@@ -79,44 +79,66 @@ if ($result->num_rows > 0) {
         $steamID = $row['steamID'];
         $nickname = htmlspecialchars($row['nickname']);
         $image = $row['image'];
+        $boolean_tf2 = false;
+        $boolean_csgo = false;
 
-        // Memorizza i dettagli utente
-        $userDetails[$steamID] = [
-            'nickname' => $nickname,
-            'tf2Score' => 0,
-            'cs2WinPercentage' => 0
-        ];
+        $tf2Stats = getGameStats($steamID, $apiKey, $tf2GameId);
+        if (empty($tf2Stats)) {
+            $boolean_tf2 = true;
+        }
+        
+        $cs2Stats = getGameStats($steamID, $apiKey, $cs2GameId);
+
+        if (empty($cs2Stats)) {
+            $boolean_csgo = true;
+        }
+        if (empty($steamID)) {
+            continue;
+        }
+
+        if (!$boolean_csgo || !$boolean_tf2) {
+            $userDetails[$steamID] = [
+                'nickname' => $nickname,
+                'tf2Score' => 0,
+                'cs2WinPercentage' => 0
+            ];
+        }
+        
 
         // Statistiche di Team Fortress 2
-        $tf2Stats = getGameStats($steamID, $apiKey, $tf2GameId);
-        if (isset($tf2Stats['playerstats']['stats'])) {
-            $tf2StatsArray[$steamID] = $tf2Stats['playerstats']['stats'];
-            foreach ($tf2StatsArray[$steamID] as $stat) {
-                if ($stat['name'] === 'iPointsScored') {
-                    $userDetails[$steamID]['tf2Score'] = $stat['value'];
+        if (!$boolean_tf2) {
+            if (isset($tf2Stats['playerstats']['stats'])) {
+                $tf2StatsArray[$steamID] = $tf2Stats['playerstats']['stats'];
+                foreach ($tf2StatsArray[$steamID] as $stat) {
+                    if ($stat['name'] === 'iPointsScored') {
+                        $userDetails[$steamID]['tf2Score'] = $stat['value'];
+                    }
                 }
             }
         }
+        
 
         // Statistiche di Counter-Strike 2
-        $cs2Stats = getGameStats($steamID, $apiKey, $cs2GameId);
-        if (isset($cs2Stats['playerstats']['stats'])) {
-            $cs2StatsArray[$steamID] = $cs2Stats['playerstats']['stats'];
-            $totalWins = 0;
-            $totalMatches = 0;
-
-            foreach ($cs2StatsArray[$steamID] as $stat) {
-                if ($stat['name'] === 'total_matches_won') {
-                    $totalWins = $stat['value'];
+        if(!$boolean_csgo){
+            if (isset($cs2Stats['playerstats']['stats'])) {
+                $cs2StatsArray[$steamID] = $cs2Stats['playerstats']['stats'];
+                $totalWins = 0;
+                $totalMatches = 0;
+    
+                foreach ($cs2StatsArray[$steamID] as $stat) {
+                    if ($stat['name'] === 'total_matches_won') {
+                        $totalWins = $stat['value'];
+                    }
+                    if ($stat['name'] === 'total_matches_played') {
+                        $totalMatches = $stat['value'];
+                    }
                 }
-                if ($stat['name'] === 'total_matches_played') {
-                    $totalMatches = $stat['value'];
+                if ($totalMatches > 0) {
+                    $userDetails[$steamID]['cs2WinPercentage'] = round(($totalWins / $totalMatches) * 100, 2);
                 }
-            }
-            if ($totalMatches > 0) {
-                $userDetails[$steamID]['cs2WinPercentage'] = round(($totalWins / $totalMatches) * 100, 2);
             }
         }
+        
         // echo "<li><strong>Nickname:</strong> {$nickname} - <strong>Steam ID:</strong> {$steamID}</li>";
     }
     echo "</ul>";
@@ -131,18 +153,14 @@ function generaClassificaTF2($tf2Stats, &$userDetails)
     $importantStats = ['iPointsScored'];
     $validClasses = ['Scout', 'Soldier', 'Pyro', 'Demoman', 'Heavy', 'Engineer', 'Medic', 'Sniper', 'Spy'];
 
-    // Populate scores based on TF2 stats
     foreach ($tf2Stats as $steamID => $stats) {
+        $userScores[$steamID] = 0; // Initialize score
         foreach ($stats as $stat) {
             foreach ($importantStats as $importantStat) {
                 if (strpos($stat['name'], $importantStat) !== false) {
                     $parts = explode('.', $stat['name']);
-                    if (count($parts) === 3) {
-                        $className = $parts[0];
-                        if (in_array($className, $validClasses)) {
-                            // Accumulate score
-                            $userScores[$steamID] += $stat['value'];
-                        }
+                    if (count($parts) === 3 && in_array($parts[0], $validClasses)) {
+                        $userScores[$steamID] += $stat['value']; // Accumulate score
                     }
                 }
             }

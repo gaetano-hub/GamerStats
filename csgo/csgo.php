@@ -122,6 +122,18 @@ if ($result->num_rows > 0) {
         $nickname = htmlspecialchars($row['nickname']);
         $image = $row['image'];
 
+        
+
+        $cs2Stats = getGameStats($steamID, $apiKey, $cs2GameId);
+        if(empty($cs2Stats)){
+            continue;
+        }
+
+
+        if(empty($steamID)){
+            continue;  
+        }
+
         $userDetails[$steamID] = [
             'nickname' => $nickname,
             'tf2Score' => 0,
@@ -134,7 +146,7 @@ if ($result->num_rows > 0) {
             'mvps' => 0
         ];
 
-        $cs2Stats = getGameStats($steamID, $apiKey, $cs2GameId);
+        
         if (isset($cs2Stats['playerstats']['stats'])) {
             $cs2StatsArray[$steamID] = $cs2Stats['playerstats']['stats'];
             $totalWins = 0;
@@ -192,8 +204,12 @@ function generaClassificaCSGO($gameStatsArray, &$userDetails, $apiKey, $gameId)
         }
 
         if ($totalMatches > 0) {
-            $winPercentage = round(($totalWins / $totalMatches) * 100, 2);
+            $losses = $totalMatches - $totalWins;
+            $winPercentage = round(($totalWins / ($losses + 1)), 2); // Calcolo percentuale vittorie
             $lastMatchStats = getLastMatchStats($steamID, $apiKey, $gameId);
+
+            
+            
 
             // Update the corresponding entry in the classifica
             $classifica[$steamID]['win_percentage'] = $winPercentage;
@@ -265,15 +281,25 @@ if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
         $steamID = $row['steamID'];
         $nickname = htmlspecialchars($row['nickname']);
+
+        $cs2Stats = getGameStats($steamID, $apiKey, $cs2GameId);
+        if (empty($cs2Stats)) {
+            continue;
+        }
+
+        if(empty($steamID)){
+            continue;
+        }
         $userDetails[$steamID] = [
             'nickname' => $nickname,
             'totalKills' => 0,
             'totalDeaths' => 0,
             'totalDamageDone' => 0 // Change to totalDamageDone
         ];
+        
 
         // Ottieni le statistiche per CS2
-        $cs2Stats = getGameStats($steamID, $apiKey, $cs2GameId);
+        
         if (isset($cs2Stats['playerstats']['stats'])) {
             foreach ($cs2Stats['playerstats']['stats'] as $stat) {
                 if ($stat['name'] === 'total_kills') {
@@ -299,7 +325,8 @@ function generaClassificaCSGO_kill($userDetails)
     if (empty($userDetails)) {
         return []; // Return an empty array if there are no Steam IDs
     }
-
+   
+    
     // Initialize an array for the leaderboard
     $leaderboard = [];
 

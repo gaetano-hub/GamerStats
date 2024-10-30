@@ -153,6 +153,9 @@ foreach ($steamIDs as $steamID) {
 
         // Fetch TF2 stats
         $tf2Stats = getGameStats($steamID, $apiKey, $tf2GameId);
+        if(empty($tf2Stats)){
+            continue;
+        }
         if ($tf2Stats !== null) {
             // Initialize temporary variables for aggregating stats
             $kills = $damage = $killAssists = $pointsScored = $playTime = $buildingsDestroyed = 0;
@@ -271,6 +274,9 @@ foreach ($steamIDs as $steamID) {
 
         // Ottieni le statistiche per CS2
         $cs2Stats = getGameStats($steamID, $apiKey, $cs2GameId);
+        if (empty($cs2Stats)) {
+            continue;
+        }
 
         if (isset($cs2Stats['playerstats']['stats'])) {
             $stats = extractStats($cs2Stats['playerstats']['stats']);
@@ -666,7 +672,7 @@ $dota2avg = generateDota2LeaderboardAvg($membersD);
     -->
 
     <div class="content">
-        <nav class="navbar fixed-top navbar-expand-lg" style="background-color: var(--object_color);">
+        <nav class="navbar fixed-top navbar-expand-lg" style="background-color: var(--object_color); display: none;">
             <div class="container-fluid" style="background-color: var(--object_color);">
                 <a class="navbar-brand fs-3" href="#" style="color: var(--brand_color);">GamerStats</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"

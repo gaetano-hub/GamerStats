@@ -59,7 +59,7 @@ while ($row = $result->fetch_assoc()) {
         // Fetch the steamID
         $row = $result->fetch_assoc();
         $steamID = $row['steamID'];
-        echo "Steam ID for $visitingUser is: " . htmlspecialchars($steamID);
+        //echo "Steam ID for $visitingUser is: " . htmlspecialchars($steamID);
     } else {
         echo "Nessun utente trovato con il nickname: " . htmlspecialchars($nameMember);
     }
@@ -83,7 +83,7 @@ while ($row = $result->fetch_assoc()) {
     <link href="../assets/css/bootstrap.min.css" rel="stylesheet" />
     <!-- Bootstrap JS -->
     <script src="../assets/js/bootstrap.bundle.min.js"></script>
-    <title>Team page</title>
+    <title>Member page</title>
 </head>
 
 <body>
@@ -261,14 +261,18 @@ while ($row = $result->fetch_assoc()) {
         function getGameStats($steamID, $apiKey, $gameId)
         {
             $url = "https://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid={$gameId}&steamid={$steamID}&key={$apiKey}";
-            $response = file_get_contents($url);
+            $response = @file_get_contents($url);
             return json_decode($response, true);
         }
 
         // Verifica se lo Steam ID è impostato
-        if ($steamID) {
+        if (!empty($steamID)) {
             // Ottieni statistiche per Counter-Strike 2
             $cs2Stats = getGameStats($steamID, $apiKey, $cs2GameId);
+            if(empty($cs2Stats)) {
+                //echo "<p>Statistiche non disponibili per Counter-Strike 2.</p>";
+                exit; // Esci per evitare ulteriori elaborazioni
+            }
 
             // Prepara i dati per la visualizzazione
             $statsArray = [];
@@ -277,7 +281,7 @@ while ($row = $result->fetch_assoc()) {
                     $statsArray[$stat['name']] = $stat['value'];
                 }
             } else {
-                echo "<p>Statistiche non disponibili per Counter-Strike 2.</p>";
+                //echo "<p>Statistiche non disponibili per Counter-Strike 2.</p>";
                 exit; // Esci per evitare ulteriori elaborazioni
             }
 
@@ -657,7 +661,7 @@ while ($row = $result->fetch_assoc()) {
 
             <?php
         } else {
-            echo "<p>Steam ID non trovato. Accedi per visualizzare le statistiche.</p>";
+            echo "<span style='color: white;'> Steam ID not found.</span>";
         }
             ?>
 
