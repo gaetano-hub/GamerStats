@@ -215,6 +215,7 @@ function generateDota2LeaderboardWlr()
         $wl = getPlayerWL($account_id);
         //echo "<script>console.log(" . json_encode($wl) . ");</script>";
         //echo "<script>console.log(" . json_encode($nickname) . ");</script>";
+        if (!empty(getPlayerRecentMatches($account_id))) {
         $wlr = $wl['win'] / ($wl['lose'] + 1);
         $leaderboardWlr[] = [
             'nickname' => $nickname,
@@ -223,6 +224,7 @@ function generateDota2LeaderboardWlr()
             'totalLosses' => $wl['lose'],
             'wlr' => $wlr
         ];
+        }
     }
     usort($leaderboardWlr, function ($a, $b) {
         return $b['wlr'] <=> $a['wlr'];

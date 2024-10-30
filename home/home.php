@@ -1,6 +1,5 @@
 <?php
 session_start();
-
 // Converti l'array di sessione in formato JSON
 $sessionData = json_encode($_SESSION);
 
@@ -102,7 +101,7 @@ if ($result->num_rows > 0) {
         if (empty($tf2Stats)) {
             $boolean_tf2 = true;
         }
-        
+
         $cs2Stats = getGameStats($steamID, $apiKey, $cs2GameId);
 
         if (empty($cs2Stats)) {
@@ -119,7 +118,7 @@ if ($result->num_rows > 0) {
                 'cs2WinPercentage' => 0
             ];
         }
-        
+
 
         // Statistiche di Team Fortress 2
         if (!$boolean_tf2) {
@@ -132,15 +131,15 @@ if ($result->num_rows > 0) {
                 }
             }
         }
-        
+
 
         // Statistiche di Counter-Strike 2
-        if(!$boolean_csgo){
+        if (!$boolean_csgo) {
             if (isset($cs2Stats['playerstats']['stats'])) {
                 $cs2StatsArray[$steamID] = $cs2Stats['playerstats']['stats'];
                 $totalWins = 0;
                 $totalMatches = 0;
-    
+
                 foreach ($cs2StatsArray[$steamID] as $stat) {
                     if ($stat['name'] === 'total_matches_won') {
                         $totalWins = $stat['value'];
@@ -154,7 +153,7 @@ if ($result->num_rows > 0) {
                 }
             }
         }
-        
+
         // echo "<li><strong>Nickname:</strong> {$nickname} - <strong>Steam ID:</strong> {$steamID}</li>";
     }
     echo "</ul>";
@@ -217,7 +216,7 @@ function generaClassificaCSGO($gameStatsArray, &$userDetails)
         // Calcola la percentuale di vittorie, il numero di sconfitte e aggiungi ai dati
         if ($totalMatches > 0) {
             $losses = $totalMatches - $totalWins;
-            $winPercentage = round(($totalWins / ($losses + 1)), 2); // Calcolo percentuale vittorie
+            $winPercentage = round(($totalWins / ($totalMatches)) * 100, 2); // Calcolo percentuale vittorie
 
             // Verifica se il nickname esiste in $userDetails
             $nickname = isset($userDetails[$steamID]) ? $userDetails[$steamID]['nickname'] : 'Sconosciuto';
@@ -310,22 +309,29 @@ function generateDota2Leaderboard()
         $account_id = (int) $player_id - 76561197960265728;
         //API CALL
         $recent_matches = getPlayerRecentMatches($account_id);
+
+        echo "<script>console.log('generaClassificaDota2: processing user: " . $nickname . "');</script>";
         if (!empty($recent_matches)) {
+            echo "<script>console.log('generaClassificaDota2: retrieved recent matches for user: " . $nickname . "');</script>";
             $kdr = 0;
             $total_kills = 0;
             $total_deaths = 0;
 
             foreach ($recent_matches as $match) {
-                $total_kills += $match['kills'];
-                $total_deaths += $match['deaths'];
+                echo "<script>console.log('mar" . $match . "');</script>";
+
             }
             $kdr = $total_kills / $total_deaths;
+            echo "<script>console.log('generaClassificaDota2: calculated kdr for user: " . $nickname . "');</script>";
             $leaderboard[] = [
                 'nickname' => $nickname,
                 'steamID' => $player_id,
                 'kdr' => $kdr
             ];
+        } else {
+            echo "<script>console.log('generaClassificaDota2: no recent matches found for user: " . $nickname . "');</script>";
         }
+
     }
     usort($leaderboard, function ($a, $b) {
         return $b['kdr'] <=> $a['kdr'];
@@ -635,23 +641,35 @@ $conn->close();
                             <div class="d-flex flex-column align-items-center">
                                 <p class="card-text" style="color: var(--text_color); text-align: center;">
                                 </p>
-                                <ul class="list-group text-center" style="width: 100%; max-width: 400px; color: var(--text_color);" name="rank_csgo">
+                                <ul class="list-group text-center" style="width: 100%; max-width: 400px; color: var(--text_color); color: var(--text_color);" name="rank_csgo">
                                     <?php
                                     // Check if cs2Classifica has elements and then iterate
                                     if (!empty($dota2Classifica)) {
                                         // Sort the leaderboard by percentage in descending order
+                                        echo '<table class="table table-dark table-striped" style="var(--text_color);">';
+                                            echo '<thead>';
+                                            echo '<tr>';
+                                            echo '<th>Nickname</th>';
+                                            echo '<th>Steam ID</th>';
+                                            echo '<th>Win Percentage</th>';
+                                            echo '</tr>';
                                         foreach ($dota2Classifica as $user) {
                                             // Extract nickname and win percentage from user
                                             $nickname = htmlspecialchars($user['nickname']);
-                                            $kdr = htmlspecialchars($user['kdr']);
+                                            $kdr = round(htmlspecialchars($user['kdr']), 2);
 
                                             // Print each user in the list
-                                            echo "<li class='list-group-item d-flex justify-content-between align-items-center' style='background-color: rgba(255, 255, 255, 0.1);'>
-                        <span>Nickname: {$nickname}</span>
-                        <span>Steam ID: " . htmlspecialchars($user['steamID']) . "</span>
-                        <span class='badge bg-primary rounded-pill'>{$kdr}</span>
-                      </li>";
+                                            
+                                            echo '<tr>';
+                                            echo "<td>{$nickname}</td>";
+                                            echo "<td>" . htmlspecialchars($user['steamID']) . "</td>";
+                                            echo '<td><span class="badge bg-primary">' . $kdr . '%</span></td>';
+                                            echo '</tr>';
                                         }
+                                        
+                                            
+                                            echo '</tbody>';
+                                            echo '</table>';
                                     } else {
                                         // If the leaderboard is empty, show a message
                                         echo "<li class='list-group-item text-center' style='background-color: rgba(255, 255, 255, 0.1);'>Nessun vincitore trovato</li>";

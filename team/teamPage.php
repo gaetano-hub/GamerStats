@@ -96,7 +96,7 @@ foreach ($members as $member) {
     // Prepara la query per ottenere lo steamID
     $memberStmt = $conn->prepare("SELECT steamID FROM users WHERE nickname = ?");
     $memberStmt->bind_param("s", $member);
-    
+
     $memberStmt->execute();
 
     // Ottieni il risultato
@@ -153,15 +153,15 @@ foreach ($steamIDs as $steamID) {
         $nickname = htmlspecialchars($row['nickname']);
         // Fetch TF2 stats
         $tf2Stats = getGameStats($steamID, $apiKey, $tf2GameId);
-        if(empty($tf2Stats)){
+        if (empty($tf2Stats)) {
             continue;
         }
         if ($tf2Stats !== null) {
             // Initialize temporary variables for aggregating stats
             $kills = $damage = $killAssists = $pointsScored = $playTime = $buildingsDestroyed = 0;
-            
-            foreach ($tf2Stats['playerstats'] as $item) {
-                if ($item  == 'stats') {
+
+            if (isset($tf2Stats['playerstats']['stats'])) {
+                foreach ($tf2Stats['playerstats']['stats'] as $stat) {
                     foreach ($tf2Stats['playerstats']['stats'] as $stat) {
                         if (isset($stat['name']) && isset($stat['value'])) {
                             $value = is_numeric($stat['value']) ? $stat['value'] : 0; // Ensure it's a number
@@ -184,7 +184,10 @@ foreach ($steamIDs as $steamID) {
             }
 
 
+
             // Store accumulated stats
+            $userDetails[$steamID]['nickname'] = $nickname;
+
             $userDetails[$steamID]['kills'] = $kills;
             $userDetails[$steamID]['damage'] = $damage;
             $userDetails[$steamID]['killAssists'] = $killAssists;
@@ -286,7 +289,7 @@ foreach ($steamIDs as $steamID) {
             $stats = extractStats($cs2Stats['playerstats']['stats']);
             $totalWins = $stats['totalWins'];
             $totalMatches = $stats['totalMatches'];
-            $winPercentage = $totalMatches > 0 ? round(($totalWins / (($totalMatches - $totalWins) + 1)), 2) : 0;
+            $winPercentage = $totalMatches > 0 ? round(($totalWins / (($totalMatches)) * 100), 2) : 0;
 
             // Inizializza l'array per l'utente
             $userDetails_csgo[$steamID] = [
@@ -492,22 +495,22 @@ function generateDota2LeaderboardWlr($members)
         //updateDatabase($nickname, $account_id);
         //API CALL
         $wl = getPlayerWL($account_id);
-        if (!($wl['win']==0 && $wl['lose']==0)) {
-        echo "<script>console.log('generaClassificaDota2: retrieved wins and losses".$wl['win']."');</script>";
-        //echo "<script>console.log(" . json_encode($wl) . ");</script>";
-        //echo "<script>console.log(" . json_encode($nickname) . ");</script>";
-        $wlr = $wl['win'] / ($wl['lose'] + 1);
-        echo "<script>console.log('generaClassificaDota2: calculated wlr".$wl['win']."');</script>";
-        $leaderboardWlr[] = [
-            'nickname' => $nickname,
-            'steamID' => $account_id,
-            'totalWins' => $wl['win'],
-            'totalLosses' => $wl['lose'],
-            'wlr' => $wlr
-        ];
-    } else {
-        echo "<script>console.log('generaClassificaDota2: no recent matches found');</script>";
-    }
+        if (!($wl['win'] == 0 && $wl['lose'] == 0)) {
+            echo "<script>console.log('generaClassificaDota2: retrieved wins and losses" . $wl['win'] . "');</script>";
+            //echo "<script>console.log(" . json_encode($wl) . ");</script>";
+            //echo "<script>console.log(" . json_encode($nickname) . ");</script>";
+            $wlr = $wl['win'] / ($wl['lose'] + 1);
+            echo "<script>console.log('generaClassificaDota2: calculated wlr" . $wl['win'] . "');</script>";
+            $leaderboardWlr[] = [
+                'nickname' => $nickname,
+                'steamID' => $account_id,
+                'totalWins' => $wl['win'],
+                'totalLosses' => $wl['lose'],
+                'wlr' => $wlr
+            ];
+        } else {
+            echo "<script>console.log('generaClassificaDota2: no recent matches found');</script>";
+        }
     }
     usort($leaderboardWlr, function ($a, $b) {
         return $b['wlr'] <=> $a['wlr'];
@@ -547,7 +550,7 @@ function generateDota2LeaderboardKdr($members)
                 $total_kills += $match['kills'];
                 $total_deaths += $match['deaths'];
             }
-            echo "<script>console.log('generaClassificaDota2: calculated total kills and deaths:".$total_kills."');</script>";
+            echo "<script>console.log('generaClassificaDota2: calculated total kills and deaths:" . $total_kills . "');</script>";
             $kdr = $total_kills / ($total_deaths + 1);
             $leaderboardkdr[] = [
                 'nickname' => $nickname,
@@ -577,13 +580,13 @@ function generateDota2LeaderboardAvg($members)
     $conn = new mysqli($servername, $username, $password, $dbname);
 
     $leaderboardAvg = [];
-    $kdrL=[];
-    $wrL=[];
-    $totaltotalkills=0;
-    $s=0;
-    $avg_kdr=0;
-    $avg_wr=0;
-    if(empty($members)){
+    $kdrL = [];
+    $wrL = [];
+    $totaltotalkills = 0;
+    $s = 0;
+    $avg_kdr = 0;
+    $avg_wr = 0;
+    if (empty($members)) {
         return;
     }
     // Iterate through the users array and make a call with the dota2api php file
@@ -598,15 +601,15 @@ function generateDota2LeaderboardAvg($members)
         //API CALL
         $total_kills = 0;
         $total_deaths = 0;
-        $total_wins=0;
-        $total_losses=0;
+        $total_wins = 0;
+        $total_losses = 0;
         $recent_matches = getPlayerRecentMatches($account_id);
         $kdr = 0;
-        $wr=0;
+        $wr = 0;
         if (!empty($recent_matches)) {
             echo "<script>console.log('generaClassificaDota2: retrieved recent matches');</script>";
             $kdr = 0;
-            $wr=0;
+            $wr = 0;
             foreach ($recent_matches as $match) {
                 $total_kills += $match['kills'];
                 $totaltotalkills += $match['kills'];
@@ -614,7 +617,7 @@ function generateDota2LeaderboardAvg($members)
             }
             $total_wins += $wl['win'];
             $total_losses += $wl['lose'];
-            echo "<script>console.log('generaClassificaDota2: calculated total kills and deaths:".$total_kills."');</script>";
+            echo "<script>console.log('generaClassificaDota2: calculated total kills and deaths:" . $total_kills . "');</script>";
             $kdr = $total_kills / ($total_deaths + 1);
             $wr = $total_wins / ($total_losses + 1);
         } else {
@@ -622,18 +625,17 @@ function generateDota2LeaderboardAvg($members)
         }
         $kdrL[$s] = $kdr;
         $wrL[$s] = $wr;
-        
     }
-    foreach($kdrL as $k){
+    foreach ($kdrL as $k) {
         $avg_kdr += $k;
     }
-    foreach($wrL as $w){
+    foreach ($wrL as $w) {
         $avg_wr += $w;
     }
     $leaderboardAvg[] = [
-        'avg_kills' => $totaltotalkills/$s,
-        'avg_kdr' => $avg_kdr/$s,
-        'avg_wr' => $avg_wr/$s
+        'avg_kills' => $totaltotalkills / $s,
+        'avg_kdr' => $avg_kdr / $s,
+        'avg_wr' => $avg_wr / $s
     ];
     return $leaderboardAvg;
 }
@@ -799,22 +801,22 @@ $dota2avg = generateDota2LeaderboardAvg($membersD);
                                     Change leader
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" style="background-color: var(--object_color);">';
-                                if (!is_null($teamData['member_one'])) {
-                                    echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_one'] . '" style="color: var(--text_color);">' . $teamData['member_one'] . '</button></li>';
-                                }
-                                if (!is_null($teamData['member_two'])) {
-                                    echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_two'] . '" style="color: var(--text_color);">' . $teamData['member_two'] . '</button></li>';
-                                }
-                                if (!is_null($teamData['member_three'])) {
-                                    echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_three'] . '" style="color: var(--text_color);">' . $teamData['member_three'] . '</button></li>';
-                                }
-                                if (!is_null($teamData['member_four'])) {
-                                    echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_four'] . '" style="color: var(--text_color);">' . $teamData['member_four'] . '</button></li>';
-                                }
-                                if (!is_null($teamData['member_five'])) {
-                                    echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_five'] . '" style="color: var(--text_color);">' . $teamData['member_five'] . '</button></li>';
-                                }
-                                echo '</ul>
+            if (!is_null($teamData['member_one'])) {
+                echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_one'] . '" style="color: var(--text_color);">' . $teamData['member_one'] . '</button></li>';
+            }
+            if (!is_null($teamData['member_two'])) {
+                echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_two'] . '" style="color: var(--text_color);">' . $teamData['member_two'] . '</button></li>';
+            }
+            if (!is_null($teamData['member_three'])) {
+                echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_three'] . '" style="color: var(--text_color);">' . $teamData['member_three'] . '</button></li>';
+            }
+            if (!is_null($teamData['member_four'])) {
+                echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_four'] . '" style="color: var(--text_color);">' . $teamData['member_four'] . '</button></li>';
+            }
+            if (!is_null($teamData['member_five'])) {
+                echo '<li><button type="submit" class="dropdown-item" name="newLeader" value="' . $teamData['member_five'] . '" style="color: var(--text_color);">' . $teamData['member_five'] . '</button></li>';
+            }
+            echo '</ul>
                             </form>
                         </div>
                         <div class="col">
@@ -912,69 +914,67 @@ $dota2avg = generateDota2LeaderboardAvg($membersD);
     <div class="container text-center"
         style="margin-top: 10px; background-color: var(--transparent_col); padding: 15px;">
         <div class="row">
-            <div class="col-md-6">
-                <?php
-                // Print user statistics
-                if (!empty($userDetails) && $game === "Team Fortress 2") {
-                    echo "<h2>Statistiche di Team Fortress 2</h2>";
-                    echo "uliiii" . $game;
-                    echo '<div style="overflow-x:auto;">';
-                    echo '<table class="table table-dark table-striped">';
-                    echo '<thead>';
+            <?php
+            // Print user statistics
+            if (!empty($userDetails) && $game === "Team Fortress 2") {
+                echo "<h2 style='color: var(--text_color);'>Stats Team Fortress 2</h2>";
+                echo '<div style="overflow-x:auto;">';
+                echo '<table class="table table-dark table-striped">';
+                echo '<thead>';
+                echo '<tr>';
+                echo '<th>Nickname</th>';
+                echo '<th>Kills</th>';
+                echo '<th>Damage</th>';
+                echo '<th>Kill Assists</th>';
+                echo '<th>Points Scored</th>';
+                echo '<th>Play Time</th>';
+                echo '<th>Buildings Destroyed</th>';
+                echo '</tr>';
+                echo '</thead>';
+                echo '<tbody>';
+
+                foreach ($userDetails as $steamID => $stats) {
                     echo '<tr>';
-                    echo '<th>Nickname</th>';
-                    echo '<th>Kills</th>';
-                    echo '<th>Damage</th>';
-                    echo '<th>Kill Assists</th>';
-                    echo '<th>Punti Scavati</th>';
-                    echo '<th>Tempo di Gioco</th>';
-                    echo '<th>Edifici Distrutti</th>';
+                    echo "<td>" . htmlspecialchars($stats['nickname']) . "</td>";
+                    echo "<td>" . htmlspecialchars($stats['kills']) . "</td>";
+                    echo "<td>" . htmlspecialchars($stats['damage']) . "</td>";
+                    echo "<td>" . htmlspecialchars($stats['killAssists']) . "</td>";
+                    echo "<td>" . htmlspecialchars($stats['pointsScored']) . "</td>";
+                    echo "<td>" . htmlspecialchars($stats['playTime']) . "</td>";
+                    echo "<td>" . htmlspecialchars($stats['buildingsDestroyed']) . "</td>";
                     echo '</tr>';
-                    echo '</thead>';
-                    echo '<tbody>';
+                }
 
-                    foreach ($userDetails as $steamID => $stats) {
-                        echo '<tr>';
-                        echo "<td>" . htmlspecialchars($stats['nickname']) . "</td>";
-                        echo "<td>" . htmlspecialchars($stats['kills']) . "</td>";
-                        echo "<td>" . htmlspecialchars($stats['damage']) . "</td>";
-                        echo "<td>" . htmlspecialchars($stats['killAssists']) . "</td>";
-                        echo "<td>" . htmlspecialchars($stats['pointsScored']) . "</td>";
-                        echo "<td>" . htmlspecialchars($stats['playTime']) . "</td>";
-                        echo "<td>" . htmlspecialchars($stats['buildingsDestroyed']) . "</td>";
-                        echo '</tr>';
-                    }
+                echo '</tbody>';
+                echo '</table></div>';
 
-                    echo '</tbody>';
-                    echo '</table></div>';
-
-                    // Calculate and display average stats
-                    $numUsers = count($userDetails);
-                    if ($numUsers > 0) {
-                        $averageStats = [
-                            'kills' => $aggregateStats['kills'] / $numUsers,
-                            'damage' => $aggregateStats['damage'] / $numUsers,
-                            'killAssists' => $aggregateStats['killAssists'] / $numUsers,
-                            'pointsScored' => $aggregateStats['pointsScored'] / $numUsers,
-                            'playTime' => $aggregateStats['playTime'] / $numUsers,
-                            'buildingsDestroyed' => $aggregateStats['buildingsDestroyed'] / $numUsers
-                        ];
-                    }
-                    echo "<h3>Media Statistiche</h3>";
-                    echo '<div style="overflow-x:auto;">';
-                    echo '<table class="table table-dark table-striped">';
-                    echo '<thead>';
-                    echo '<tr>';
-                    echo '<th>Kills</th>';
-                    echo '<th>Damage</th>';
-                    echo '<th>Kill Assists</th>';
-                    echo '<th>Punti Scavati</th>';
-                    echo '<th>Tempo di Gioco</th>';
-                    echo '<th>Edifici Distrutti</th>';
-                    echo '</tr>';
-                    echo '</thead>';
-                    echo '<tbody>';
-                    echo '<tr>
+                // Calculate and display average stats
+                $numUsers = count($userDetails);
+                if ($numUsers > 0) {
+                    $averageStats = [
+                        'kills' => $aggregateStats['kills'] / $numUsers,
+                        'damage' => $aggregateStats['damage'] / $numUsers,
+                        'killAssists' => $aggregateStats['killAssists'] / $numUsers,
+                        'pointsScored' => $aggregateStats['pointsScored'] / $numUsers,
+                        'playTime' => $aggregateStats['playTime'] / $numUsers,
+                        'buildingsDestroyed' => $aggregateStats['buildingsDestroyed'] / $numUsers
+                    ];
+                }
+                echo "<h3 style='color: var(--text_color);'>Average Stats</h3>";
+                echo '<div style="overflow-x:auto;">';
+                echo '<table class="table table-dark table-striped">';
+                echo '<thead>';
+                echo '<tr>';
+                echo '<th>Kills</th>';
+                echo '<th>Damage</th>';
+                echo '<th>Kill Assists</th>';
+                echo '<th>Points Scored</th>';
+                echo '<th>Play Time</th>';
+                echo '<th>Buildings Destroyed</th>';
+                echo '</tr>';
+                echo '</thead>';
+                echo '<tbody>';
+                echo '<tr>
                         <td>' . number_format($averageStats['kills'], 2) . '</td>
                         <td>' . number_format($averageStats['damage'], 2) . '</td>
                         <td>' . number_format($averageStats['killAssists'], 2) . '</td>
@@ -982,113 +982,106 @@ $dota2avg = generateDota2LeaderboardAvg($membersD);
                         <td>' . number_format($averageStats['playTime'], 2) . '</td>
                         <td>' . number_format($averageStats['buildingsDestroyed'], 2) . '</td>
                     </tr>';
-                    echo '</tbody>';
-                    echo '</table></div>';
+                echo '</tbody>';
+                echo '</table></div>';
 
-                    // Prepare data for pie charts
-                    $labels = [];
-                    $killsData = [];
-                    $damageData = [];
-                    $killAssistsData = [];
+                // Prepare data for pie charts
+                $labels = [];
+                $killsData = [];
+                $damageData = [];
+                $killAssistsData = [];
 
-                    foreach ($userDetails as $stats) {
-                        $labels[] = htmlspecialchars($stats['nickname']);
-                        $killsData[] = $stats['kills'];
-                        $damageData[] = $stats['damage'];
-                        $killAssistsData[] = $stats['killAssists'];
-                    }
-
-
-                    // Assuming $labels, $killsData, $damageData, and $killAssistsData are defined earlier in your PHP code
-                
-                    // Start outputting HTML with echo
-                    echo '<div class="col-md-6">';
-                    echo '    <h3>Grafici delle Statistiche</h3>';
-                    echo '    <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 20px;">';
-                    echo '        <canvas id="killsChart"></canvas>';
-                    echo '        <canvas id="damageChart"></canvas>';
-                    echo '        <canvas id="killAssistsChart"></canvas>';
-                    echo '    </div>';
-                    echo '    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>';
-                    echo '    <script>';
-                    echo '        function createChart(ctx, chartLabel, data, backgroundColors) {';
-                    echo '            return new Chart(ctx, {';
-                    echo '                type: "pie",';
-                    echo '                data: {';
-                    echo '                    labels: ' . json_encode($labels) . ',';
-                    echo '                    datasets: [{';
-                    echo '                        label: chartLabel,';
-                    echo '                        data: data,';
-                    echo '                        backgroundColor: backgroundColors,';
-                    echo '                        borderColor: "rgba(255, 255, 255, 1)",';
-                    echo '                        borderWidth: 1';
-                    echo '                    }]';
-                    echo '                },';
-                    echo '                options: {';
-                    echo '                    responsive: true,';
-                    echo '                    plugins: {';
-                    echo '                        legend: { position: "top" },';
-                    echo '                        tooltip: {';
-                    echo '                            callbacks: {';
-                    echo '                                label: function(tooltipItem) {';
-                    echo '                                    return tooltipItem.label + ": " + tooltipItem.raw;';
-                    echo '                                }';
-                    echo '                            }';
-                    echo '                        }';
-                    echo '                    }';
-                    echo '                }';
-                    echo '            });';
-                    echo '        }';
-
-                    echo '        const ctxKills = document.getElementById("killsChart").getContext("2d");';
-                    echo '        const ctxDamage = document.getElementById("damageChart").getContext("2d");';
-                    echo '        const ctxKillAssists = document.getElementById("killAssistsChart").getContext("2d");';
-
-                    echo '        const backgroundColors = [';
-                    echo '            "rgba(255, 99, 132, 0.6)",';
-                    echo '            "rgba(54, 162, 235, 0.6)",';
-                    echo '            "rgba(255, 206, 86, 0.6)",';
-                    echo '            "rgba(75, 192, 192, 0.6)",';
-                    echo '            "rgba(153, 102, 255, 0.6)",';
-                    echo '            "rgba(255, 159, 64, 0.6)"';
-                    echo '        ];';
-
-                    echo '        createChart(ctxKills, "Kills", ' . json_encode($killsData) . ', backgroundColors);';
-                    echo '        createChart(ctxDamage, "Damage", ' . json_encode($damageData) . ', backgroundColors);';
-                    echo '        createChart(ctxKillAssists, "Kill Assists", ' . json_encode($killAssistsData) . ', backgroundColors);';
-
-                    echo '    </script>';
-                    echo '</div>';
-                } else {
-                    // echo "No stats available.<br>";
+                foreach ($userDetails as $stats) {
+                    $labels[] = htmlspecialchars($stats['nickname']);
+                    $killsData[] = $stats['kills'];
+                    $damageData[] = $stats['damage'];
+                    $killAssistsData[] = $stats['killAssists'];
                 }
-                ?>
-            </div>
 
-            <div class="col-md-7">
-                <?php
-                // Stampa la classifica
-                if (!empty($cs2Classifica) && $game === "Csgo") {
-                    echo "<h2>Statistiche di CSGO 2</h2>";
-                    echo '<div style="overflow-x:auto;">';
-                    echo '<table class="table table-dark table-striped">';
-                    echo "<thead>
-        <tr>
-            <th>Nickname</th>
-            <th>Steam ID</th>
-            <th>Win Percentage (%)</th>
-            <th>Total Kills</th>
-            <th>Total Deaths</th>
-            <th>Total Damage Done</th>
-            <th>Last Match Kills</th>
-            <th>Last Match Deaths</th>
-            <th>Last Match MVPs</th>
-        </tr>
-    </thead>";
-                    echo "<tbody>"; // Add tbody for better structure
-                
-                    foreach ($cs2Classifica as $user) {
-                        echo "<tr>
+
+                // Assuming $labels, $killsData, $damageData, and $killAssistsData are defined earlier in your PHP code
+
+                // Start outputting HTML with echo
+                echo '    <h3 style="color: var(--text_color)">Graph average stats team</h3>';
+                echo '    <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 20px;">';
+                echo '        <canvas id="killsChart"></canvas>';
+                echo '        <canvas id="damageChart"></canvas>';
+                echo '        <canvas id="killAssistsChart"></canvas>';
+                echo '    </div>';
+                echo '    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>';
+                echo '    <script>';
+                echo '        function createChart(ctx, chartLabel, data, backgroundColors) {';
+                echo '            return new Chart(ctx, {';
+                echo '                type: "pie",';
+                echo '                data: {';
+                echo '                    labels: ' . json_encode($labels) . ',';
+                echo '                    datasets: [{';
+                echo '                        label: chartLabel,';
+                echo '                        data: data,';
+                echo '                        backgroundColor: backgroundColors,';
+                echo '                        borderColor: "rgba(255, 255, 255, 1)",';
+                echo '                        borderWidth: 1';
+                echo '                    }]';
+                echo '                },';
+                echo '                options: {';
+                echo '                    responsive: true,';
+                echo '                    plugins: {';
+                echo '                        legend: { position: "top" },';
+                echo '                        tooltip: {';
+                echo '                            callbacks: {';
+                echo '                                label: function(tooltipItem) {';
+                echo '                                    return tooltipItem.label + ": " + tooltipItem.raw;';
+                echo '                                }';
+                echo '                            }';
+                echo '                        }';
+                echo '                    }';
+                echo '                }';
+                echo '            });';
+                echo '        }';
+
+                echo '        const ctxKills = document.getElementById("killsChart").getContext("2d");';
+                echo '        const ctxDamage = document.getElementById("damageChart").getContext("2d");';
+                echo '        const ctxKillAssists = document.getElementById("killAssistsChart").getContext("2d");';
+
+                echo '        const backgroundColors = [';
+                echo '            "rgba(255, 99, 132, 0.6)",';
+                echo '            "rgba(54, 162, 235, 0.6)",';
+                echo '            "rgba(255, 206, 86, 0.6)",';
+                echo '            "rgba(75, 192, 192, 0.6)",';
+                echo '            "rgba(153, 102, 255, 0.6)",';
+                echo '            "rgba(255, 159, 64, 0.6)"';
+                echo '        ];';
+
+                echo '        createChart(ctxKills, "Kills", ' . json_encode($killsData) . ', backgroundColors);';
+                echo '        createChart(ctxDamage, "Damage", ' . json_encode($damageData) . ', backgroundColors);';
+                echo '        createChart(ctxKillAssists, "Kill Assists", ' . json_encode($killAssistsData) . ', backgroundColors);';
+
+                echo '    </script>';
+            } else {
+                // echo "No stats available.<br>";
+            }
+            // Stampa la classifica
+            if (!empty($cs2Classifica) && $game === "Csgo") {
+                echo "<h2 style='color: var(--text_color);'>Stats CSGO</h2>";
+                echo '<div style="overflow-x:auto;">';
+                echo '<table class="table table-dark table-striped">';
+                echo "<thead>
+                    <tr>
+                        <th>Nickname</th>
+                        <th>Steam ID</th>
+                        <th>Win Percentage (%)</th>
+                        <th>Total Kills</th>
+                        <th>Total Deaths</th>
+                        <th>Total Damage Done</th>
+                        <th>Last Match Kills</th>
+                        <th>Last Match Deaths</th>
+                        <th>Last Match MVPs</th>
+                    </tr>
+                </thead>";
+                echo "<tbody>"; // Add tbody for better structure
+
+                foreach ($cs2Classifica as $user) {
+                    echo "<tr>
             <td>{$user['nickname']}</td>
             <td>{$user['steamID']}</td>
             <td>{$user['cs2WinPercentage']}</td>
@@ -1099,16 +1092,12 @@ $dota2avg = generateDota2LeaderboardAvg($membersD);
             <td>{$user['last_match']['last_match_deaths']}</td>
             <td>{$user['last_match']['last_match_mvps']}</td>
         </tr>";
-                    }
-
-                    echo "</tbody>"; // Close tbody
-                    echo "</table>";
-                    echo "</div>"; // Close the leaderboard div
-                } else {
-                    echo "<div class='leaderboard'>";
-                    // echo "<p>Nessun utente trovato con statistiche valide.</p>";
-                    echo "</div>"; // Close the leaderboard div
                 }
+
+                echo "</tbody>"; // Close tbody
+                echo "</table>";
+                echo "</div>"; // Close the leaderboard div
+
 
                 echo "</tbody>"; // Close tbody
                 echo "</table>";
@@ -1117,7 +1106,7 @@ $dota2avg = generateDota2LeaderboardAvg($membersD);
 
                 // Stampa le medie
                 if ((isset($averageKills) || isset($averageDeaths) || isset($averageDamageDone) || isset($averageWinPercentage)) && $game === "Csgo") {
-                    echo "<h2>Statistiche Medie</h2>";
+                    echo "<h2 style='color: var(--text_color);'>Averages Csgo Stats</h2>";
                     echo '<div style="overflow-x:auto;">';
                     echo '<table class="table table-dark table-striped">';
                     echo "<thead>
@@ -1140,7 +1129,9 @@ $dota2avg = generateDota2LeaderboardAvg($membersD);
                     echo "</div>"; // Close the averages div
 
                     // Pie chart
-                    echo "<canvas id='statisticsPieChart' width='400' height='400'></canvas>";
+                    echo '<div style="width: 400px; height: 400px;" >';
+                    echo "<canvas id='statisticsPieChart' width='200px' height='200px'></canvas>";
+
             ?>
 
                     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -1190,130 +1181,126 @@ $dota2avg = generateDota2LeaderboardAvg($membersD);
                                     }
                                 }
                             }
-                        }
-                    );
-                </script>
-                <?php
+                        });
+                    </script>
+            <?php
+            echo '</div>';
                 } else {
                     // echo "<tr><td colspan='4'>Nessun dato disponibile per le statistiche medie.</td></tr>";
                 }
-                ?>
-                                <div class="col-md-8">
-                    
-                    <?php
-                    // Print user statistics
-                    if ($game === "Dota2") {
-                        if (!empty($dota2wlr)) {
-                            echo '<table class="table table-dark table-striped">';
-                            echo '<thead>';
+            } else {
+                echo "<div class='leaderboard'>";
+                // echo "<p>Nessun utente trovato con statistiche valide.</p>";
+                echo "</div>"; // Close the leaderboard div
+            }
+            ?>
+            <div class="col-md-8">
+
+                <?php
+                // Print user statistics
+                if ($game === "Dota2" && !empty($dota2wlr)) {
+                    if (!empty($dota2wlr)) {
+                        echo '<table class="table table-dark table-striped">';
+                        echo '<thead>';
+                        echo '<tr>';
+                        echo '<th>Nickname</th>';
+                        echo '<th>wins</th>';
+                        echo '<th>losses</th>';
+                        echo '<th>Win/Loss Ratio</th>'; // Change to Danni Totali
+                        echo '</tr>';
+                        echo '</thead>';
+                        echo '<tbody>';
+                        foreach ($dota2wlr as $data) {
+
+                            $nickname = htmlspecialchars($data['nickname']);
+                            $wlr = htmlspecialchars($data['wlr']); // Change to totalDamageDone
+                            $wins = htmlspecialchars($data['totalWins']);
+                            $losses = htmlspecialchars($data['totalLosses']);
                             echo '<tr>';
-                            echo '<th>Nickname</th>';
-                            echo '<th>wins</th>';
-                            echo '<th>losses</th>';
-                            echo '<th>Win/Loss Ratio</th>'; // Change to Danni Totali
+                            echo "<td>{$nickname}</td>";
+                            echo "<td>{$wins}</td>";
+                            echo "<td>{$losses}</td>";
+                            echo "<td>{$wlr}</td>"; // Change to totalDamageDone
                             echo '</tr>';
-                            echo '</thead>';
-                            echo '<tbody>';
-                            foreach ($dota2wlr as $data) {
-                               
-                                $nickname = htmlspecialchars($data['nickname']);
-                                $wlr = htmlspecialchars($data['wlr']); // Change to totalDamageDone
-                                $wins = htmlspecialchars($data['totalWins']);
-                                $losses = htmlspecialchars($data['totalLosses']);
-                                echo '<tr>';
-                                echo "<td>{$nickname}</td>";
-                                echo "<td>{$wins}</td>";
-                                echo "<td>{$losses}</td>";
-                                echo "<td>{$wlr}</td>"; // Change to totalDamageDone
-                                echo '</tr>';
-                            }
-
-                            echo '</tbody>';
-                            echo '</table>';
-                        } else {
-                            echo "<li class='list-group-item text-center' style='background-color: rgba(255, 255, 255, 0.1);'>No stats available.</li>";
                         }
-                        if (!empty($dota2kdr)) {
-                            echo '<table class="table table-dark table-striped">';
-                            echo '<thead>';
-                            echo '<tr>';
-                            echo '<th>Nickname</th>';
-                            echo '<th>Kills</th>';
-                            echo '<th>Deaths</th>';
-                            echo '<th>K/D</th>'; // Change to Danni Totali
-                            echo '</tr>';
-                            echo '</thead>';
-                            echo '<tbody>';
 
-                            foreach ($dota2kdr as $data) {
-                                $nickname = htmlspecialchars($data['nickname']);
-                                $kills = htmlspecialchars($data['totalKills']);
-                                $deaths = htmlspecialchars($data['totalDeaths']);
-                                $kdr = htmlspecialchars($data['kdr']); // Change to totalDamageDone
-
-                                echo '<tr>';
-                                echo "<td>{$nickname}</td>";
-                                echo "<td>{$kills}</td>";
-                                echo "<td>{$deaths}</td>";
-                                echo "<td>{$kdr}</td>"; // Change to totalDamageDone
-                                echo '</tr>';
-                            }
-
-                            echo '</tbody>';
-                            echo '</table>';
-                        } else {
-                            echo "<li class='list-group-item text-center' style='background-color: rgba(255, 255, 255, 0.1);'>No stats available.</li>";
-                        }
-                        
-                        if (!empty($dota2avg)) {
-                            echo '<table class="table table-dark table-striped">';
-                            echo '<thead>';
-                            echo '<tr>';
-                            echo '<th>Average kills</th>';
-                            echo '<th>Average kdr</th>';
-                            echo '<th>Average wr</th>';
-                            echo '</tr>';
-                            echo '</thead>';
-                            echo '<tbody>';
-
-                            foreach ($dota2avg as $data) {
-                                $avg_kills = htmlspecialchars($data['avg_kills']);
-                                $avg_kdr = htmlspecialchars($data['avg_kdr']);
-                                $avg_wr = htmlspecialchars($data['avg_wr']);
-
-                                echo '<tr>';
-                                echo "<td>{$avg_kills}</td>";
-                                echo "<td>{$avg_kdr}</td>";
-                                echo "<td>{$avg_wr}</td>";
-                                echo '</tr>';
-                            }
-
-                            echo '</tbody>';
-                            echo '</table>';
-                        } else {
-                            echo "<li class='list-group-item text-center' style='background-color: rgba(255, 255, 255, 0.1);'>No stats available.</li>";
-                        }
-                    } else {
-                        // echo "No stats available.<br>";
+                        echo '</tbody>';
+                        echo '</table>';
                     }
-                    ?>
-                </div>
+                    if (!empty($dota2kdr)) {
+                        echo '<table class="table table-dark table-striped">';
+                        echo '<thead>';
+                        echo '<tr>';
+                        echo '<th>Nickname</th>';
+                        echo '<th>Kills</th>';
+                        echo '<th>Deaths</th>';
+                        echo '<th>K/D</th>'; // Change to Danni Totali
+                        echo '</tr>';
+                        echo '</thead>';
+                        echo '<tbody>';
+
+                        foreach ($dota2kdr as $data) {
+                            $nickname = htmlspecialchars($data['nickname']);
+                            $kills = htmlspecialchars($data['totalKills']);
+                            $deaths = htmlspecialchars($data['totalDeaths']);
+                            $kdr = htmlspecialchars($data['kdr']); // Change to totalDamageDone
+
+                            echo '<tr>';
+                            echo "<td>{$nickname}</td>";
+                            echo "<td>{$kills}</td>";
+                            echo "<td>{$deaths}</td>";
+                            echo "<td>{$kdr}</td>"; // Change to totalDamageDone
+                            echo '</tr>';
+                        }
+
+                        echo '</tbody>';
+                        echo '</table>';
+                    }
+
+                    if (!empty($dota2avg)) {
+                        echo '<table class="table table-dark table-striped">';
+                        echo '<thead>';
+                        echo '<tr>';
+                        echo '<th>Average kills</th>';
+                        echo '<th>Average kdr</th>';
+                        echo '<th>Average wr</th>';
+                        echo '</tr>';
+                        echo '</thead>';
+                        echo '<tbody>';
+
+                        foreach ($dota2avg as $data) {
+                            $avg_kills = htmlspecialchars($data['avg_kills']);
+                            $avg_kdr = htmlspecialchars($data['avg_kdr']);
+                            $avg_wr = htmlspecialchars($data['avg_wr']);
+
+                            echo '<tr>';
+                            echo "<td>{$avg_kills}</td>";
+                            echo "<td>{$avg_kdr}</td>";
+                            echo "<td>{$avg_wr}</td>";
+                            echo '</tr>';
+                        }
+
+                        echo '</tbody>';
+                        echo '</table>';
+                    }
+                }
+                ?>
+            </div>
+
         </div>
 
-    </div>
+        <?php
+        $stmt->close();
+        $conn->close();
+        ?>
 
-    <?php
-    $stmt->close();
-    $conn->close();
-    ?>
+        <script>
+            // Trasferisci i dati di sessione dal PHP al JavaScript
+            var sessionData = <?php echo $sessionData; ?>;
 
-    <script>
-        // Trasferisci i dati di sessione dal PHP al JavaScript
-        var sessionData = <?php echo $sessionData; ?>;
-
-        // Stampa i dati di sessione nella console del browser
-        console.log(sessionData);
-    </script>
+            // Stampa i dati di sessione nella console del browser
+            console.log(sessionData);
+        </script>
 </body>
 
 </html>

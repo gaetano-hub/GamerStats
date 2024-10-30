@@ -406,7 +406,7 @@ while ($row = $result->fetch_assoc()) {
             {
                 $url = "https://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid={$gameId}&steamid={$steamID}&key={$apiKey}";
                 $response = @file_get_contents($url);       
-                return null; //json_decode($response, true);
+                return json_decode($response, true);
             }
 
             // Verifica se lo Steam ID è impostato
@@ -448,7 +448,7 @@ while ($row = $result->fetch_assoc()) {
                 // Display statistics
             ?>
                 <div class="container text-center" style="margin-top: 10px; background-color: var(--transparent_col); padding: 15px;">
-                    <p style="font-size: 2rem; font-weight: bold; color: var(--text_color);">Stats di Counter-Strike 2</p>
+                    <p style="font-size: 2rem; font-weight: bold; color: var(--text_color);">Stats Counter-Strike</p>
 
                     <!-- Grafici -->
                     <div class="charts-grid">
@@ -458,7 +458,7 @@ while ($row = $result->fetch_assoc()) {
 
                     <!-- Statistiche dettagliate -->
                     <div class="stats-details" style="margin-top: 20px;">
-                        <h3>Statistiche Totali</h3>
+                        <h3>Total Statistics</h3>
                         <div class="stats-grid">
                             <div class="stats-item"><strong>Total Kills:</strong> <span style="color: white;"><?php echo $totalKills; ?></span></div>
                             <div class="stats-item"><strong>Total Deaths:</strong> <span style="color: white;"><?php echo $totalDeaths; ?></span></div>
@@ -469,14 +469,14 @@ while ($row = $result->fetch_assoc()) {
                             <div class="stats-item"><strong>Deaths Per Round:</strong> <span style="color: white;"><?php echo number_format($deathsPerRound, 2); ?></span></div>
                         </div>
 
-                        <h3>Statistiche Ultima Partita</h3>
+                        <h3>Last Match Statistics</h3>
                         <div class="stats-grid">
                             <div class="stats-item"><strong>Last Match Kills:</strong> <span style="color: white;"><?php echo $lastMatchKills; ?></span></div>
                             <div class="stats-item"><strong>Last Match Deaths:</strong> <span style="color: white;"><?php echo $lastMatchDeaths; ?></span></div>
                             <div class="stats-item"><strong>Last Match Wins:</strong> <span style="color: white;"><?php echo $lastMatchWins; ?></span></div>
                         </div>
 
-                        <h3>Rapporti</h3>
+                        <h3>Ratio</h3>
                         <div class="stats-grid">
                             <div class="stats-item"><strong>Kill/Death Ratio:</strong> <span style="color: white;"><?php echo number_format($killDeathRatio, 2); ?></span></div>
                             <div class="stats-item"><strong>Win/Loss Ratio:</strong> <span style="color: white;"><?php echo number_format($winLossRatio, 2); ?></span></div>
@@ -603,7 +603,7 @@ while ($row = $result->fetch_assoc()) {
 
                 if (isset($tf2Stats['playerstats']['stats'])) {
                     echo '<div class="container text-center" style="margin-top: 10px; background-color: var(--transparent_col); padding: 15px;">';
-                    echo '<p style="font-size: 2rem; font-weight: bold; color: var(--text_color);">Statistiche di Team Fortress 2</p>';
+                    echo '<p style="font-size: 2rem; font-weight: bold; color: var(--text_color);">Stats Team Fortress 2</p>';
 
                     // Array per memorizzare le somme delle statistiche per ogni classe
                     $classStats = [];
@@ -663,12 +663,12 @@ while ($row = $result->fetch_assoc()) {
                         echo '<div class="col-md-4" style="margin: 10px; padding: 15px; border: 1px solid #ccc; border-radius: 8px; background-color: #f9f9f9;">';
                         echo "<h4>{$class}</h4>";
                         echo '<ul style="list-style-type: none; padding: 0;">';
-                        echo '<li><strong>Uccisioni:</strong> ' . $stats['iNumberOfKills'] . '</li>';
-                        echo '<li><strong>Danno:</strong> ' . $stats['iDamageDealt'] . '</li>';
-                        echo '<li><strong>Tempo di Gioco:</strong> ' . $stats['iPlayTime'] . ' minuti</li>';
-                        echo '<li><strong>Catture Punti:</strong> ' . $stats['iPointCaptures'] . '</li>';
-                        echo '<li><strong>Assistenza Uccisioni:</strong> ' . $stats['iKillAssists'] . '</li>';
-                        echo '<li><strong>Edifici Distrutti:</strong> ' . $stats['iBuildingsDestroyed'] . '</li>';
+                        echo '<li><strong>Kills:</strong> ' . $stats['iNumberOfKills'] . '</li>';
+                        echo '<li><strong>Damage:</strong> ' . $stats['iDamageDealt'] . '</li>';
+                        echo '<li><strong>Time Played:</strong> ' . $stats['iPlayTime'] . ' minuti</li>';
+                        echo '<li><strong>Captured Points:</strong> ' . $stats['iPointCaptures'] . '</li>';
+                        echo '<li><strong>Kill Assists:</strong> ' . $stats['iKillAssists'] . '</li>';
+                        echo '<li><strong>Buildings Destroyed:</strong> ' . $stats['iBuildingsDestroyed'] . '</li>';
                         echo '</ul>';
 
                         // Creare un canvas per il grafico
@@ -678,7 +678,7 @@ while ($row = $result->fetch_assoc()) {
                         echo 'var chart = new Chart(ctx, {';
                         echo 'type: "bar",'; // Tipo di grafico
                         echo 'data: {';
-                        echo 'labels: ["Uccisioni", "Danno", "Tempo di Gioco", "Catture Punti", "Assistenza Uccisioni", "Edifici Distrutti"],';
+                        echo 'labels: ["Kills", "Damage", "Time Played", "Captured Points", "Kill Assists", "Buildings Destroyed"],';
                         echo 'datasets: [{';
                         echo 'label: "Statistiche ' . $class . '",';
                         echo 'data: [' .
@@ -718,13 +718,13 @@ while ($row = $result->fetch_assoc()) {
 
                 <div class="container text-center" style="margin-top: 10px; background-color: var(--transparent_col); padding: 15px;">
                     <p style="font-size: 2rem; font-weight: bold; color: var(--text_color);">
-                        Statistiche di Dota 2
+                        Stats Dota 2
                     <div class="charts-grid">
                         <canvas id="winRatioChartD" width="300" height="150"></canvas>
                         <canvas id="kdaChartD" width="300" height="150"></canvas>
                     </div>
-                    <div class="stats-details" style="margin-top: 20px;">
-                        <h3>Statistiche Totali</h3>
+                    <div class="stats-details" style="margin-top: 20px; color: var(--text_color);">
+                        <h3>Total Stats</h3>
                         <div class="stats-grid">
                             <div class="stats-item"><strong>Total Kills:</strong> <span id="totalKillsDota2"></span></div>
                             <div class="stats-item"><strong>Total Deaths:</strong> <span id="totalDeathsDota2"></span></div>
@@ -737,11 +737,11 @@ while ($row = $result->fetch_assoc()) {
                         -->
                         </div>
 
-                        <h3>Statistiche Ultime Partite</h3>
+                        <h3>Last Match Statistics</h3>
                         <div class="stats-grid" id="lastDota2">
                         </div>
-
-                        <h3>Rapporti</h3>
+                        <br>
+                        <h3>Ratio</h3>
                         <div class="stats-grid">
                             <div class="stats-item"><strong>Kill/Death Ratio:</strong> <span id="killDeathRatioDota2"></span></div>
                             <div class="stats-item"><strong>Win/Loss Ratio:</strong> <span id="winLossRatioDota2"></span></div>
