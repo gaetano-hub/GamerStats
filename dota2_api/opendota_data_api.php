@@ -150,7 +150,7 @@ $account_id = (int) $player_id- 76561197960265728;
 /*
 Tested with:
 */
-$account_id='221959239'; //Steam32
+//$account_id='221959239'; //Steam32
 $name = getPlayerName($conn, $account_id+76561197960265728);
 
 

@@ -482,6 +482,7 @@ function generateDota2LeaderboardWlr($members)
         //updateDatabase($nickname, $account_id);
         //API CALL
         $wl = getPlayerWL($account_id);
+        if (!($wl['win']==0 && $wl['lose']==0)) {
         echo "<script>console.log('generaClassificaDota2: retrieved wins and losses".$wl['win']."');</script>";
         //echo "<script>console.log(" . json_encode($wl) . ");</script>";
         //echo "<script>console.log(" . json_encode($nickname) . ");</script>";
@@ -494,6 +495,9 @@ function generateDota2LeaderboardWlr($members)
             'totalLosses' => $wl['lose'],
             'wlr' => $wlr
         ];
+    } else {
+        echo "<script>console.log('generaClassificaDota2: no recent matches found');</script>";
+    }
     }
     usort($leaderboardWlr, function ($a, $b) {
         return $b['wlr'] <=> $a['wlr'];
