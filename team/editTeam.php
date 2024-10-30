@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 // Connessione al database
 $servername = "localhost";
 $username = "root";
@@ -24,6 +24,15 @@ $memberFive = $_POST['memberFive'];
 
 $members = array($memberOne, $memberTwo, $memberThree, $memberFour, $memberFive);
 
+$leader = $_SESSION['nickname'];
+
+$leaderAsMember = in_array($leader, $members);
+
+if ($leaderAsMember) {
+    echo "<script>alert('The leader cannot also be a member of the team');  window.history.back();</script>";
+    exit;
+}
+
 $notFoundMembers = [];
     foreach ($members as $member) {
         if (!empty($member)) {
@@ -39,13 +48,13 @@ $notFoundMembers = [];
     }
 
     if (!empty($notFoundMembers)) {
-        $message = "Gli utenti ";
+        $message = "The users ";
         foreach ($notFoundMembers as $index => $member) {
             $message .= $member;
             if ($index < count($notFoundMembers) - 1) {
                 $message .= ", ";
             } else {
-                $message .= " non sono registrati al sito";
+                $message .= " are not registered to GamerStats";
             }
         }
         echo '<script>alert("'.$message.'"); window.history.back();</script>';
