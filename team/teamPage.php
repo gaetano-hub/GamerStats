@@ -672,7 +672,7 @@ $dota2avg = generateDota2LeaderboardAvg($membersD);
     -->
 
     <div class="content">
-        <nav class="navbar fixed-top navbar-expand-lg" style="background-color: var(--object_color); display: none;">
+        <nav class="navbar fixed-top navbar-expand-lg" style="background-color: var(--object_color);">
             <div class="container-fluid" style="background-color: var(--object_color);">
                 <a class="navbar-brand fs-3" href="#" style="color: var(--brand_color);">GamerStats</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"

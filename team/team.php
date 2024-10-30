@@ -53,7 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $members = array($memberone, $membertwo, $memberthree, $memberfour, $memberfive, $leader);
 
-    $sameLeader = array_filter($members, function($member) use ($leader) {
+    $sameLeader = array_filter($members, function ($member) use ($leader) {
         return $member == $leader;
     });
 
@@ -86,10 +86,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $message .= " non sono registrati al sito";
             }
         }
-        echo '<script>alert("'.$message.'"); window.history.back();</script>';
+        echo '<script>alert("' . $message . '"); window.history.back();</script>';
         exit;
     }
 
+    if ($game === "Game") {
+        echo '<script>alert("Please choose a valid game"); window.history.back();</script>';
+        exit;
+    }
 
     $stmt = $conn->prepare("SELECT * FROM teams WHERE team_name = ?");
     $stmt->bind_param("s", $teamName);
@@ -97,7 +101,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
-        die("Team name already used.");
+        echo '<script>alert("This team name is already used"); window.history.back();</script>';
+        exit;
     }
 
     // Inserisci i dati del team nella tabella team
