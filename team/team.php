@@ -77,13 +77,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     if (!empty($notFoundMembers)) {
-        $message = "Gli utenti ";
+        $message = "Users ";
         foreach ($notFoundMembers as $index => $member) {
             $message .= $member;
             if ($index < count($notFoundMembers) - 1) {
                 $message .= ", ";
             } else {
-                $message .= " non sono registrati al sito";
+                $message .= " are not registered on the site";
             }
         }
         echo '<script>alert("' . $message . '"); window.history.back();</script>';
@@ -119,8 +119,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($stmt->execute() === TRUE) {
         header("Location: ../memberPage/myProfile.php");
     } else {
-        echo "Errore: " . $stmt->error;
-        error_log("Errore: " . $stmt->error, 3, "errors.log"); // Log degli errori
+        echo "Error: " . $stmt->error;
+        error_log("Error: " . $stmt->error, 3, "errors.log"); // Log degli errori
     }
 }
 // Chiudi la connessione

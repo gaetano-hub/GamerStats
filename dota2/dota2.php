@@ -400,9 +400,9 @@ function updateDatabase($name, $account_id)
 </head>
 
 <body onload="sendData()">
-    <div class="content">
+<div class="content">
         <nav class="navbar fixed-top navbar-expand-lg" style="background-color: var(--object_color);">
-            <div class="container-fluid">
+            <div class="container-fluid" style="background-color: var(--object_color);">
                 <a class="navbar-brand fs-3" href="#" style="color: var(--brand_color);">GamerStats</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -411,71 +411,97 @@ function updateDatabase($name, $account_id)
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item dropdown">
+                        <li class="nav-item dropdown" style="margin-top: 6px;">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                                aria-expanded="false" style="color: var(--navbar_textCol);">
-                                Games
-                            </a>
+                                aria-expanded="false" style="color: var(--navbar_textCol);">Games</a>
                             <ul class="dropdown-menu" style="background-color: var(--object_color);">
-                                <li><a class="dropdown-item" href="../team_fortess2/team_fortess2.php"
-                                        style="color: var(--brand_color);">Team Fortress 2</a></li>
-                                <li><a class="dropdown-item" href="../csgo/csgo.php"
-                                        style="color: var(--brand_color);">Csgo</a></li>
-                                <li><a class="dropdown-item" href="../dota2/fota2.php"
-                                        style="color: var(--brand_color);">Dota2</a></li>
+                                <!-- TODO: aggiungere href per arrivare alle pagine dei giochi-->
+                                <li><a class="dropdown-item" href="../team_fortess2/team_fortess2.php" style="color: var(--brand_color);">Team Fortress 2</a></li>
+                                <li><a class="dropdown-item" href="../csgo/csgo.php" style="color: var(--brand_color);">Csgo</a></li>
+                                <li><a class="dropdown-item" href="../dota2/dota2.php" style="color: var(--brand_color);">Dota 2</a></li>
+                                <!-- <li><hr class="dropdown-divider"></li>
+                                 <li><a class="dropdown-item" href="#">Something else here</a></li> 
+                                 Possono sempre servire -->
                             </ul>
                         </li>
-                        <li class="nav-item">
-                            <a class="btn btn-outline-success" id="homeref" type="button"
-                                style="background-color: var(--object_color);" href="../home/home.php">
-                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
-                                    width="24px" fill="#e8eaed">
-                                    <path
-                                        d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z" />
+                        <li class="nav-item" style="margin-left: auto; margin-top: auto;">
+                            <a class="btn btn-outline-success" id="homeref" type="button" style=" background-color:var(--object_color);" href="../home/home.php">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+                                    <path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z" />
                                 </svg>
                             </a>
                         </li>
                     </ul>
-                    <ul class="navbar-nav mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <form class="d-flex" role="search">
-                                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"
-                                    style="background-color: var(--object_color);">
-                                <button class="btn btn-outline-success" id="search" type="submit"
-                                    style="background-color: var(--object_color);">
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
-                                        width="24px" fill="#e8eaed">
-                                        <path
-                                            d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z" />
-                                    </svg>
-                                </button>
-                            </form>
+                    <!-- TODO: modificare href e vari dettagli del signup e login-->
+                    <ul class="navbar-nav align-items-center mb-2 mb-lg-0">
+                        <li class="nav-item align-self-center">
+                            <div style="position: relative;">
+                                <form class="d-flex" role="search" action="search.php" method="post" id="searchForm" style="margin-top: 10px;">
+                                    <input class="form-control me-2" name="searchString" id="searchInput" type="search" placeholder="Search" aria-label="Search"
+                                        style="background-color:var(--object_color); color: var(--text_color); width: calc(100% - 40px);">
+                                    <button class="btn" type="button" id="searchButton">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+                                            <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z" />
+                                        </svg>
+                                    </button>
+                                </form>
+
+                                <ul class="dropdown-menu" id="resultDropdown" style="background-color: var(--object_color); position: absolute; top: 100%; left: 0; width: 13.5rem; z-index: 1000; display: none;"></ul>
+                            </div>
                         </li>
+
+                        <script>
+                            document.getElementById('searchButton').addEventListener('click', function() {
+                                const searchString = document.getElementById('searchInput').value;
+
+                                if (searchString.trim() === '') {
+                                    document.getElementById('resultDropdown').style.display = 'none';
+                                    return;
+                                }
+
+                                fetch('../home/search.php', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/x-www-form-urlencoded'
+                                        },
+                                        body: 'searchString=' + encodeURIComponent(searchString)
+                                    })
+                                    .then(response => response.text())
+                                    .then(data => {
+                                        const resultDropdown = document.getElementById('resultDropdown');
+                                        resultDropdown.innerHTML = data;
+                                        resultDropdown.style.display = 'block';
+                                    })
+                                    .catch(error => console.error('Error:', error));
+                            });
+                        </script>
+                        <li class="separator" style="color: var(--separator_color);">|</li>
+                        <!-- Controllo se l'utente è loggato -->
                         <?php if (isset($_SESSION['nickname'])): ?>
+                            <!-- L'utente è loggato, mostra Logout -->
                             <li class="nav-item">
-                                <a class="nav-link" href="../memberPage/myProfile.php"
-                                    style="color: var(--brand_color); font-weight: bold;">
-                                    <?php echo htmlspecialchars($_SESSION['nickname']); ?>
+                                <a class="nav-link" href="../memberPage/myProfile.php" style="color: var(--brand_color); font-weight: bold;">
+                                    <?php echo $_SESSION['nickname']; ?>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="../logout/logout.php"
-                                    style="color: var(--brand_color);">Logout</a>
+                                <a class="nav-link active" aria-current="page" href="../logout/logout.php" style="color: var(--brand_color);">Logout</a>
                             </li>
                         <?php else: ?>
+                            <!-- L'utente non è loggato, mostra Login e Sign Up -->
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="../login/login.html"
-                                    style="color: var(--brand_color);">Login</a>
+                                <a class="nav-link active" aria-current="page" href="../login/login.html" style="color: var(--brand_color);">Login</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="../signUp/signUp.html"
-                                    style="color: var(--brand_color);">Sign Up</a>
+                                <a class="nav-link active" aria-current="page" href="../signUp/signUp.html" style="color: var(--brand_color);">Sign Up</a>
                             </li>
                         <?php endif; ?>
                     </ul>
                 </div>
             </div>
         </nav>
+    </div>
+    <div
 
         <div
             style="background-color: var(--transparent_col); height: 5rem; display: flex; justify-content: center; align-items: center; margin-top: 68px;">

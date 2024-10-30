@@ -33,15 +33,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = trim($_POST['email']);
     $password = $_POST['password'];
 
-    // Validazione dell'email
+    // Validate email
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        die("Email non valida.");
+        die("Invalid email address.");
     }
 
-    // Validazione della password (es. lunghezza minima)
+    // Validate password (e.g. minimum length)
     if (strlen($password) < 6) {
-        die("La password deve avere almeno 6 caratteri.");
+        die("The password must be at least 6 characters long.");
     }
+
 
     // Controlla se il nickname o l'email esistono già
     $stmt = $conn->prepare("SELECT * FROM users WHERE email = ? OR nickname = ?");
@@ -50,7 +51,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
-        die("Nickname o email già utilizzati.");
+        echo "<script>alert('Nickname or email already in use.'); window.history.back();</script>";
+        exit;
     }
 
     // Crittografia della password

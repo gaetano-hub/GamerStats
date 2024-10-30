@@ -696,15 +696,16 @@ $dota2avg = generateDota2LeaderboardAvg($membersD);
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                                 aria-expanded="false" style="color: var(--navbar_textCol);">Games</a>
                             <ul class="dropdown-menu" style="background-color: var(--object_color);">
-
-                                <li><a class="dropdown-item" href="../csgo/csgo.php"
-                                        style="color: var(--brand_color);">Csgo</a></li>
-                                <li><a class="dropdown-item" href="../team_fortress2/team_fortress2.php"
-                                        style="color: var(--brand_color);">Team Fortress 2</a></li>
+                                <!-- TODO: aggiungere href per arrivare alle pagine dei giochi-->
+                                <li><a class="dropdown-item" href="../team_fortess2/team_fortess2.php" style="color: var(--brand_color);">Team Fortress 2</a></li>
+                                <li><a class="dropdown-item" href="../csgo/csgo.php" style="color: var(--brand_color);">Csgo</a></li>
                                 <li><a class="dropdown-item" href="../dota2/dota2.php" style="color: var(--brand_color);">Dota 2</a></li>
+                                <!-- <li><hr class="dropdown-divider"></li>
+                                 <li><a class="dropdown-item" href="#">Something else here</a></li> 
+                                 Possono sempre servire -->
                             </ul>
                         </li>
-                        <li class="nav-item" style="margin-left: 7px; margin-top: 11px;">
+                        <li class="nav-item" style="margin-left: auto; margin-top: auto;">
                             <a class="btn btn-outline-success" id="homeref" type="button" style=" background-color:var(--object_color);" href="../home/home.php">
                                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
                                     <path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z" />
@@ -712,10 +713,11 @@ $dota2avg = generateDota2LeaderboardAvg($membersD);
                             </a>
                         </li>
                     </ul>
-                    <ul class="navbar-nav mb-2 mb-lg-0">
+                    <!-- TODO: modificare href e vari dettagli del signup e login-->
+                    <ul class="navbar-nav align-items-center mb-2 mb-lg-0">
                         <li class="nav-item align-self-center">
                             <div style="position: relative;">
-                                <form class="d-flex" role="search" id="searchForm" action="search.php" method="post" style="margin-top: 10px;">
+                                <form class="d-flex" role="search" action="search.php" method="post" id="searchForm" style="margin-top: 10px;">
                                     <input class="form-control me-2" name="searchString" id="searchInput" type="search" placeholder="Search" aria-label="Search"
                                         style="background-color:var(--object_color); color: var(--text_color); width: calc(100% - 40px);">
                                     <button class="btn" type="button" id="searchButton">
@@ -724,9 +726,11 @@ $dota2avg = generateDota2LeaderboardAvg($membersD);
                                         </svg>
                                     </button>
                                 </form>
+
                                 <ul class="dropdown-menu" id="resultDropdown" style="background-color: var(--object_color); position: absolute; top: 100%; left: 0; width: 13.5rem; z-index: 1000; display: none;"></ul>
                             </div>
                         </li>
+
                         <script>
                             document.getElementById('searchButton').addEventListener('click', function() {
                                 const searchString = document.getElementById('searchInput').value;
@@ -753,8 +757,9 @@ $dota2avg = generateDota2LeaderboardAvg($membersD);
                             });
                         </script>
                         <li class="separator" style="color: var(--separator_color);">|</li>
+                        <!-- Controllo se l'utente è loggato -->
                         <?php if (isset($_SESSION['nickname'])): ?>
-
+                            <!-- L'utente è loggato, mostra Logout -->
                             <li class="nav-item">
                                 <a class="nav-link" href="../memberPage/myProfile.php" style="color: var(--brand_color); font-weight: bold;">
                                     <?php echo $_SESSION['nickname']; ?>
@@ -764,7 +769,7 @@ $dota2avg = generateDota2LeaderboardAvg($membersD);
                                 <a class="nav-link active" aria-current="page" href="../logout/logout.php" style="color: var(--brand_color);">Logout</a>
                             </li>
                         <?php else: ?>
-
+                            <!-- L'utente non è loggato, mostra Login e Sign Up -->
                             <li class="nav-item">
                                 <a class="nav-link active" aria-current="page" href="../login/login.html" style="color: var(--brand_color);">Login</a>
                             </li>
