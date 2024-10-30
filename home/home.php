@@ -318,8 +318,8 @@ function generateDota2Leaderboard()
             $total_deaths = 0;
 
             foreach ($recent_matches as $match) {
-                echo "<script>console.log('mar" . $match . "');</script>";
-
+                $total_kills += $match['kills'];
+                $total_deaths += $match['deaths'];
             }
             $kdr = $total_kills / $total_deaths;
             echo "<script>console.log('generaClassificaDota2: calculated kdr for user: " . $nickname . "');</script>";
