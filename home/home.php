@@ -651,7 +651,7 @@ $conn->close();
                                             echo '<tr>';
                                             echo '<th>Nickname</th>';
                                             echo '<th>Steam ID</th>';
-                                            echo '<th>Win Percentage</th>';
+                                            echo '<th>K/D</th>';
                                             echo '</tr>';
                                         foreach ($dota2Classifica as $user) {
                                             // Extract nickname and win percentage from user
@@ -663,7 +663,7 @@ $conn->close();
                                             echo '<tr>';
                                             echo "<td>{$nickname}</td>";
                                             echo "<td>" . htmlspecialchars($user['steamID']) . "</td>";
-                                            echo '<td><span class="badge bg-primary">' . $kdr . '%</span></td>';
+                                            echo '<td><span class="badge bg-primary">' . $kdr . '</span></td>';
                                             echo '</tr>';
                                         }
                                         

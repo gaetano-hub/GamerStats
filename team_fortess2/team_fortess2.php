@@ -215,43 +215,45 @@ $userDetails = [];
 // Fetch user details and stats
 if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
-
         $steamID = $row['steamID'];
         $nickname = htmlspecialchars($row['nickname']);
 
         $tf2Stats = getGameStats($steamID, $apiKey, $tf2GameId);
-        if ($tf2Stats !== null) {
+        if (empty($tf2Stats)) {
+            continue; // Skip if no stats available
+        }
 
         if (!empty($steamID)) {
             $userDetails[$steamID] = [
-                'nickname' => $nickname
+                'nickname' => $nickname,
+                'kills' => 0,
+                'damage' => 0,
+                'killAssists' => 0
             ];
 
-        // Fetch TF2 stats
-        
-            // Initialize temporary variables for aggregating stats
-            $kills = $damage = $killAssists = 0;
-
-            foreach ($tf2Stats['playerstats']['stats'] as $stat) {
-                // Check if the stat name contains specific substrings
-                if (strpos($stat['name'], 'iNumberOfKills') !== false) {
-                    $kills += $stat['value'];
-                    $userDetails[$steamID]['kills'] = $kills;
-                } elseif (strpos($stat['name'], 'iDamageDealt') !== false) {
-                    $damage += $stat['value'];
-                    $userDetails[$steamID]['damage'] = $damage;
-                } elseif (strpos($stat['name'], 'iKillAssists') !== false) {
-                    $killAssists += $stat['value'];
-                    $userDetails[$steamID]['killAssists'] = $killAssists;
+            // Fetch TF2 stats
+            if (isset($tf2Stats['playerstats']['stats'])) {
+                foreach ($tf2Stats['playerstats']['stats'] as $stat) {
+                    // Check if the stat name contains specific substrings
+                    if (strpos($stat['name'], 'iNumberOfKills') !== false) {
+                        $userDetails[$steamID]['kills'] += $stat['value'];
+                    } elseif (strpos($stat['name'], 'iDamageDealt') !== false) {
+                        $userDetails[$steamID]['damage'] += $stat['value'];
+                    } elseif (strpos($stat['name'], 'iKillAssists') !== false) {
+                        $userDetails[$steamID]['killAssists'] += $stat['value'];
+                    }
                 }
+            }
+
+            // Remove users with default stats
+            if ($userDetails[$steamID]['kills'] === 0 && 
+                $userDetails[$steamID]['damage'] === 0 && 
+                $userDetails[$steamID]['killAssists'] === 0) {
+                unset($userDetails[$steamID]);
             }
         }
     }
-    }
-} else {
-    // echo "No users found in the database.<br>";
 }
-
 
 
 // Create a ranking score for each user

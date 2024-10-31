@@ -79,3 +79,16 @@
 [2024-10-30 22:27:32] Successfully updated database for Raddan.
 [2024-10-30 22:27:32] Updating database for user: MONARCA with account_id: 151736264.
 [2024-10-30 22:27:47] Successfully updated database for MONARCA.
+[2024-10-31 00:51:51] POST request received.
+[2024-10-31 00:51:51] Connecting to the database.
+[2024-10-31 00:51:51] Users found in the database.
+[2024-10-31 00:51:51] Updating database for user: [value-2] with account_id: 119010169.
+[2024-10-31 00:51:52] Successfully updated database for [value-2].
+[2024-10-31 00:51:52] Updating database for user: Shepard with account_id: 410037519.
+[2024-10-31 00:51:53] Successfully updated database for Shepard.
+[2024-10-31 00:51:53] Updating database for user: Raddan with account_id: 221959239.
+[2024-10-31 00:52:04] Successfully updated database for Raddan.
+[2024-10-31 00:52:04] Updating database for user: monarca with account_id: 149118176.
+[2024-10-31 00:52:16] Successfully updated database for monarca.
+[2024-10-31 00:52:16] Updating database for user: michele with account_id: 114333310.
+[2024-10-31 00:52:17] Successfully updated database for michele.

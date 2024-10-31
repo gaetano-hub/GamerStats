@@ -1007,11 +1007,18 @@ $dota2avg = generateDota2LeaderboardAvg($membersD);
                 // Assuming $labels, $killsData, $damageData, and $killAssistsData are defined earlier in your PHP code
 
                 // Start outputting HTML with echo
+                
                 echo '    <h3 style="color: var(--text_color)">Graph average stats team</h3>';
                 echo '    <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 20px;">';
+                echo '<div style="width: 200px; height: 200px;">';
                 echo '        <canvas id="killsChart"></canvas>';
+                echo '    </div>';
+                echo '<div style="width: 200px; height: 200px;">';
                 echo '        <canvas id="damageChart"></canvas>';
+                echo '    </div>';
+                echo '<div style="width: 200px; height: 200px;">';
                 echo '        <canvas id="killAssistsChart"></canvas>';
+                echo '    </div>';
                 echo '    </div>';
                 echo '    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>';
                 echo '    <script>';
@@ -1062,8 +1069,6 @@ $dota2avg = generateDota2LeaderboardAvg($membersD);
                 echo '        createChart(ctxKillAssists, "Kill Assists", ' . json_encode($killAssistsData) . ', backgroundColors);';
 
                 echo '    </script>';
-            } else {
-                // echo "No stats available.<br>";
             }
             // Stampa la classifica
             if (!empty($cs2Classifica) && $game === "Csgo") {

@@ -522,12 +522,12 @@ $stmt->close();
                         echo '<div class="col-md-4" style="margin: 10px; padding: 15px; border: 1px solid #ccc; border-radius: 8px; background-color: #f9f9f9;">';
                         echo "<h4>{$class}</h4>";
                         echo '<ul style="list-style-type: none; padding: 0;">';
-                        echo '<li><strong>Uccisioni:</strong> ' . $stats['iNumberOfKills'] . '</li>';
-                        echo '<li><strong>Danno:</strong> ' . $stats['iDamageDealt'] . '</li>';
-                        echo '<li><strong>Tempo di Gioco:</strong> ' . $stats['iPlayTime'] . ' minuti</li>';
-                        echo '<li><strong>Catture Punti:</strong> ' . $stats['iPointCaptures'] . '</li>';
-                        echo '<li><strong>Assistenza Uccisioni:</strong> ' . $stats['iKillAssists'] . '</li>';
-                        echo '<li><strong>Edifici Distrutti:</strong> ' . $stats['iBuildingsDestroyed'] . '</li>';
+                        echo '<li><strong>Kills:</strong> ' . $stats['iNumberOfKills'] . '</li>';
+                        echo '<li><strong>Damage:</strong> ' . $stats['iDamageDealt'] . '</li>';
+                        echo '<li><strong>Time Played:</strong> ' . $stats['iPlayTime'] . ' minuti</li>';
+                        echo '<li><strong>Captured Points:</strong> ' . $stats['iPointCaptures'] . '</li>';
+                        echo '<li><strong>Kill Assists:</strong> ' . $stats['iKillAssists'] . '</li>';
+                        echo '<li><strong>Buildings Destroyed:</strong> ' . $stats['iBuildingsDestroyed'] . '</li>';
                         echo '</ul>';
 
                         // Creare un canvas per il grafico
@@ -537,7 +537,7 @@ $stmt->close();
                         echo 'var chart = new Chart(ctx, {';
                         echo 'type: "bar",'; // Tipo di grafico
                         echo 'data: {';
-                        echo 'labels: ["Uccisioni", "Danno", "Tempo di Gioco", "Catture Punti", "Assistenza Uccisioni", "Edifici Distrutti"],';
+                        echo 'labels: ["Kills", "Damage", "Time Played", "Captured Points", "Kill Assists", "Buildings Destroyed"],';
                         echo 'datasets: [{';
                         echo 'label: "Statistiche ' . $class . '",';
                         echo 'data: [' .
