@@ -718,7 +718,7 @@ $conn->close();
                 The most popular maps are <b>Dust II</b>, <b>Inferno</b>, <b>Mirage</b>, <b>Nuke</b>, and <b>Overpass</b>.
             </p>
             <p style="display: flex; justify-content: center; align-items: center; font-size: 1.5rem; color: var(--text_color);">
-                <b>League of Legends</b> <br>
+                <b>Team Fortress 2</b> <br>
             </p>
             <p style="font-size: 1.5rem; margin-left: 10px; margin-right: 10px; color: var(--text_color);">
                 <b>What is Team Fortress 2? </b>
