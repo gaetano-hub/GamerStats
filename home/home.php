@@ -501,8 +501,8 @@ $conn->close();
             </div>
         </nav>
         <div
-            style="background-color: var(--transparent_col); height: 5rem; display: flex; justify-content: center; align-items: center; margin-top: 70px;">
-            <p style="font-size: 2rem; font-weight: bold; color: var(--text_color);">Game rankings</p>
+            style="background-color: var(--transparent_col); height: 5rem; display: flex; justify-content: center; align-items: center; margin-top: 80px;">
+            <p style="font-size: 2rem; font-weight: bold; color: var(--text_color); text-align: center; width: 100%;">Game rankings</p>
         </div>
         <div class="d-flex justify-content-center" style="margin-top: 5rem; margin-bottom: 5rem; height: auto;">
             <div class="row">

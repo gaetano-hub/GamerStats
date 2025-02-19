@@ -42,7 +42,7 @@
                 <form name="registrationForm" action="signUp.php" method="POST" class="form" id="signUp" onsubmit="return validateForm();">
                     <div class="d-flex justify-content-center">
                         <label>
-                            <img class="img" src="../assets/LogoGS.png" style="width: 100px; height: 100px;" alt="logo" />
+                            <img class="img" src="../assets/GamerStatsLogo.png" style="max-width: 300px; max-height: 300px; margin-bottom: -40px;" alt="logo" />
                         </label>
                     </div>
                     <div class="d-flex justify-content-center">
@@ -68,7 +68,7 @@
                         <label for="confirmPassword">Confirm Password</label>
                     </div>
                     <div class="d-grid gap-1">
-                        <button class="btn btn-primary btn-lg" id="submitSignUp" type="submit">Confirm Registration</button>
+                        <button class="btn btn-primary btn-lg" id="submitSignUp" type="submit" style="background-color: #7fccdd; border-color: #649eac; color: rgb(0, 0, 0);">Confirm Registration</button>
                         <!-- <a href="https://id.riotgames.com/auth/authorize?response_type=code&client_id=YOUR_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI&scope=openid+email">Accedi con Riot</a> -->
 
                     </div>
@@ -80,10 +80,14 @@
                     <p style="font-size: -1rem;" class="title">Or you can sign up with:</p>
                 </div>
                 <div class="d-flex justify-content-between">
-                    <a class="btn btn-lg flex-fill me-1" id="riotGamesBtn" style="background-color: rgb(210, 44, 44); color: white;" 
-                    href="signUP_steam/redirect_to_steam.php">Steam</a>
-                    <a class="btn btn-lg flex-fill ms-1" id="battleNetBtn" style="background-color:darkblue; color: white;" 
-                    href="signUP_ds/signUp_with_ds.php" >Discord</a>
+                    <a class="btn btn-lg flex-fill me-1" id="SteamBtn" style="background-color: transparent; color: white;" 
+                    href="signUP_steam/redirect_to_steam.php">
+                        <img src="../assets/Steam.png" alt="Steam" style="height: 50px; margin-right: 8px;">
+                    </a>
+                    <a class="btn btn-lg flex-fill ms-1" id="DiscordBtn" style="background-color: transparent; color: white;" 
+                    href="signUP_ds/signUp_with_ds.php">
+                        <img src="../assets/Discord.png" alt="Discord" style="height: 50px; margin-right: 8px;">
+                    </a>
                 </div>
             </div>
         </div>
