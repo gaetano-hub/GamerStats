@@ -10,7 +10,7 @@
 
 
 <?php
-$access_token = "swqwsxqrdbfu9snanpeqm2k2fjewkr";
+$access_token = "dqe8civavof6jfgaq0cbjekb4oqkyg";
 $validate_url = "https://id.twitch.tv/oauth2/validate";
 
 // Initialize cURL session

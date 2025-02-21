@@ -511,7 +511,7 @@ $conn->close();
                         <div class="card-body">
                             <div class="d-flex justify-content-center align-items-center">
                                 <img src="../assets/tf2.png" class="card-img-top" alt="tf2Logo" style="width: 70px; height: auto; margin-right: 10px;">
-                                <h5 class="card-title text-center" style="color: var(--text_color)">Team Fortress 2 Top Winners</h5>
+                                <h5 class="card-title text-center" style="color: var(--text_color)">Team Fortress 2 Top Players</h5>
                             </div>
                             <div class="text-center mt-3">
                                 <ul class="list-group">
@@ -571,7 +571,7 @@ $conn->close();
                         <div class="card-body">
                             <div class="d-flex justify-content-center align-items-center">
                                 <img src="../assets/csgologo.png" class="card-img-top" alt="csgoLogo" style="width: 57px; height: auto; margin-right: 10px;">
-                                <h5 class="card-title text-center" style="color: var(--text_color)">Csgo Top Winners</h5>
+                                <h5 class="card-title text-center" style="color: var(--text_color)">Csgo Top Players</h5>
                             </div>
                             <div class="text-center mt-3">
                                 <ul class="list-group">
@@ -636,7 +636,7 @@ $conn->close();
                         <div class="card-body">
                             <div class="d-flex justify-content-center align-items-center">
                                 <img src="../assets/dotalogo.png" class="card-img-top" alt="dotaLogo" style="width: 50px; height: auto; margin-right: 10px;">
-                                <h5 class="card-title text-center" style="color: var(--text_color)">Dota2 Top Winners</h5>
+                                <h5 class="card-title text-center" style="color: var(--text_color)">Dota2 Top Players</h5>
                             </div>
                             <div class="d-flex flex-column align-items-center">
                                 <p class="card-text" style="color: var(--text_color); text-align: center;">

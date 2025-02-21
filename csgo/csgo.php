@@ -4,7 +4,7 @@ session_start();
 // Converti l'array di sessione in formato JSON
 $sessionData = json_encode($_SESSION);
 
-$access_token = "swqwsxqrdbfu9snanpeqm2k2fjewkr";
+$access_token = "dqe8civavof6jfgaq0cbjekb4oqkyg";
 $validate_url = "https://id.twitch.tv/oauth2/validate";
 
 // Initialize cURL session
@@ -32,7 +32,7 @@ if (curl_errno($ch)) {
     }
 }
 
-$access_token = 'swqwsxqrdbfu9snanpeqm2k2fjewkr';
+$access_token = 'dqe8civavof6jfgaq0cbjekb4oqkyg';
 $client_id = 'kdky4zjc7xuo41zu0v1bqf3y9hp41v';
 $game_id = '32399';
 
