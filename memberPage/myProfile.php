@@ -208,24 +208,24 @@ while ($row = $result->fetch_assoc()) {
                                                 $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
                                                 if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg") {
-                                                    echo "Spiacente, solo i formati JPG, PNG e JPEG sono permessi.";
+                                                    echo "Sorry, only JPG, PNG, and JPEG formats are allowed.";
                                                     $uploadOk = 0;
                                                 }
 
                                                 if ($uploadOk == 0) {
-                                                    echo "Spiacente, il file non è stato caricato.";
+                                                    echo "Sorry, the file was not uploaded.";
                                                 } else {
                                                     if (move_uploaded_file($_FILES["profileImage"]["tmp_name"], $target_file)) {
                                                         $sql = "UPDATE users SET image=? WHERE nickname=?";
                                                         $stmt = $conn->prepare($sql);
                                                         $stmt->bind_param("ss", $target_file, $_SESSION['nickname']);
                                                         if ($stmt->execute()) {
-                                                            echo "Immagine profilo aggiornata con successo.";
+                                                            echo "Profile image updated successfully.";
                                                         } else {
-                                                            echo "Errore durante l'aggiornamento dell'immagine: " . $conn->error;
+                                                            echo "Error updating profile image: " . $conn->error;
                                                         }
                                                     } else {
-                                                        echo "Spiacente, c'è stato un errore durante il caricamento del file.";
+                                                        echo "Sorry, there was an error uploading your file.";
                                                     }
                                                 }
                                             }
@@ -244,10 +244,10 @@ while ($row = $result->fetch_assoc()) {
                         <div id="liveAlertPlaceholder"></div>
                         <div class="col">
                             <a type="button" class="btn" style="background-color: var(--object_color); color: var(--text_color);"
-                                href="link_steam/redirect_to_steam.php">Steam</a>
+                                href="link_steam/redirect_to_steam.php">Connect your Steam account</a>
                         </div>
                         <div class="col">
-                            <button type="button" class="btn btn-success" id="liveAlertBtn" style="color: var(--text_color);">Share</button>
+                            <button type="button" class="btn btn-success" id="liveAlertBtn" style="color: var(--text_color);">Share your stats</button>
                             <div id="liveAlertPlaceholder"></div>
                             <div id="memberLink" style="display:none;">https://example.com/sharelink</div> <!-- Example link -->
 
