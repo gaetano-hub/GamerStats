@@ -1072,7 +1072,7 @@ $dota2avg = generateDota2LeaderboardAvg($membersD);
             }
             // Stampa la classifica
             if (!empty($cs2Classifica) && $game === "Csgo") {
-                echo "<h2 style='color: var(--text_color);'>Stats CSGO</h2>";
+                echo "<h2 style='color: var(--text_color);'>CSGO Team members Statistics</h2>";
                 echo '<div style="overflow-x:auto;">';
                 echo '<table class="table table-dark table-striped">';
                 echo "<thead>
@@ -1116,7 +1116,7 @@ $dota2avg = generateDota2LeaderboardAvg($membersD);
 
                 // Stampa le medie
                 if ((isset($averageKills) || isset($averageDeaths) || isset($averageDamageDone) || isset($averageWinPercentage)) && $game === "Csgo") {
-                    echo "<h2 style='color: var(--text_color);'>Averages Csgo Stats</h2>";
+                    echo "<h2 style='color: var(--text_color);'>Csgo Team Stats</h2>";
                     echo '<div style="overflow-x:auto;">';
                     echo '<table class="table table-dark table-striped">';
                     echo "<thead>

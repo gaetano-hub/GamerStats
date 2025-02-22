@@ -485,7 +485,7 @@ $conn->close();
             <p style="font-size: 2rem; font-weight: bold; color: var(--text_color);">Csgo Page</p>
         </div>
 
-        <h1 class="text-center" style="color: white">Live Csgo Streams</h1>
+        <h1 class="text-center" style="color:var(--text_contrast_color);">Live Csgo Streams</h1>
         <div id="streams-carousel" class="carousel slide streams mx-auto" style="max-width: 50%;" data-bs-ride="false">
             <div class="carousel-inner">
                 <?php if (!empty($streams)) : ?>
@@ -493,12 +493,12 @@ $conn->close();
                         <div class="carousel-item <?php echo $i === 0 ? 'active' : ''; ?>">
                             <div class="stream">
                                 <div style="display: flex; justify-content: center;">
-                                    <a href="https://www.twitch.tv/<?php echo htmlspecialchars($stream['user_name']); ?>" target="_blank" style="color:white">
+                                    <a href="https://www.twitch.tv/<?php echo htmlspecialchars($stream['user_name']); ?>" target="_blank" style="color:var(--text_contrast_color); font-weight: bold;">
                                         <?php echo htmlspecialchars($stream['user_name']); ?>
                                     </a>
                                 </div>
                                 <img src="<?php echo str_replace('{width}x{height}', '640x360', $stream['thumbnail_url']); ?>" alt="Stream Thumbnail" class="d-block mx-auto">
-                                <p class="text-center" style="color: white">Viewers: <?php echo htmlspecialchars($stream['viewer_count']); ?></p>
+                                <p class="text-center" style="color:var(--text_contrast_color); font-weight: bold;">Viewers: <?php echo htmlspecialchars($stream['viewer_count']); ?></p>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -508,11 +508,11 @@ $conn->close();
                     </div>
                 <?php endif; ?>
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#streams-carousel" data-bs-slide="prev">
+            <button class="carousel-control-prev" type="button" data-bs-target="#streams-carousel" data-bs-slide="prev" style="filter: invert(100%); font-size: 2 rem;">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Previous</span>
             </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#streams-carousel" data-bs-slide="next">
+            <button class="carousel-control-next" type="button" data-bs-target="#streams-carousel" data-bs-slide="next" style="filter: invert(100%); font-size: 2 rem;">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Next</span>
             </button>
