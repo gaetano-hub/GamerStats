@@ -100,3 +100,13 @@
 [2024-10-31 10:51:38] Updating database for user: Raddan with account_id: 221959239.
 [2024-10-31 10:51:48] Successfully updated database for Raddan.
 [2024-10-31 10:51:48] Updating database for user: monarca with account_id: 149118176.
+[2025-02-26 15:41:07] POST request received.
+[2025-02-26 15:41:07] Connecting to the database.
+[2025-02-26 15:41:07] Users found in the database.
+[2025-02-26 15:41:07] Updating database for user: gaetest with account_id: 114333310.
+[2025-02-26 15:41:09] Successfully updated database for gaetest.
+[2025-02-26 15:41:09] Updating database for user: giotest with account_id: 410037519.
+[2025-02-26 15:41:10] Successfully updated database for giotest.
+[2025-02-26 15:41:10] Updating database for user: eletest with account_id: 221666230.
+[2025-02-26 15:41:30] Successfully updated database for eletest.
+[2025-02-26 15:41:30] Updating database for user: andretest with account_id: 321580662.
