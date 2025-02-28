@@ -29,11 +29,12 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Preleva il nickname dalla sessione
+// Prelevo il nickname dalla sessione
 $nickname = $_SESSION['nickname'];
 
-// Prepara la query per ottenere i nomi dei team
-$stmt = $conn->prepare("SELECT team_name FROM teams WHERE member_one = ? OR member_two = ? OR member_three = ? OR member_four = ? OR member_five = ? OR leader = ?");
+// Query per ottenere i nomi dei team
+$stmt = $conn->prepare("SELECT team_name FROM teams WHERE member_one = ? OR member_two = ? OR member_three = ? 
+                            OR member_four = ? OR member_five = ? OR leader = ?");
 $stmt->bind_param("ssssss", $nickname, $nickname, $nickname, $nickname, $nickname, $nickname);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -409,20 +410,19 @@ while ($row = $result->fetch_assoc()) {
                 return json_decode($response, true);
             }
 
-            // Verifica se lo Steam ID è impostato
+            // Verifico se lo Steam ID è impostato
             if ($steamID) {
-                // Ottieni statistiche per Counter-Strike 2
+                // Ottiengo le statistiche per Counter-Strike 2
                 $cs2Stats = getGameStats($steamID, $apiKey, $cs2GameId);
 
-                // Prepara i dati per la visualizzazione
+                // Preparo i dati per la visualizzazione
                 $statsArray = [];
                 if (isset($cs2Stats['playerstats']['stats'])) {
                     foreach ($cs2Stats['playerstats']['stats'] as $stat) {
                         $statsArray[$stat['name']] = $stat['value'];
                     }
                 } else {
-                    //echo "<p>Statistiche non disponibili per Counter-Strike 2.</p>";
-                    exit; // Esci per evitare ulteriori elaborazioni
+                    exit; // Imposto l'uscita per evitare ulteriori elaborazioni
                 }
 
                 // Statistiche totali
@@ -430,22 +430,20 @@ while ($row = $result->fetch_assoc()) {
                 $totalDeaths = $statsArray['total_deaths'] ?? 0;
                 $totalWins = $statsArray['total_matches_won'] ?? 0;
                 $totalMatchesPlayed = $statsArray['total_matches_played'] ?? 0;
-                $totalRoundsPlayed = $statsArray['total_rounds_played'] ?? 1; // Prevenire divisione per zero
+                $totalRoundsPlayed = $statsArray['total_rounds_played'] ?? 1; // Per prevenire divisione per zero
 
                 // Statistiche ultima partita
                 $lastMatchKills = $statsArray['last_match_kills'] ?? 0;
                 $lastMatchDeaths = $statsArray['last_match_deaths'] ?? 0;
                 $lastMatchWins = $statsArray['last_match_wins'] ?? 0;
 
-                // Calcola i rapporti
+                // Rapporti
                 $killDeathRatio = ($totalDeaths > 0) ? ($totalKills / $totalDeaths) : 0;
                 $winLossRatio = ($totalMatchesPlayed > 0) ? ($totalWins / $totalMatchesPlayed) : 0;
 
-                // Calcola le statistiche per round
+                // Statistiche per round
                 $killsPerRound = $totalRoundsPlayed > 0 ? $totalKills / $totalRoundsPlayed : 0;
                 $deathsPerRound = $totalRoundsPlayed > 0 ? $totalDeaths / $totalRoundsPlayed : 0;
-
-                // Display statistics
             ?>
                 <div class="container text-center" style="margin-top: 10px; background-color: var(--transparent_col); padding: 15px;">
                     <p style="font-size: 2rem; font-weight: bold; color: var(--text_color);">Stats Counter-Strike</p>
